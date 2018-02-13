@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d8223ea630344719929678b24d283d, type: 3}
+  m_Name: Birds
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: 6f17090c9c229479bbbd98137f0e9fdc, type: 3}
+  - {fileID: 8300000, guid: a7c41028ebf0544feb298774a54b56d9, type: 3}
+  - {fileID: 8300000, guid: 44bb5b8ec7d4247b0ac430a4ae5065ed, type: 3}
+  - {fileID: 8300000, guid: a7c41028ebf0544feb298774a54b56d9, type: 3}
