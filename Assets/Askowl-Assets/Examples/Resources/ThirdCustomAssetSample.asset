@@ -8,7 +8,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcb1011a1004c40ea9fdee1c26954a27, type: 3}
-  m_Name: SecondTestCustomAsset
+  m_Script: {fileID: 11500000, guid: b8225b56c16ba4f53abbd875f294db0e, type: 3}
+  m_Name: ThirdCustomAssetSample
   m_EditorClassIdentifier: 
-  anInteger: 5678
+  anInteger: 9000

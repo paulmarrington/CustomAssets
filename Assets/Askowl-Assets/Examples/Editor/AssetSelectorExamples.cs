@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-public class AssetSelectorTest {
+public class AssetSelectorExamples {
 
-  AssetSelectorExample assetList = Resources.Load<AssetSelectorExample>("AssetSelectorExample");
+  AssetSelectorSample assetList = Resources.Load<AssetSelectorSample>("AssetSelectorSample");
 
   [Test]
-  public void AssetSelectorTestRandom() {
-    Assert.IsNotNull(assetList, "Did not load resource 'AssetSelectorExample'");
+  public void AssetSelectorRandomExample() {
+    Assert.IsNotNull(assetList, "Did not load resource 'AssetSelectorSample'");
 
     assetList.Select.Random();
 
@@ -32,8 +32,8 @@ public class AssetSelectorTest {
   }
 
   [Test]
-  public void AssetSelectorTestCycle() {
-    Assert.IsNotNull(assetList, "Did not load resource 'AssetSelectorExample'");
+  public void AssetSelectorCycleExample() {
+    Assert.IsNotNull(assetList, "Did not load resource 'AssetSelectorSample'");
 
     assetList.Select.Cycle();
 
@@ -46,8 +46,8 @@ public class AssetSelectorTest {
   }
 
   [Test]
-  public void AssetSelectorTestExhaustive() {
-    Assert.IsNotNull(assetList, "Did not load resource 'AssetSelectorExample'");
+  public void AssetSelectorExhaustiveExample() {
+    Assert.IsNotNull(assetList, "Did not load resource 'AssetSelectorSample'");
 
     assetList.Select.Exhaustive();
 

@@ -8,8 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53886b9e1536c40ca898951dd36b7e0c, type: 3}
-  m_Name: AssetSelectorExample
+  m_Script: {fileID: 11500000, guid: 2cbd5fa7b9921465fbc2cb789fe07cc8, type: 3}
+  m_Name: AssetSelectorSample
   m_EditorClassIdentifier: 
   assets:
   - {fileID: 8300000, guid: 6f17090c9c229479bbbd98137f0e9fdc, type: 3}

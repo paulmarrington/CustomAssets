@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-public class SelectorTest {
+public class SelectorExamples {
 
   Selector<int> selector = new Selector<int> (new int[] { 0, 1, 2, 3, 4 });
 

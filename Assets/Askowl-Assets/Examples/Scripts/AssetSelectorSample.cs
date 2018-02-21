@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Examples/AssetSelector", fileName = "AssetSelectorExample", order = 1)]
-public class AssetSelectorExample: AssetSelector<AudioClip> {
+[CreateAssetMenu(menuName = "Examples/AssetSelector", fileName = "AssetSelectorSample", order = 1)]
+public class AssetSelectorSample: AssetSelector<AudioClip> {
 
   public int ToPlay() {
     AudioClip pick = Pick();
