@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Custom Assets/Sound Clips", fileName = "Clips", order = 1)]
-public class Clips: AssetSelector<AudioClip> {
-
+public sealed class Clips : AssetSelector<AudioClip> {
+  [UsedImplicitly]
   public void Play() {
-    AudioSource.PlayClipAtPoint(Pick(), new Vector3 (0, 0, 0));
+    AudioSource.PlayClipAtPoint(clip: Pick(), position: new Vector3(x: 0, y: 0, z: 0));
   }
 }
