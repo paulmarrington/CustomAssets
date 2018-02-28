@@ -1,15 +1,9 @@
 ﻿using UnityEngine;
-using UnityEditor;
-using UnityEngine.TestTools;
 using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
-using System;
 using System.Linq;
 
-public class SelectorExamples {
-
-  Selector<int> selector = new Selector<int> (new int[] { 0, 1, 2, 3, 4 });
+public sealed class SelectorExamples {
+  private readonly Selector<int> selector = new Selector<int> (choices: new[] { 0, 1, 2, 3, 4 });
 
   [Test]
   public void SelectorTestRandom() {
@@ -43,11 +37,11 @@ public class SelectorExamples {
 
   [Test]
   public void SelectorTestExhaustive() {
-    
+
     selector.Exhaustive();
 
     int[] hits = new int[selector.Choices.Length];
-    for (int idx = 0; idx < hits.Length * 100; idx++) {
+    for (int idx = 0; idx < (hits.Length * 100); idx++) {
       int at = selector.Pick();
       Assert.AreNotEqual(at, -1, " returned does not exist");
       Assert.Less(at, hits.Length);
