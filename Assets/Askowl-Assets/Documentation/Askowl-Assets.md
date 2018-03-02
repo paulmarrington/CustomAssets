@@ -17,7 +17,7 @@ Fill the public data in the asset for use in methods to provide functionality. T
 
 ```C#
 [CreateAssetMenu(menuName = "Examples/Sound Clips", fileName = "Clips", order = 1)]
-public class ClipsExample: CustomAsset<Clips> {
+public class ClipsExample: CustomAsset<ClipsExample> {
   public AudioClip[] clips;
 
   public void Play() {
