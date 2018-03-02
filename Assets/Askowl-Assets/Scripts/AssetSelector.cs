@@ -1,4 +1,4 @@
-﻿public class AssetSelector<T> : CustomAsset<T>, Pick<T> where T : UnityEngine.Object {
+﻿public class AssetSelector<T> : CustomAsset<T>, IPick<T> where T : UnityEngine.Object {
   public T[] AssetList;
 
   public Selector<T> Select;

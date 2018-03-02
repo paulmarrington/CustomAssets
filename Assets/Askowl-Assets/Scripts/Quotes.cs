@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-internal sealed class Quotes : Pick<string> {
+internal sealed class Quotes : IPick<string> {
   private readonly TextAsset quoteAsset;
 
   private readonly Selector<string> selector = new Selector<string>();
@@ -34,8 +34,8 @@ internal sealed class Quotes : Pick<string> {
     return Regex.Replace(input: quote, pattern: @"^(.*?)\s*\((.*)\)$", evaluator: m =>
                            string.Format(
                              format: "<b>\"</b><i>{0}</i><b>\"</b>      <color=grey>{1}</color>",
-                             arg0: m.Groups[groupnum: 1].Value,
-                             arg1: m.Groups.Count > 1 ? m.Groups[groupnum: 2].Value : "")
+                             arg0: m.Groups[1].Value,
+                             arg1: m.Groups.Count > 1 ? m.Groups[2].Value : "")
     );
   }
 }

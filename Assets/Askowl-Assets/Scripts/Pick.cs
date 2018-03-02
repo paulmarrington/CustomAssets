@@ -1,5 +1,3 @@
-﻿using System;
-
-public interface Pick<T> {
+﻿internal interface IPick<out T> {
   T Pick();
 }

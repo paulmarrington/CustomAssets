@@ -9,6 +9,6 @@ public sealed class ClipsSample: CustomAsset<AudioClip> {
 
   [UsedImplicitly]
   public void Play() {
-    AudioSource.PlayClipAtPoint(Clips [random.Next(0, Clips.Length)], new Vector3 (0, 0, 0));
+    AudioSource.PlayClipAtPoint(clip: Clips [random.Next(minValue: 0, maxValue: Clips.Length)], position: new Vector3 (x: 0, y: 0, z: 0));
   }
 }

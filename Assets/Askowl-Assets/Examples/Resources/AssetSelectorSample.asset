@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cbd5fa7b9921465fbc2cb789fe07cc8, type: 3}
   m_Name: AssetSelectorSample
   m_EditorClassIdentifier: 
-  assets:
+  AssetList:
   - {fileID: 8300000, guid: 6f17090c9c229479bbbd98137f0e9fdc, type: 3}
   - {fileID: 8300000, guid: a7c41028ebf0544feb298774a54b56d9, type: 3}
   - {fileID: 8300000, guid: 44bb5b8ec7d4247b0ac430a4ae5065ed, type: 3}

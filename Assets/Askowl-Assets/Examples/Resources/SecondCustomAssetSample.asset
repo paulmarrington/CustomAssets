@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8225b56c16ba4f53abbd875f294db0e, type: 3}
   m_Name: SecondCustomAssetSample
   m_EditorClassIdentifier: 
-  anInteger: 5678
+  AnInteger: 5678

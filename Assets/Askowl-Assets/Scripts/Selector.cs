@@ -1,65 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
+using JetBrains.Annotations;
 
-public class Selector<T>: Pick<T> {
-  T[] choices = { };
-  Func<T> picker;
+public sealed class Selector<T> : IPick<T> {
+  private T[]     choices = { };
+  private Func<T> picker;
 
-  public Selector() {
+  internal Selector() {
     Random();
-    init();
+    Init();
   }
 
   public Selector(T[] choices) {
     this.choices = choices;
     Random();
-    init();
+    Init();
   }
 
-  private Random random = new Random ();
+  private readonly Random random = new Random();
 
-  void init() {
-    remaining = new List<T> (choices);
-    idx = 0;
+  private void Init() {
+    remaining = new List<T>(collection: choices);
+    idx       = 0;
   }
 
   public T[] Choices {
     get { return choices; }
-    set {
+    internal set {
       choices = value;
-      init();
+      Init();
     }
   }
 
   public void Random() {
-    picker = () => choices [random.Next(0, choices.Length)];
-    init();
+    picker = () => choices[random.Next(minValue: 0, maxValue: choices.Length)];
+    Init();
   }
 
-  int idx;
+  private int idx;
 
-  public void Cycle() {
-    picker = () => choices [idx++ % choices.Length];
-  }
+  public void Cycle() { picker = () => choices[idx++ % choices.Length]; }
 
+  [UsedImplicitly]
   public int CycleIndex { get { return idx % choices.Length; } }
 
-  List<T> remaining;
+  private List<T> remaining;
 
   public void Exhaustive() {
     picker = () => {
       if (remaining.Count == 0) {
-        remaining = new List<T> (choices);
+        remaining = new List<T>(collection: choices);
       }
-      idx = random.Next(0, remaining.Count);
-      T result = remaining [idx];
-      remaining.RemoveAt(idx);
+
+      idx = random.Next(minValue: 0, maxValue: remaining.Count);
+      T result = remaining[index: idx];
+      remaining.RemoveAt(index: idx);
       return result;
     };
   }
 
-  public virtual T Pick() {
-    return picker();
-  }
+  public T Pick() { return picker(); }
 }
