@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
 using NUnit.Framework;
-using System.Linq;
+using UnityEngine;
 
 public sealed class AssetSelectorExamples {
   private readonly AssetSelectorSample assetList =

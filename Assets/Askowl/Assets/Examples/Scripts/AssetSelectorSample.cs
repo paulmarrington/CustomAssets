@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Askowl;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Examples/AssetSelector", fileName = "AssetSelectorSample", order = 1)]
 public sealed class AssetSelectorSample : AssetSelector<AudioClip> {
