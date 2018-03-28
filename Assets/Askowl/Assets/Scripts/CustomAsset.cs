@@ -44,9 +44,8 @@
       }
 
       // Nope. Is it another sort of resource?
-      if (!Equals(objA: (instances[key: name] = Resources.Load<T>(path: name)), objB: default(T)) ||
-          !Equals(objA: (instances[key: name] = Resources.Load<T>(path: defaultName)),
-                  objB: default(T))) {
+      if (!Equals((instances[key: name] = Resources.Load<T>(path: name)),        default(T)) ||
+          !Equals((instances[key: name] = Resources.Load<T>(path: defaultName)), default(T))) {
         return instances[key: name];
       }
 
