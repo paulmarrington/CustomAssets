@@ -22,7 +22,7 @@
   public class CustomAsset<T> : ScriptableObject where T : Object {
     private static Dictionary<string, T> instances;
 
-    public static T Asset(string name = "") {
+    public static T Asset(string name = null) {
       name = string.IsNullOrEmpty(value: name) ? typeof(T).Name : name;
 
       // Have I seen it before?
