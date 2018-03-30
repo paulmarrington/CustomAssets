@@ -1,6 +1,5 @@
 ﻿namespace Askowl {
   using System.Collections.Generic;
-  using System.Linq;
   using UnityEngine;
 /*
  * [CreateAssetMenu(menuName="Custom Asset Type/Custom Asset Name")]
@@ -32,24 +31,15 @@
         return instances[key: name];
       }
 
-      string defaultName = name + "Default";
-
       // Nope. Is it a ScriptableObject saved as an Asset?
-      T[] objects = FindObjectsOfType<T>();
+      instances[key: name] = Components.Find<T>(name);
+      if (!Equals(instances[key: name], default(T))) return instances[key: name];
 
-      foreach (T instance in objects.Where(predicate: instance =>
-                                             instance.name.Equals(value: name) ||
-                                             instance.name.Equals(value: defaultName))) {
-        return instances[key: name] = instance;
-      }
+      // Or a reference to a default for the Asset?
+      instances[key: name] = Components.Find<T>(name + "Default");
+      if (!Equals(instances[key: name], default(T))) return instances[key: name];
 
-      // Nope. Is it another sort of resource?
-      if (!Equals((instances[key: name] = Resources.Load<T>(path: name)),        default(T)) ||
-          !Equals((instances[key: name] = Resources.Load<T>(path: defaultName)), default(T))) {
-        return instances[key: name];
-      }
-
-      // Nope. Better give up now
+      // Better give up now
       Debug.LogErrorFormat("Project does not contain an asset of type '<b>{0}({1})</b>'", name,
                            typeof(T).Name);
 

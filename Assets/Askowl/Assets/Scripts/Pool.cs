@@ -5,14 +5,6 @@
   using UnityEngine;
   using Object = UnityEngine.Object;
 
-  public interface IPool {
-    void Prepare(string name, Component master);
-  }
-
-  public sealed class PooledMonobehaviour : MonoBehaviour {
-    [SerializeField] public Component Original;
-  }
-
   public class Pool<T> : IPool where T : Component {
     public int Depth { get; private set; }
 
@@ -24,8 +16,12 @@
 
     private static Pool<T> instance;
 
-    public static void CreatePool(T ofComponent) {
-      if (instance != null) return;
+    [CanBeNull]
+    public static Pool<T> CreatePool(T ofComponent = null, [CanBeNull] string name = null) {
+      if (instance != null) return instance;
+
+      ofComponent      = ofComponent ?? Components.Find<T>(name) ?? Components.Create<T>(name);
+      ofComponent.name = name        ?? ofComponent.name;
 
       Type                poolType  = ofComponent.GetType();
       GameObject          singleton = new GameObject();
@@ -40,10 +36,11 @@
       if (instance != null) instance.Prepare(name: ofComponent.name, master: ofComponent);
 
       Object.DontDestroyOnLoad(target: singleton);
+      return instance;
     }
 
     [NotNull]
-    public static Pool<T> Instance { get { return instance ?? (instance = new Pool<T>()); } }
+    public static Pool<T> Instance { get { return instance ?? CreatePool(); } }
 
     public void Prepare([CanBeNull] string name, Component master) {
       Instance.Name     = string.IsNullOrEmpty(value: name) ? typeof(T).Name : name;
@@ -81,5 +78,13 @@
       clone.gameObject.name += " " + ++Depth;
       return clone;
     }
+  }
+
+  public interface IPool {
+    void Prepare(string name, Component master);
+  }
+
+  public sealed class PooledMonobehaviour : MonoBehaviour {
+    [SerializeField] public Component Original;
   }
 }

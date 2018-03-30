@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using Askowl;
+using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
 
 public sealed class PoolExample {
   [UnityTest]
-  public IEnumerator PoolTestEnumerator() {
-    Pool<Text> pool      = Pool<Text>.Instance;
-    Text[]     instances = new Text[21];
+  public IEnumerator PoolTextTest() {
+    Pool<Text> textPool = Pool<Text>.Instance;
+    yield return PoolTest(textPool);
+  }
 
+  private static IEnumerator PoolTest<T>([NotNull] Pool<T> pool) where T : Component {
     Assert.IsNotNull(pool);
+    T[] instances = new T[21];
 
     for (int i = 0; i < 10; i++) {
       instances[i] = pool.Get();
@@ -36,7 +41,7 @@ public sealed class PoolExample {
       yield return null;
     }
 
-    Text oneMore = pool.Get();
+    T oneMore = pool.Get();
     Assert.AreEqual(expected: "PoolSample 20", actual: oneMore.name);
     Assert.AreEqual(expected: 30,              actual: pool.Depth);
   }
