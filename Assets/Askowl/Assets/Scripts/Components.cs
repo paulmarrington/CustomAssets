@@ -4,9 +4,8 @@
   using UnityEngine;
 
   public static class Components {
-    public static T Find<T>(string name = null) where T : Object {
-      name = string.IsNullOrEmpty(value: name) ? typeof(T).Name : name;
-
+    public static T Find<T>(string name) where T : Object {
+      name = string.IsNullOrEmpty(name) ? typeof(T).Name : name;
       T[] objects = Object.FindObjectsOfType<T>();
 
       foreach (T obj in objects.Where(obj => obj.name.Equals(name))) return obj;
@@ -15,17 +14,16 @@
       return resource;
     }
 
-    [NotNull]
+    [NotNull, UsedImplicitly]
     public static T Create<T>([CanBeNull] string name = null) where T : Component {
       GameObject gameObject = new GameObject();
 
       T instance = Create<T>(gameObject, name);
-      instance.name   = name ?? typeof(T).ToString();
       gameObject.name = instance.name;
       return instance;
     }
 
-    [NotNull]
+    [NotNull, UsedImplicitly]
     public static T Create<T>([NotNull] GameObject gameObject, [CanBeNull] string name = null)
       where T : Component {
       T instance = gameObject.AddComponent<T>();

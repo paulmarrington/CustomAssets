@@ -1,4 +1,5 @@
 ﻿namespace Askowl {
+  using System.Collections;
   using System.Collections.Generic;
   using JetBrains.Annotations;
   using UnityEngine;
@@ -12,6 +13,8 @@
       for (int i = 1; i < children.Length; ++i) {
         CreatePool(children[i].gameObject);
       }
+
+      StartCoroutine(SetParentOnReturn());
     }
 
     private void CreatePool([NotNull] GameObject master) {
@@ -71,20 +74,30 @@
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public static void Return([NotNull] GameObject clone) {
-      PoolMonitor poolMonitor = clone.GetComponent<PoolMonitor>();
-      PoolQueue   pool        = PoolFor(poolMonitor.MasterName);
+    public static void Return([NotNull] GameObject clone) { returns.Enqueue(clone); }
 
-      if (pool != null) {
-        poolMonitor.InPool = poolMonitor.OkToPool = true;
-        poolMonitor.gameObject.SetActive(false);
-        clone.transform.SetParent(poolMonitor.PoolRoot);
-        pool.Enqueue(clone);
-      } else {
-        Debug.LogErrorFormat("**** Error: {0} was not created in a pool", clone.name);
+    private static readonly Queue<GameObject> returns = new Queue<GameObject>();
+
+    private IEnumerator SetParentOnReturn() {
+      while (true) {
+        while (returns.Count > 0) {
+          GameObject  clone       = returns.Dequeue();
+          PoolMonitor poolMonitor = clone.GetComponent<PoolMonitor>();
+          PoolQueue   pool        = PoolFor(poolMonitor.MasterName);
+
+          if (pool != null) {
+            poolMonitor.InPool = poolMonitor.OkToPool = true;
+            pool.Enqueue(clone);
+            clone.transform.SetParent(poolMonitor.PoolRoot);
+          } else {
+            Debug.LogErrorFormat("**** Error: {0} was not created in a pool", clone.name);
+          }
+
+          clone.SetActive(false);
+        }
+
+        yield return null;
       }
-
-      clone.SetActive(false);
     }
 
     [CanBeNull]

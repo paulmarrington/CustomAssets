@@ -19,7 +19,8 @@ public sealed class PoolExample : MonoBehaviour {
     for (int i = 0; i < 21; i++) {
       prefab1[i] =
         Pool.Acquire<PoolPrefabScriptSample>("PoolSamplePrefab",
-                                             parent: FindObjectOfType<Canvas>().transform);
+                                             parent: FindObjectOfType<Canvas>().transform,
+                                             position: new Vector3(x: i * 60, y: i * 60));
 
       yield return new WaitForSeconds(frequency);
 
