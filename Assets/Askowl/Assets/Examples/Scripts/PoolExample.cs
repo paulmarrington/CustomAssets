@@ -17,7 +17,9 @@ public sealed class PoolExample : MonoBehaviour {
     Assert.AreEqual(0, Pool.PoolFor("PoolSamplePrefab").Count);
 
     for (int i = 0; i < 21; i++) {
-      prefab1[i] = Pool.Acquire<PoolPrefabScriptSample>("PoolSamplePrefab");
+      prefab1[i] =
+        Pool.Acquire<PoolPrefabScriptSample>("PoolSamplePrefab",
+                                             parent: FindObjectOfType<Canvas>().transform);
 
       yield return new WaitForSeconds(frequency);
 

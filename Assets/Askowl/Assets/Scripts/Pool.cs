@@ -6,9 +6,11 @@
   public sealed class Pool : MonoBehaviour {
     private void OnEnable() {
       DontDestroyOnLoad(target: gameObject);
+      Transform[] children = GetComponentsInChildren<Transform>();
 
-      for (int i = 0; i < transform.childCount; ++i) {
-        CreatePool(transform.GetChild(i).gameObject);
+      // skip first as it is the Pool itself
+      for (int i = 1; i < children.Length; ++i) {
+        CreatePool(children[i].gameObject);
       }
     }
 
@@ -19,6 +21,9 @@
         PoolMonitor poolMonitor = master.AddComponent<PoolMonitor>();
         poolMonitor.MasterName = master.name;
         Queues[poolName]       = new PoolQueue {Master = master};
+        GameObject poolRoot = new GameObject(poolName);
+        poolRoot.transform.parent = transform;
+        poolMonitor.PoolRoot      = poolRoot.transform;
       } else {
         Debug.LogFormat("Duplicate Pools for {0}", master.name);
       }
@@ -55,7 +60,7 @@
         poolMonitor = clone.gameObject.GetComponent<PoolMonitor>();
       } while (!poolMonitor.OkToPool);
 
-      clone.transform.SetParent(parent ?? pool.Master.transform.parent);
+      clone.transform.SetParent(parent ?? poolMonitor.PoolRoot);
       clone.transform.position  = position;
       clone.transform.rotation  = rotation;
       poolMonitor.PoolOnDisable = poolOnDisable;
@@ -66,19 +71,20 @@
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public static void Return([NotNull] GameObject gameObject) {
-      PoolMonitor poolMonitor = gameObject.GetComponent<PoolMonitor>();
+    public static void Return([NotNull] GameObject clone) {
+      PoolMonitor poolMonitor = clone.GetComponent<PoolMonitor>();
       PoolQueue   pool        = PoolFor(poolMonitor.MasterName);
 
       if (pool != null) {
         poolMonitor.InPool = poolMonitor.OkToPool = true;
         poolMonitor.gameObject.SetActive(false);
-        pool.Enqueue(gameObject);
+        clone.transform.SetParent(poolMonitor.PoolRoot);
+        pool.Enqueue(clone);
       } else {
-        Debug.LogErrorFormat("**** Error: {0} was not created in a pool", gameObject.name);
+        Debug.LogErrorFormat("**** Error: {0} was not created in a pool", clone.name);
       }
 
-      gameObject.SetActive(false);
+      clone.SetActive(false);
     }
 
     [CanBeNull]
@@ -88,8 +94,8 @@
     }
 
     [CanBeNull, UsedImplicitly]
-    private static PoolQueue PoolFor([NotNull] GameObject gameObject) {
-      return PoolFor(gameObject.GetComponent<PoolMonitor>().MasterName);
+    private static PoolQueue PoolFor([NotNull] GameObject clone) {
+      return PoolFor(clone.GetComponent<PoolMonitor>().MasterName);
     }
 
     private sealed class PoolDict : Dictionary<string, PoolQueue> { }
@@ -97,9 +103,10 @@
     private static readonly PoolDict Queues = new PoolDict();
 
     private sealed class PoolMonitor : MonoBehaviour {
-      public bool   PoolOnDisable;
-      public bool   InPool, OkToPool = true;
-      public string MasterName;
+      public bool      PoolOnDisable;
+      public bool      InPool, OkToPool = true;
+      public string    MasterName;
+      public Transform PoolRoot;
 
 //      private void Awake() { DontDestroyOnLoad(gameObject); }
 
