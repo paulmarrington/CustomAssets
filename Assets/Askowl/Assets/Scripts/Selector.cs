@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System;
-using JetBrains.Annotations;
+﻿namespace Askowl {
+  using System;
+  using System.Collections.Generic;
+  using JetBrains.Annotations;
 
-namespace Askowl {
   public sealed class Selector<T> : IPick<T> {
     private T[]     choices = { };
     private Func<T> picker;
@@ -27,7 +27,7 @@ namespace Askowl {
 
     public T[] Choices {
       get { return choices; }
-      internal set {
+      set {
         choices = value;
         Init();
       }
