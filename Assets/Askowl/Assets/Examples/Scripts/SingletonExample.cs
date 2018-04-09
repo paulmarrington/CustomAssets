@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using System.Collections;
 using UnityEngine.Assertions;
 using UnityEngine.TestTools;
 
@@ -13,3 +14,4 @@ public sealed class SingletonExample {
     }
   }
 }
+#endif

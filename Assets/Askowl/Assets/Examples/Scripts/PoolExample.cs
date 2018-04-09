@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using System.Collections;
 using Askowl;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -73,3 +74,4 @@ public sealed class PoolExample : MonoBehaviour {
     Assert.AreEqual(expected: 4, actual: Pool.PoolFor("Scene GameObject").Count);
   }
 }
+#endif

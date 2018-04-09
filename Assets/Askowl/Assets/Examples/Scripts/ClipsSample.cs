@@ -1,4 +1,5 @@
-﻿using Askowl;
+﻿#if UNITY_EDITOR
+using Askowl;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -14,3 +15,4 @@ public sealed class ClipsSample : CustomAsset<AudioClip> {
                                 position: new Vector3(x: 0, y: 0, z: 0));
   }
 }
+#endif
