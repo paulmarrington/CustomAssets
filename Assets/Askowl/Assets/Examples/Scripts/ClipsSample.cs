@@ -1,13 +1,14 @@
 ﻿#if UNITY_EDITOR
-using Askowl;
+using CustomAsset;
 using JetBrains.Annotations;
 using UnityEngine;
+using Random = System.Random;
 
 [CreateAssetMenu(menuName = "Examples/Sound Clips", fileName = "Clips", order = 1)]
-public sealed class ClipsSample : CustomAsset.Select<AudioClip> {
+public sealed class ClipsSample : SelectAsset<AudioClip> {
   [SerializeField] private AudioClip[] clips;
 
-  private readonly System.Random random = new System.Random();
+  private readonly Random random = new Random();
 
   [UsedImplicitly]
   public void Play() {

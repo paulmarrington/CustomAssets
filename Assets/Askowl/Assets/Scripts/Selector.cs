@@ -3,7 +3,7 @@
   using System.Collections.Generic;
   using JetBrains.Annotations;
 
-  public class Selector<T> : IPick<T> {
+  public sealed class Selector<T> : IPick<T> {
     private T[]     choices = { };
     private Func<T> picker;
 
