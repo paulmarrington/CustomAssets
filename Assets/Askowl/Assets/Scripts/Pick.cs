@@ -1,5 +1,5 @@
 ﻿namespace Askowl {
-  public interface IPick<out T> {
+  public interface Pick<out T> {
     T Pick();
   }
 }

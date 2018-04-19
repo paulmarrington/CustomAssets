@@ -1,8 +1,7 @@
-﻿using CustomAsset;
-using UnityEngine;
+﻿using UnityEngine;
 
-public sealed class DirectEventListenerSample : BaseEventListener {
-  public override void OnEventRaised(IEventListener listener) {
+public sealed class DirectEventListenerSample : Events.BaseListener {
+  public override void OnTriggered(Events.Listener listener) {
     Debug.Log("Direct Event heard and responded to");
   }
 }

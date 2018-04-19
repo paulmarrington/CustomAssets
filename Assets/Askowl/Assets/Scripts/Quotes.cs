@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Askowl {
-  public sealed class Quotes : IPick<string> {
+  public sealed class Quotes : Pick<string> {
     private readonly TextAsset quoteAsset;
 
     private readonly Selector<string> selector = new Selector<string>();

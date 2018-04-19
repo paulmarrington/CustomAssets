@@ -329,7 +329,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 0d6b0ff8ee5144733a175f3433e4fb53, type: 2}
-        m_MethodName: Raise
+        m_MethodName: Trigger
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -475,7 +475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a796a56eea2a3497b8c3188769e5bbd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventActor: {fileID: 11400000, guid: 3378a8b8ba99d4b1a94246c61a5a11bd, type: 2}
+  channel: {fileID: 11400000, guid: 3378a8b8ba99d4b1a94246c61a5a11bd, type: 2}
 --- !u!4 &726056789
 Transform:
   m_ObjectHideFlags: 0
@@ -914,7 +914,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
-        m_MethodName: Raise
+        m_MethodName: Trigger
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1307,9 +1307,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77a22e6d615c43b1adeeeb2980a7ca3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventActor: {fileID: 11400000, guid: 0d6b0ff8ee5144733a175f3433e4fb53, type: 2}
+  channel: {fileID: 11400000, guid: 0d6b0ff8ee5144733a175f3433e4fb53, type: 2}
   animator: {fileID: 1092706610}
-  trigger: Colour
+  parameterName: Colour
 --- !u!4 &1500507378
 Transform:
   m_ObjectHideFlags: 0
@@ -1475,7 +1475,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 3378a8b8ba99d4b1a94246c61a5a11bd, type: 2}
-        m_MethodName: Raise
+        m_MethodName: Trigger
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1783,7 +1783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f7a5f106292b4c798aea3b9bc3ea57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventActor: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
+  channel: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
   unityEvent:
     m_PersistentCalls:
       m_Calls:
