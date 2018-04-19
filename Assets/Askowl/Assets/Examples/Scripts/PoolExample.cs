@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 public sealed class PoolExample : MonoBehaviour {
-  private void  Awake() { StartCoroutine(PoolTest()); }
+  public void StartPoolTest() { StartCoroutine(PoolTest()); }
+
   private float frequency = 0.01f;
 
   IEnumerator PoolTest() {
@@ -14,8 +15,10 @@ public sealed class PoolExample : MonoBehaviour {
     Assert.IsNotNull(Pool.PoolFor("PoolSamplePrefab"));
     Assert.IsNotNull(Pool.PoolFor("PoolPrefabScriptSample"));
 
-    PoolPrefabScriptSample[] prefab1 = new PoolPrefabScriptSample[21];
-    Assert.AreEqual(0, Pool.PoolFor("PoolSamplePrefab").Count);
+    PoolPrefabScriptSample[] prefab1   = new PoolPrefabScriptSample[21];
+    Pool.PoolQueue           poolQueue = Pool.PoolFor("PoolSamplePrefab");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(0, poolQueue.Count);
 
     for (int i = 0; i < 21; i++) {
       prefab1[i] =
@@ -25,10 +28,13 @@ public sealed class PoolExample : MonoBehaviour {
 
       yield return new WaitForSeconds(frequency);
 
+      Assert.IsNotNull(prefab1[i]);
       prefab1[i].MaxCount = i;
     }
 
-    Assert.AreEqual(expected: 0, actual: Pool.PoolFor("PoolSamplePrefab").Count);
+    poolQueue = Pool.PoolFor("PoolSamplePrefab");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(0, poolQueue.Count);
 
     PoolPrefabScriptSample[] prefab2 = new PoolPrefabScriptSample[21];
 
@@ -36,11 +42,16 @@ public sealed class PoolExample : MonoBehaviour {
       prefab2[i] = Pool.Acquire<PoolPrefabScriptSample>();
       yield return new WaitForSeconds(frequency);
 
+      Assert.IsNotNull(prefab2[i]);
       prefab2[i].MaxCount = 100 + i;
     }
 
-    Assert.AreEqual(expected: 0, actual: Pool.PoolFor("PoolSamplePrefab").Count);
-    Assert.AreEqual(expected: 0, actual: Pool.PoolFor("PoolPrefabScriptSample").Count);
+    poolQueue = Pool.PoolFor("PoolSamplePrefab");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(expected: 0, actual: poolQueue.Count);
+    poolQueue = Pool.PoolFor("PoolPrefabScriptSample");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(expected: 0, actual: poolQueue.Count);
 
     for (int i = 0; i < 7; i++) {
       prefab1[i].gameObject.SetActive(false);
@@ -52,8 +63,12 @@ public sealed class PoolExample : MonoBehaviour {
       yield return new WaitForSeconds(frequency);
     }
 
-    Assert.AreEqual(expected: 7, actual: Pool.PoolFor("PoolSamplePrefab").Count);
-    Assert.AreEqual(expected: 9, actual: Pool.PoolFor("PoolPrefabScriptSample").Count);
+    poolQueue = Pool.PoolFor("PoolSamplePrefab");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(expected: 7, actual: poolQueue.Count);
+    poolQueue = Pool.PoolFor("PoolPrefabScriptSample");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(expected: 9, actual: poolQueue.Count);
 
     Assert.IsNotNull(Pool.PoolFor("Scene GameObject"));
 
@@ -64,14 +79,18 @@ public sealed class PoolExample : MonoBehaviour {
       yield return new WaitForSeconds(frequency);
     }
 
-    Assert.AreEqual(expected: 0, actual: Pool.PoolFor("Scene GameObject").Count);
+    poolQueue = Pool.PoolFor("Scene GameObject");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(expected: 0, actual: poolQueue.Count);
 
     for (int i = 15; i < 19; i++) {
       scenes[i].gameObject.SetActive(false);
       yield return new WaitForSeconds(frequency);
     }
 
-    Assert.AreEqual(expected: 4, actual: Pool.PoolFor("Scene GameObject").Count);
+    poolQueue = Pool.PoolFor("Scene GameObject");
+    Assert.IsNotNull(poolQueue);
+    Assert.AreEqual(expected: 4, actual: poolQueue.Count);
   }
 }
 #endif

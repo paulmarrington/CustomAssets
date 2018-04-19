@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class DirectEventListenerSample : Events.BaseListener {
+  [SerializeField] private Text textComponent;
+
   public override void OnTriggered(Events.Listener listener) {
-    Debug.Log("Direct Event heard and responded to");
+    textComponent.text = "Direct Event heard and responded to";
   }
 }
+#endif

@@ -8,7 +8,7 @@ namespace CustomAsset {
   using JetBrains.Annotations;
   using UnityEngine;
 
-  public class BaseAsset<T> : ScriptableObject {
+  public class CustomAsset<T> : ScriptableObject {
 #if UNITY_EDITOR
     [Multiline] public string Description = "";
 #endif
@@ -33,6 +33,6 @@ namespace CustomAsset {
       }
     }
 
-    public static implicit operator T([NotNull] BaseAsset<T> t) { return t.value; }
+    public static implicit operator T([NotNull] CustomAsset<T> t) { return t.value; }
   }
 }

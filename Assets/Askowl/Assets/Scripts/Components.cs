@@ -4,7 +4,11 @@
   using UnityEngine;
 
   public static class Components {
-    public static T Find<T>(string name) where T : Object {
+    public static T Find<T>(GameObject gameObject) where T : Object {
+      return gameObject.GetComponent<T>() ?? Find<T>();
+    }
+
+    public static T Find<T>(string name = null) where T : Object {
       name = string.IsNullOrEmpty(name) ? typeof(T).Name : name;
       T[] objects = Object.FindObjectsOfType<T>();
 

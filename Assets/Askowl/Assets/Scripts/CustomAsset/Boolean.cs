@@ -2,5 +2,5 @@
   using UnityEngine;
 
   [CreateAssetMenu(menuName = "Custom Assets/Boolean")]
-  public sealed class Boolean : BaseAsset<bool> { }
+  public sealed class Boolean : CustomAsset<bool> { }
 }

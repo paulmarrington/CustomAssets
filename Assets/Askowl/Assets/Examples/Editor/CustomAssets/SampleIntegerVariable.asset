@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Name: SampleIntegerVariable
   m_EditorClassIdentifier: 
   Description: 
-  Value: 1234
+  value: 0
+  onChange: {fileID: 0}
