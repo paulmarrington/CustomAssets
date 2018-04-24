@@ -40,7 +40,7 @@ internal sealed class SelectorExamples {
 
   [Test]
   public void SelectorTestExhaustive() {
-    Selector<int> selector = new Selector<int>(choices: new[] {0, 1, 2, 3, 4}, isExhaustive: true);
+    Selector<int> selector = new Selector<int>(choices: new[] {0, 1, 2, 3, 4}, exhaustiveBelow: 10);
 
     int[] hits = new int[selector.Choices.Length];
 

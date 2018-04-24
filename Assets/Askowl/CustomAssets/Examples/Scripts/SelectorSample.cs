@@ -9,7 +9,7 @@ using Random = System.Random;
 /// three audio clips.
 /// </summary>
 [CreateAssetMenu(menuName = "Examples/SelectAsset", fileName = "SelectAssetSample", order = 1)]
-public sealed class SelectAssetSample : SelectAsset<AudioClip> {
+public sealed class SelectorSample : Selector<AudioClip> {
   /// <summary>
   /// Play is linked to a button on the test site. SelectAsset.Pick() chooses
   /// from the list of audio clips. Whether it will be a random, cyclic or exhaustive choice

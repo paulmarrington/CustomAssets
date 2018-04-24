@@ -24,7 +24,7 @@ namespace Askowl {
 
     private void Init([NotNull] string[] listOfQuotes) {
       Length   = listOfQuotes.Length;
-      selector = new Selector<string>(choices: listOfQuotes, isExhaustive: (Length < 100));
+      selector = new Selector<string>(choices: listOfQuotes, isRandom: (Length < 100));
     }
 
     [NotNull]

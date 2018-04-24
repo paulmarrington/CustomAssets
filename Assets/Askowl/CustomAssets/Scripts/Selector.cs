@@ -3,16 +3,26 @@
   using System.Collections.Generic;
   using JetBrains.Annotations;
 
+  /// <summary>
+  /// Pick one item from a list.
+  /// </summary>
+  /// <typeparam name="T">Type of item. It can be a primative, object or even a Unity Asset</typeparam>
   public sealed class Selector<T> : Pick<T> {
     private          T[]     choices = { };
     private readonly Func<T> picker;
 
-    public Selector(T[] choices = null, bool isExhaustive = false, bool isRandom = true) {
+    /// <summary>
+    /// Constructor to create selection list.
+    /// </summary>
+    /// <param name="choices">The list to choose an item from</param>
+    /// <param name="isRandom">Defaults to random. Set false to cycle through entries sequentially</param>
+    /// <param name="exhaustiveBelow">If the list is shorter then select items randomly, but never choose one a second time until all have been picked. This is useful for short lists to reduce repeats.</param>
+    public Selector(T[] choices = null, bool isRandom = true, int exhaustiveBelow = 0) {
       if (choices != null) this.choices = choices;
 
       if (!isRandom) { // cycle through list
         picker = () => this.choices[cycleIndex++ % this.choices.Length];
-      } else if (!isExhaustive) { // randoms election
+      } else if (choices.Length < exhaustiveBelow) { // randoms election
         picker = () => this.choices[random.Next(minValue: 0, maxValue: this.choices.Length)];
       } else {
         picker = () => { // different random choice until list exhausted, then repeat
