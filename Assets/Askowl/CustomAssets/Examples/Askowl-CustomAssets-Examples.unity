@@ -4769,7 +4769,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: ecabd440b9c2a48c5a621c86b6135b2d, type: 2}
+      - m_Target: {fileID: 11400000, guid: 345336cb6d0374f219ca9f901f64ca6d, type: 2}
         m_MethodName: Play
         m_Mode: 1
         m_Arguments:

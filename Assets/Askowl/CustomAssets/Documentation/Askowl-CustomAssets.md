@@ -1,7 +1,44 @@
-# Assets
+# Custom Assets
 [TOC]
 
-> Read the code in the Examples Folder.
+> Read the code in the Examples Folder and run the Example scene
+
+## Introduction
+## Creating Custom Assets
+### OfType&lt;T>
+### Float
+### Integer
+### String
+### Trigger
+### Boolean
+### Custom Asset Sets
+#### Enum Replacements
+#### Sound Clips
+## Editing Custom Assets
+## Custom Assets as Singleton Replacements
+## Custom Assets as Game Managers
+## Custom Assets as Resources
+## Custom Assets as Event Sources
+## Custom Assets as Event Listeners
+### Component Listeners
+#### ComponentListener (string)
+#### Float
+#### Integer
+#### Boolean
+#### UITextListener
+### Animation Listeners
+#### Trigger
+#### Float
+#### Integer
+#### Boolean
+### Unity Event Listeners
+## Custom Asset Persistence
+## Asset Support
+
+
+
+==========================================================
+
 
 ## Components
 `Components` is a static helper class with functions to create and find Components.

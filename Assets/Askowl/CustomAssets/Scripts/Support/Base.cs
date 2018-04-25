@@ -51,5 +51,7 @@ namespace CustomAsset {
     public void Deregister(Listener listener) {
       if (listeners.Contains(listener)) listeners.Remove(listener);
     }
+
+    protected virtual void OnEnable() { }
   }
 }

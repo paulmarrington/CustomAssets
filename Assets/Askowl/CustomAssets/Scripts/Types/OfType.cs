@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace CustomAsset {
   using JetBrains.Annotations;
@@ -64,9 +65,8 @@ namespace CustomAsset {
     public void Load() {
       if (!persistent) return;
 
-      string     json    = PlayerPrefs.GetString(name, null);
-      ForJson<T> wrapped = JsonUtility.FromJson<ForJson<T>>(json);
-      Value = wrapped.Value;
+      string json = PlayerPrefs.GetString(name, null);
+      Value = JsonUtility.FromJson<ForJson<T>>(json).Value;
     }
 
     /// <summary>
@@ -77,14 +77,26 @@ namespace CustomAsset {
     public void Save() {
       if (!persistent) return;
 
-      ForJson<T> wrapped = new ForJson<T> {Value = value};
-      PlayerPrefs.SetString(name, JsonUtility.ToJson(wrapped));
+      PlayerPrefs.SetString(name, JsonUtility.ToJson(new ForJson<T> {Value = value}));
     }
 
-    private void OnEnable() {
+    /// <inheritdoc />
+    protected override void OnEnable() {
+#if UNITY_EDITOR
+      // so editor behaves like a target platform - and has the asset contents, not those from last run
+      if (jsonForReset == null) {
+        jsonForReset = JsonUtility.ToJson(new ForJson<T> {Value = value});
+      } else {
+        // lower case 'value' so that the update trigger doesn't happen
+        value = JsonUtility.FromJson<ForJson<T>>(jsonForReset).Value;
+      }
+#endif
+      base.OnEnable();
       hideFlags = HideFlags.DontUnloadUnusedAsset;
       Load();
     }
+
+    private string jsonForReset;
 
     private void OnDisable() { Save(); }
   }

@@ -27,7 +27,7 @@ namespace CustomAsset {
     /// </summary>
     [UsedImplicitly]
     public void Add(T entry) {
-      if (Value.Contains(entry)) return;
+      if (Contains(entry)) return;
 
       Value.Add(entry);
       selector = null;
@@ -39,12 +39,20 @@ namespace CustomAsset {
     /// </summary>
     [UsedImplicitly]
     public void Remove(T entry) {
-      if (!Value.Contains(entry)) return;
+      if (!Contains(entry)) return;
 
       Value.Remove(entry);
       selector = null;
       Changed();
     }
+
+    /// <summary>
+    /// See if a set contains a specific element
+    /// </summary>
+    /// <param name="entry">Element that may or may not be in the set</param>
+    /// <returns>True if the element supplied is in this set</returns>
+    [UsedImplicitly]
+    public bool Contains(T entry) { return Value.Contains(entry); }
 
     /// <summary>
     /// Call an action on every entry in the set. Order is from last to first so that items can be removed safely.
