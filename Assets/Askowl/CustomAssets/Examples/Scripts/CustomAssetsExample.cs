@@ -19,11 +19,13 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   [SerializeField] private Boolean           boolean;
   [SerializeField] private Text              textComponent;
   [SerializeField] private LargerAssetSample largerSample;
+  [SerializeField] private Integer           persistent;
+  [SerializeField] private Float             critical;
 
-  public float UpdateIntegerValue {
-    get { return integer; }
-    set { integer.Value = (int) (value * 10); }
-  }
+//  public float UpdateIntegerValue {
+//    get { return integer; }
+//    set { integer.Value = (int) (value * 10); }
+//  }
 
   /// <summary>
   /// A CustomAsset need not be just a primative - as long as it is serializable.
@@ -31,11 +33,13 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   [Serializable]
   public class LargerAssetContents {
     // ReSharper disable MissingXmlDoc
+    // ReSharper disable UnassignedField.Global
 
     public int    I;
     public float  F;
     public string S;
 
+    // ReSharper restore UnassignedField.Global
     // ReSharper restore MissingXmlDoc
   }
 
@@ -58,6 +62,28 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   }
 
   /// <summary>
+  /// Make sure that a custom asset saved to persistent storage can be retrieved later
+  /// </summary>
+  [UsedImplicitly]
+  public void CheckPersistence() {
+    persistent.Value = 12;
+    persistent.Save();
+    persistent.Value = 33;
+    persistent.Load();
+    textComponent.text = "Persistent value - expecting 12, got " + persistent.Value;
+  }
+
+  /// <summary>
+  /// Make sure that persistent custom assets marked as critical are saved on change
+  /// </summary>
+  [UsedImplicitly]
+  public void CheckCriticalPersistence() {
+    critical.Value = 44;
+    critical.Load();
+    textComponent.text = "Persistent value - expecting 44, got " + critical.Value;
+  }
+
+  /// <summary>
   /// Button action to test the undating of a CustomAsset
   /// </summary>
   [UsedImplicitly]
@@ -73,12 +99,12 @@ public sealed class CustomAssetsExample : MonoBehaviour {
 
       currentFloat.Value += 1;
 
-      if (currentFloat >= maxFloat) {
-        currentFloat.Value = 0;
+      if (!(currentFloat >= maxFloat)) continue;
 
-        textComponent.text +=
-          "Float " + ((float) maxFloat) + " reached " + (++count) + " of 5 times\n";
-      }
+      currentFloat.Value = 0;
+
+      textComponent.text +=
+        "Float " + ((float) maxFloat) + " reached " + (++count) + " of 5 times\n";
     } while (count < 5);
   }
 }

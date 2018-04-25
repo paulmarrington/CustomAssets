@@ -2,6 +2,8 @@
  * With thanks to Ryan Hipple -- https://github.com/roboryantron/Unite2017
  */
 
+using System;
+
 namespace CustomAsset {
   using JetBrains.Annotations;
   using UnityEngine;
@@ -14,14 +16,23 @@ namespace CustomAsset {
   public abstract class OfType<T> : Base {
     [SerializeField] private T value;
 
+    [SerializeField, Tooltip("Save to storage")]
+    private bool persistent;
+
+    [SerializeField, Tooltip("Save on every change")]
+    private bool critical;
+
     /// <summary>
     /// Value contained within the custom asset. The getter is plain, but the setter
-    /// calls registered events.
+    /// calls registered events. It will also persist the data for critical
+    /// applications
     /// </summary>
     public T Value {
       get { return value; }
+      // ReSharper disable once MemberCanBePrivate.Global
       set {
         this.value = value;
+        if (persistent && critical) Save();
         Changed();
       }
     }
@@ -39,5 +50,42 @@ namespace CustomAsset {
     /// </summary>
     /// <returns>String representation of the contents of the containing value</returns>
     public override string ToString() { return Value.ToString(); }
+
+    [Serializable]
+    private class ForJson<TJ> {
+      public TJ Value;
+    }
+
+    /// <summary>
+    /// Load the last previously saved value from persistent storage. Called
+    /// implicitly when persistent flag is set and custom asset is enabled.
+    /// </summary>
+    [UsedImplicitly]
+    public void Load() {
+      if (!persistent) return;
+
+      string     json    = PlayerPrefs.GetString(name, null);
+      ForJson<T> wrapped = JsonUtility.FromJson<ForJson<T>>(json);
+      Value = wrapped.Value;
+    }
+
+    /// <summary>
+    /// Save current value to persistent storage. Called emplicitly when  when persistent flag is set
+    /// and custom asset is disabled or on every change if it is marked critical.
+    /// </summary>
+    [UsedImplicitly]
+    public void Save() {
+      if (!persistent) return;
+
+      ForJson<T> wrapped = new ForJson<T> {Value = value};
+      PlayerPrefs.SetString(name, JsonUtility.ToJson(wrapped));
+    }
+
+    private void OnEnable() {
+      hideFlags = HideFlags.DontUnloadUnusedAsset;
+      Load();
+    }
+
+    private void OnDisable() { Save(); }
   }
 }

@@ -22,7 +22,7 @@
 
       if (!isRandom) { // cycle through list
         picker = () => this.choices[cycleIndex++ % this.choices.Length];
-      } else if (choices.Length < exhaustiveBelow) { // randoms election
+      } else if (choices.Length >= exhaustiveBelow) { // randoms election
         picker = () => this.choices[random.Next(minValue: 0, maxValue: this.choices.Length)];
       } else {
         picker = () => { // different random choice until list exhausted, then repeat

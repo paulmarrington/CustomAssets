@@ -7,7 +7,7 @@
   /// Create an asset to store a list of sounds and play one randomly or cyclicly.
   /// </summary>
   [CreateAssetMenu(menuName = "Custom Assets/Sound Clips", fileName = "Clips")]
-  public sealed class Clips : Selector<AudioClip> {
+  public sealed class Clips : Set<AudioClip> {
     /// <summary>
     /// Play a random, exhaustive random or sequential sound.
     /// </summary>

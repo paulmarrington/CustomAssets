@@ -2,14 +2,13 @@
 using CustomAsset;
 using JetBrains.Annotations;
 using UnityEngine;
-using Random = System.Random;
 
 /// <summary>
 /// Example showing how to use SelectAsset to choose randomly between one of
 /// three audio clips.
 /// </summary>
-[CreateAssetMenu(menuName = "Examples/SelectAsset", fileName = "SelectAssetSample", order = 1)]
-public sealed class SelectorSample : Selector<AudioClip> {
+[CreateAssetMenu(menuName = "Examples/SetPicker", fileName = "SetPickerSample", order = 1)]
+public sealed class SelectorSample : Set<AudioClip> {
   /// <summary>
   /// Play is linked to a button on the test site. SelectAsset.Pick() chooses
   /// from the list of audio clips. Whether it will be a random, cyclic or exhaustive choice
