@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using Askowl;
 
 namespace CustomAsset {
   using JetBrains.Annotations;
@@ -11,7 +12,7 @@ namespace CustomAsset {
   /// <summary>
   /// Dynaic custom asset without any values. Use it to trigger and listen to events.
   /// </summary>
-  public class Base : ScriptableObject {
+  public partial class Base : ScriptableObject {
 #if UNITY_EDITOR
     /// <summary>
     /// Editor only description of what the asset is alla bout.

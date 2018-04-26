@@ -1,6 +1,7 @@
 ﻿namespace CustomAsset {
   using UnityEngine;
 
+  /// <inheritdoc />
   /// <summary>
   /// Base class for listeners that need a float parameter
   /// </summary>
@@ -8,6 +9,7 @@
   public abstract class FloatListener<T> :
     ComponentListenerBase<T, Float, float> where T : Object { }
 
+  /// <inheritdoc />
   /// <summary>
   /// Base class for listeners that need an integer parameter
   /// </summary>
@@ -15,6 +17,7 @@
   public abstract class IntegerListener<T> :
     ComponentListenerBase<T, Integer, int> where T : Object { }
 
+  /// <inheritdoc />
   /// <summary>
   /// Base class for listeners that need an boolean parameter
   /// </summary>

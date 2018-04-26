@@ -7,7 +7,8 @@
   /// Pick one item from a list.
   /// </summary>
   /// <typeparam name="T">Type of item. It can be a primative, object or even a Unity Asset</typeparam>
-  public sealed class Selector<T> : Pick<T> {
+  // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
+  public class Selector<T> : Pick<T> {
     private          T[]     choices = { };
     private readonly Func<T> picker;
 
@@ -22,7 +23,7 @@
 
       if (!isRandom) { // cycle through list
         picker = () => this.choices[cycleIndex++ % this.choices.Length];
-      } else if (choices.Length >= exhaustiveBelow) { // randoms election
+      } else if (this.choices.Length >= exhaustiveBelow) { // randoms election
         picker = () => this.choices[random.Next(minValue: 0, maxValue: this.choices.Length)];
       } else {
         picker = () => { // different random choice until list exhausted, then repeat
@@ -47,6 +48,9 @@
       cycleIndex          = 0;
     }
 
+    /// <summary>
+    /// Used to update the choices to a new set using the same picker.
+    /// </summary>
     public T[] Choices {
       get { return choices; }
       [UsedImplicitly]
@@ -58,11 +62,14 @@
 
     private int cycleIndex;
 
+    /// <summary>
+    /// The location of the next choice in the sequence.
+    /// </summary>
     [UsedImplicitly]
     public int CycleIndex { get { return cycleIndex % choices.Length; } }
 
     private List<T> remainingSelections;
 
-    public T Pick() { return picker(); }
+    public virtual T Pick() { return picker(); }
   }
 }

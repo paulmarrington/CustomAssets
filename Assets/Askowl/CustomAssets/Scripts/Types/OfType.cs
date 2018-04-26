@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace CustomAsset {
   using JetBrains.Annotations;
@@ -83,21 +82,31 @@ namespace CustomAsset {
     /// <inheritdoc />
     protected override void OnEnable() {
 #if UNITY_EDITOR
-      // so editor behaves like a target platform - and has the asset contents, not those from last run
-      if (jsonForReset == null) {
-        jsonForReset = JsonUtility.ToJson(new ForJson<T> {Value = value});
-      } else {
-        // lower case 'value' so that the update trigger doesn't happen
-        value = JsonUtility.FromJson<ForJson<T>>(jsonForReset).Value;
-      }
+      ResetValueInEditorOnly();
 #endif
       base.OnEnable();
       hideFlags = HideFlags.DontUnloadUnusedAsset;
       Load();
     }
 
-    private string jsonForReset;
-
     private void OnDisable() { Save(); }
+
+#if UNITY_EDITOR
+    private void ResetValueInEditorOnly() {
+      // so editor behaves like a target platform - and has the asset contents, not those from last run
+      if (!string.IsNullOrEmpty(jsonForReset)) {
+        var wrapper = JsonUtility.FromJson<ForJson<T>>(jsonForReset);
+
+        if (wrapper != null) {
+          value = wrapper.Value;
+          return;
+        }
+      }
+
+      jsonForReset = JsonUtility.ToJson(new ForJson<T> {Value = value});
+    }
+
+    private string jsonForReset;
+#endif
   }
 }
