@@ -16,7 +16,44 @@ Custom assets are scriptable objects with benefits.
 * Basic types offered include Float, Integer, Boolean, Trigger, String and Set.
 
 ### Custom Assets - the new Singleton
+Static variables are not evil, just inflexible. Singleton MonoBehaviour instances are not corrupt either. However, both encourage tight coupling between interested parties.
+
+And now for a bit of mild blasphemy. Assets created from scriptable objects, and hence custom assets are Unity supported *singletons*. Create `[SerializeField]` fields and drag an asset of the correct type onto them in the editor. All will reference the same in-memory instance.
+
+Using custom assets over traditional singletons provide some benefits:
+
+* Code is less coupled - or is that more decoupled?
+* Custom assets can be tested in isolation.
+* Alternative custom assets can be injected into objects that are expecting them. An inventory may depend on location or whether the player is in training mode.
+* It is less error prone to pass custom assets between scenes and projects.
+* Functionality can be more generalised for direct reuse from within the editor without writing as much scaffolding code. A `Float` custom asset, for example, can have listeners that hook into display objects. It can also be updated by sliders and scroll-bars without additional code by adding it to the *On Value Changed* field.
+
 ### Custom Assets as Game Managers
+Managers are a favourite Unity pattern. As well as a system-wide master manager, many games have them for player, enemies, sound and more. They have some standard features:
+
+* They are accessed by a static `Instance` variable.
+* They are a MonoBehaviour that sets `Instance` in `Awake()`.
+* They will call `DontDestroyOnLoad(gameObject)` if they are to be common across scenes.
+* There is often one manager to rule them all.
+
+It is not uncommon to see code like:
+
+```C#
+health = GameManager.Instance.PlayerManager.MaxHealth;
+```
+
+Try testing that component in isolation.
+
+By contrast, a custom asset approach would be more like:
+
+```C#
+[SerializeField] PlayerManager;
+...
+health = PlayerManager.MaxHealth;
+```
+
+To work with this version create a test scene and put in an individual PlayerManager custom asset. It might have different data, or it might include mock methods.
+
 ### Custom Assets as Configuration
 ### Custom Assets and Persistence
 ## Creating Custom Assets
@@ -30,8 +67,6 @@ Custom assets are scriptable objects with benefits.
 #### Enum Replacements
 #### Sound Clips
 ## Editing Custom Assets
-## Custom Assets as Singleton Replacements
-## Custom Assets as Game Managers
 ## Custom Assets as Resources
 ## Custom Assets as Event Sources
 ## Custom Assets as Event Listeners
@@ -40,6 +75,7 @@ Custom assets are scriptable objects with benefits.
 #### Float
 #### Integer
 #### Boolean
+#### UIImageFillListener
 #### UITextListener
 ### Animation Listeners
 #### Trigger

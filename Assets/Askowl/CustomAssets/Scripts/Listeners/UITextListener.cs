@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace CustomAsset {
   /// <summary>
@@ -6,6 +7,7 @@ namespace CustomAsset {
   /// whenever the string custom asset changes.
   /// </summary>
   // ReSharper disable once InconsistentNaming
+  [RequireComponent(typeof(Text))]
   public sealed class UITextListener : ComponentListener<Text> {
     protected override void Change(string value) { Component.text = value; }
   }
