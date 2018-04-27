@@ -1,8 +1,9 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && CustomAssets
 using CustomAsset;
 using JetBrains.Annotations;
 using UnityEngine;
 
+/// <inheritdoc />
 /// <summary>
 /// Example showing how to use SelectAsset to choose randomly between one of
 /// three audio clips.

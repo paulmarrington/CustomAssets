@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && CustomAssets
 using System;
 using System.Collections;
 using CustomAsset;
