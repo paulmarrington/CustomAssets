@@ -8,6 +8,7 @@ namespace CustomAsset {
   using JetBrains.Annotations;
   using UnityEngine;
 
+  /// <inheritdoc />
   /// <summary>
   /// Base class for a custom asset. Provides getters and setters for the contained value and
   /// templates for casting to the contained type and to convert it to a string.
@@ -15,6 +16,9 @@ namespace CustomAsset {
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
   public abstract class OfType<T> : Base {
     [SerializeField] private T value;
+
+    [SerializeField, Tooltip("Allow the data to be changed")]
+    private bool readWrite;
 
     [SerializeField, Tooltip("Save to storage")]
     private bool persistent;
@@ -31,6 +35,8 @@ namespace CustomAsset {
       get { return value; }
       // ReSharper disable once MemberCanBePrivate.Global
       set {
+        if (!readWrite) return;
+
         this.value = value;
         if (persistent && critical) Save();
         Changed();
@@ -45,6 +51,7 @@ namespace CustomAsset {
     /// <returns>Instance of the contained serializable object</returns>
     public static implicit operator T([NotNull] OfType<T> t) { return t.value; }
 
+    /// <inheritdoc />
     /// <summary>
     /// Pass string conversion responsibility  from the custom asset to the containing value.
     /// </summary>
@@ -56,6 +63,8 @@ namespace CustomAsset {
       public TJ Value;
     }
 
+    private string Key { get { return string.Format("{0}:{1}", name, typeof(T)); } }
+
     /// <summary>
     /// Load the last previously saved value from persistent storage. Called
     /// implicitly when persistent flag is set and custom asset is enabled.
@@ -64,7 +73,7 @@ namespace CustomAsset {
     public void Load() {
       if (!persistent) return;
 
-      string json = PlayerPrefs.GetString(name, null);
+      string json = PlayerPrefs.GetString(Key, null);
       Value = JsonUtility.FromJson<ForJson<T>>(json).Value;
     }
 
@@ -76,7 +85,7 @@ namespace CustomAsset {
     public void Save() {
       if (!persistent) return;
 
-      PlayerPrefs.SetString(name, JsonUtility.ToJson(new ForJson<T> {Value = value}));
+      PlayerPrefs.SetString(Key, JsonUtility.ToJson(new ForJson<T> {Value = value}));
     }
 
     /// <inheritdoc />

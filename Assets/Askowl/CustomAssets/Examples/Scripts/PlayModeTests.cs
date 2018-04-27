@@ -102,6 +102,12 @@ public class CustomAssetTests : PlayModeTests {
     currentFloat.Value = 1;
     yield return PushButton("CustomAssetSet");
 
-    while (Math.Abs(currentFloat.Value) > 0.1f) yield return null;
+    int count = 0;
+
+    while (Math.Abs(currentFloat.Value) > 0.1f) {
+      yield return null;
+
+      Assert.Less(count, 200);
+    }
   }
 }

@@ -55,7 +55,25 @@ health = PlayerManager.MaxHealth;
 To work with this version create a test scene and put in an individual PlayerManager custom asset. It might have different data, or it might include mock methods.
 
 ### Custom Assets as Configuration
+The most common use for scriptable objects is to ignore the scriptable part and use them as configuration containers. A Custom Asset is a file within the project. This file contains a reference to the script and serialised copies of all the data as added in the Unity editor.
+
+You can safeguard the serialisable data by making it a private `[SerializeField]` and using accessors to allow reading. Alternatively you can use them as seed data and change them during program execution.
+
+```C#
+class MyData : CustomAsset {
+[SerializeField] private int maxHealth;
+[SerializeField] private float timeOfDay;
+
+// maxHealth cannot be changed outside this class
+public int MaxHealth { get { return maxHealth; } };
+// timeOfDay can be updated
+public float TimeOfDay { get { return timeOfDay; } set { timeOfDay = value; } };
+```
+Later I will introduce better and more granular ways to handle data.
+
 ### Custom Assets and Persistence
+Custom Assets adds optional persistence to scriptable objects.
+
 ## Creating Custom Assets
 ### OfType&lt;T>
 ### Float
