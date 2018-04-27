@@ -71,8 +71,30 @@ public float TimeOfDay { get { return timeOfDay; } set { timeOfDay = value; } };
 ```
 Later I will introduce better and more granular ways to handle data.
 
+### Read-only Custom Assets
+The custom asset inspector allows a designer to mark the asset read-only. This will stop errant code from changing the value. For serialisable classes as values, protection of inner data is still code base. Make the fields private and serialisable so that the editor can change them. Then use accessors without `set` to only allow for reading. If you can't trust the code accessing data in a deep object graph, either close the custom asset or lock down access at all levels.
+
+```C#
+var clone = Object.Instantiate(myCustomAsset).Value;
+```
+
+Cloning is much more expensive at runtime than baking in protection during the compile phase.
+
 ### Custom Assets and Persistence
 Custom Assets adds optional persistence to scriptable objects.
+
+## Accessing Custom Assets
+
+TBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBD
+
+```C#
+public sealed class CustomAssetsExample : MonoBehaviour {
+  [SerializeField] private Float             maxFloat;
+  [SerializeField] private Float             currentFloat;
+  // ...
+}
+```
+![Sample Custom Asset](SampleCustomAsset.png)
 
 ## Creating Custom Assets
 ### OfType&lt;T>

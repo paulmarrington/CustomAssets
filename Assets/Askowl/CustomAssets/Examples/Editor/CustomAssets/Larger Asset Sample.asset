@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 32
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Name: Larger Asset Sample
   m_EditorClassIdentifier: 
   Description: 
-  onChange: {fileID: 0}
   value:
     I: 1
     F: 5
     S: three
+  readWrite: 1
+  persistent: 0
+  critical: 0

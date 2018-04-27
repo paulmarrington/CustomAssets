@@ -18,7 +18,7 @@ namespace CustomAsset {
     [SerializeField] private T value;
 
     [SerializeField, Tooltip("Allow the data to be changed")]
-    private bool readWrite;
+    private bool readWrite = true;
 
     [SerializeField, Tooltip("Save to storage")]
     private bool persistent;

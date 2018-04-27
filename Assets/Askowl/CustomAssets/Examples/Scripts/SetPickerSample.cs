@@ -8,8 +8,8 @@ using UnityEngine;
 /// Example showing how to use SelectAsset to choose randomly between one of
 /// three audio clips.
 /// </summary>
-[CreateAssetMenu(menuName = "Examples/SetPicker", fileName = "SetPickerSample", order = 1)]
-public sealed class SelectorSample : Set<AudioClip> {
+[CreateAssetMenu(menuName = "Examples/SetPicker", fileName = "SetPickerSample")]
+public sealed class SetPickerSample : Set<AudioClip> {
   /// <summary>
   /// Play is linked to a button on the test site. SelectAsset.Pick() chooses
   /// from the list of audio clips. Whether it will be a random, cyclic or exhaustive choice
