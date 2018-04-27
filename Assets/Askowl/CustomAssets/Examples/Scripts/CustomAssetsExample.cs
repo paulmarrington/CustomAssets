@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using Boolean = CustomAsset.Boolean;
 using String = CustomAsset.String;
 
+/// <inheritdoc />
 /// <summary>
 /// Show and update custom asset values to provide examples for their use.
 /// </summary>

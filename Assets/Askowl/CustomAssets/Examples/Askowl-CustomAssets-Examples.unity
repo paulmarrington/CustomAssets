@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 35007296}
   - component: {fileID: 35007295}
   m_Layer: 5
-  m_Name: CustomAsset Set
+  m_Name: CustomAssetSet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -693,7 +693,7 @@ GameObject:
   - component: {fileID: 157848312}
   - component: {fileID: 157848311}
   m_Layer: 5
-  m_Name: CustomAsset Get
+  m_Name: CustomAssetGet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

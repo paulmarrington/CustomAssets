@@ -27,8 +27,6 @@
         GameObject poolRoot = new GameObject(poolName);
         poolRoot.transform.parent = transform;
         poolMonitor.PoolRoot      = poolRoot.transform;
-      } else {
-        Debug.LogFormat("Duplicate Pools for {0}", master.name);
       }
     }
 
