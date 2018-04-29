@@ -147,20 +147,44 @@ public class LargerAssetSample : CustomAsset.OfType<LargerAssetContents> { }
   }
 ```
 
-### Primative Custom Assets
+All CustomAsset instances have a description field. Since you can use generic assets, it is useful to give others comments on what specific assets represent.
+
+### Primitive Custom Assets
 ```C#
   [SerializeField] private Float             currentFloat;
   [SerializeField] private Integer           integer;
   [SerializeField] private String            str;
   [SerializeField] private Boolean           boolean;
 ```
-Each if these custom assets can in a project with or without supporting code. It is possible, for example, to have a `Float` value set in the ***On Value Changed*** field of a Slider or Scrollbar, then displayed using listener like `CustomAsset.IOImageFillListener()` to set the fill amount on a health bar,
+Each if these custom assets can in a project with or without supporting code. It is possible, for example, to have a `Float` value set in the ***On Value Changed*** field of a Slider or Scrollbar, then displayed using listener like `CustomAsset.UIImageFillListener()` to set the fill amount on a health bar,
 
-### Integer
-### String
 ### Trigger
-### Boolean
+Trigger is unusual in that it does not have any data apart from CustomAsset requirements. Triggers do not have persistence, so a subclass containing data cannot be saved.
+
 ### Custom Asset Sets
+`Set`, like `OfType` is a generic class. To instantiate it requires the type of the set entries.
+
+```C#
+[CreateAssetMenu(menuName = "Examples/SetPicker", fileName = "SetPickerSample")]
+public sealed class SetPickerSample : Set<AudioClip> {
+  public void Play() { AudioSource.PlayClipAtPoint(clip: Pick(), position: Vector3.zero); }
+}
+```
+This example can be used to play one of a selection of sounds. This is a great way to make a game sound less tedious.
+
+####Pick()
+All Set subclasses have a `Pick()` method with two controlling field entries:
+* ***cycle***: True to return entries sequentially, false to get a random selection.
+* ***exhaustiveBelow***: If the number of entries in the set is below this value, then while `Pick()` will return a random entry, no entry will be retrieved twice before all the others have had a turn. From a list of three, nothing appears random.
+
+These options are available in the editor when you create a custom asset from a `Set`.
+
+#### Add(entry)
+#### Remove(entry)
+#### Contains(entry)
+#### Count
+#### ForAll
+
 #### Enum Replacements
 #### Sound Clips
 ## Editing Custom Assets

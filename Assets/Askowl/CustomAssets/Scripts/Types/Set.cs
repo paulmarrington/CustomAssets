@@ -55,6 +55,12 @@ namespace CustomAsset {
     public bool Contains(T entry) { return Value.Contains(entry); }
 
     /// <summary>
+    /// Return the number of entries in the Set
+    /// </summary>
+    [UsedImplicitly]
+    public int Count { get { return Value.Count; } }
+
+    /// <summary>
     /// Call an action on every entry in the set. Order is from last to first so that items can be removed safely.
     /// </summary>
     /// <param name="action">Action called with one entry from the set</param>

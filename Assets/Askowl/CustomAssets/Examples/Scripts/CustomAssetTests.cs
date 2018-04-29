@@ -206,6 +206,10 @@ public class CustomAssetTests : PlayModeTests {
     Assert.LessOrEqual(buttonValue, 78);
   }
 
+  /// <summary>
+  /// Have a CustomAsset.Boolean change event the contents of the results button
+  /// </summary>
+  /// <returns></returns>
   [UnityTest]
   public IEnumerator TestBooleanAsset() {
     yield return Setup();
