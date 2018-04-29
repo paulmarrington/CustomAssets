@@ -23,6 +23,8 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   [SerializeField] private Integer           persistent;
   [SerializeField] private Float             critical;
 
+  [SerializeField] private Slider integerSlider;
+
 //  public float UpdateIntegerValue {
 //    get { return integer; }
 //    set { integer.Value = (int) (value * 10); }
@@ -83,6 +85,12 @@ public sealed class CustomAssetsExample : MonoBehaviour {
     critical.Load();
     textComponent.text = "Persistent value - expecting 44, got " + critical.Value;
   }
+
+  /// <summary>
+  /// Since the component to monitor is a float we need a conversion to CustomAsset.Integer
+  /// </summary>
+  [UsedImplicitly]
+  public void UpdateIntegerAsset() { integer.Value = (int) (integerSlider.value * 100); }
 
   /// <summary>
   /// Button action to test the undating of a CustomAsset

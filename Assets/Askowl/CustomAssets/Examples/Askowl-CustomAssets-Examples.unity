@@ -612,6 +612,7 @@ MonoBehaviour:
   largerSample: {fileID: 0}
   persistent: {fileID: 0}
   critical: {fileID: 0}
+  integerSlider: {fileID: 0}
 --- !u!1 &144035901
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,8 +957,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1151565817}
-        m_MethodName: set_UpdateIntegerValue
-        m_Mode: 0
+        m_MethodName: UpdateIntegerAsset
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2509,7 +2510,7 @@ GameObject:
   - component: {fileID: 991697812}
   - component: {fileID: 991697811}
   m_Layer: 5
-  m_Name: Unity Event
+  m_Name: UnityEvent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2872,6 +2873,7 @@ MonoBehaviour:
   largerSample: {fileID: 11400000, guid: 9152366bfe5ab4e4785b79d93c2a86fa, type: 2}
   persistent: {fileID: 11400000, guid: 16c6f376a427248539eb101d9d341d94, type: 2}
   critical: {fileID: 11400000, guid: a08ffbda45923476d9996b994dff522e, type: 2}
+  integerSlider: {fileID: 232147617}
 --- !u!1 &1174551024 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1539889924543536, guid: 464ee5a1c3d024103bb35bbce02e4cd8,
@@ -3788,6 +3790,7 @@ MonoBehaviour:
   largerSample: {fileID: 0}
   persistent: {fileID: 0}
   critical: {fileID: 0}
+  integerSlider: {fileID: 0}
 --- !u!1 &1604649910
 GameObject:
   m_ObjectHideFlags: 0
@@ -4900,6 +4903,7 @@ MonoBehaviour:
   largerSample: {fileID: 0}
   persistent: {fileID: 0}
   critical: {fileID: 0}
+  integerSlider: {fileID: 0}
 --- !u!1 &1961574356
 GameObject:
   m_ObjectHideFlags: 0
@@ -5030,6 +5034,7 @@ MonoBehaviour:
   largerSample: {fileID: 0}
   persistent: {fileID: 0}
   critical: {fileID: 0}
+  integerSlider: {fileID: 0}
 --- !u!1 &2032004987
 GameObject:
   m_ObjectHideFlags: 0

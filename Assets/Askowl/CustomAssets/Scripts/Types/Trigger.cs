@@ -5,8 +5,9 @@
 namespace CustomAsset {
   using UnityEngine;
 
+  /// <inheritdoc />
   /// <summary>
-  /// Dynaic custom asset without any values. Use it to trigger and listen to events.
+  /// Dynamic custom asset without any values. Use it to trigger and listen to events.
   /// </summary>
   [CreateAssetMenu(menuName = "Custom Assets/Trigger")]
   public class Trigger : Base { }

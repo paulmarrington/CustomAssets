@@ -57,7 +57,7 @@ To work with this version create a test scene and put in an individual PlayerMan
 ### Custom Assets as Configuration
 The most common use for scriptable objects is to ignore the scriptable part and use them as configuration containers. A Custom Asset is a file within the project. This file contains a reference to the script and serialised copies of all the data as added in the Unity editor.
 
-You can safeguard the serialisable data by making it a private `[SerializeField]` and using accessors to allow reading. Alternatively you can use them as seed data and change them during program execution.
+You can safeguard the serialisable data by making it a private `[SerializeField]` and using accessors to allow reading. Alternatively, you can use them as seed data and change them during program execution.
 
 ```C#
 class MyData : CustomAsset {
@@ -72,7 +72,7 @@ public float TimeOfDay { get { return timeOfDay; } set { timeOfDay = value; } };
 Later I will introduce better and more granular ways to handle data.
 
 ### Read-only Custom Assets
-The custom asset inspector allows a designer to mark the asset read-only. This will stop errant code from changing the value. For serialisable classes as values, protection of inner data is still code base. Make the fields private and serialisable so that the editor can change them. Then use accessors without `set` to only allow for reading. If you can't trust the code accessing data in a deep object graph, either close the custom asset or lock down access at all levels.
+The custom asset inspector allows a designer to mark the asset read-only For serialisable classes as values, protection of internal data is still code bases. Make the fields private and serialisable so that the editor can change them. Then use accessors without `set` to only allow for reading. If you can't trust the code accessing data in a complex object graph, either clone the custom asset or lock down access at all levels.
 
 ```C#
 var clone = Object.Instantiate(myCustomAsset).Value;
@@ -81,14 +81,18 @@ var clone = Object.Instantiate(myCustomAsset).Value;
 Cloning is much more expensive at runtime than baking in protection during the compile phase.
 
 ### Custom Assets and Persistence
-Custom Assets adds optional persistence to scriptable objects.
+Custom Assets adds optional persistence to scriptable objects. Persistent assets must be read/write and have the `persistent` field set in the Unity Editor.
+
+Each persistent object is serialised to JSON and written as a `PlayerPref` entity. For this reason, the total storage is about one megabyte.For more massive storage needs, use a database.
+
+The key is made up of the name of the asset and the class name, making it unique to the application.
 
 ## Accessing Custom Assets
 
-TBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBDTBD
+A custom asset is like any other Unity asset. Create a field for it in a MonoBehaviour or other CustomAsset class and drop in the reference.
 
 ```C#
-public sealed class CustomAssetsExample : MonoBehaviour {
+public sealed class CustomAssetsExample: MonoBehaviour {
   [SerializeField] private Float             maxFloat;
   [SerializeField] private Float             currentFloat;
   // ...
@@ -96,9 +100,62 @@ public sealed class CustomAssetsExample : MonoBehaviour {
 ```
 ![Sample Custom Asset](SampleCustomAsset.png)
 
+Custom assets aid decoupling. Many components can operate without directly knowing each other.
+
+Access custom asset values by either casting or using the `Value` getter. ToString() willways call ToString() on the Value field.
+```C#
+Debug.LogFormat("{0} == {1}",maxFloat.Value, ((float) maxFloat);
+Debug.LogFormat("{0} == {1}",maxFloat.Value.ToString(), maxFloat.ToString());
+```
+
 ## Creating Custom Assets
+Custom Assets are ScriptableObjects serialised and written to disk as an asset in the project.
+
+```YAML
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 32
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f206729bb7e417e9b12649707e941e, type: 3}
+  m_Name: SampleFloatVariable
+  m_EditorClassIdentifier: 
+  Description: 
+  value: 0
+  readWrite: 1
+  persistent: 0
+  critical: 0
+```
+Each custom asset type has an entry on the ***Create / CustomAssets / asset name***. Use it, select the resulting file and fill in the fields. If you want to load it from disk using `Resources.Load(pathFromResources)` you will need to place it in a ***Resources*** folder.
+
 ### OfType&lt;T>
-### Float
+`CustomAsset.OfType<T>` is the base type for all custom assets except `Trigger`. Functionality includes being able to register events on change, persistence and some read-only protection.
+```C#
+[CreateAssetMenu(menuName = "Examples/LargerAssetSample")]
+public class LargerAssetSample : CustomAsset.OfType<LargerAssetContents> { }
+
+[Serializable]
+  public class LargerAssetContents {
+    public int    Order;
+    public float  Limit;
+    public string Name;
+  }
+```
+
+### Primative Custom Assets
+```C#
+  [SerializeField] private Float             currentFloat;
+  [SerializeField] private Integer           integer;
+  [SerializeField] private String            str;
+  [SerializeField] private Boolean           boolean;
+```
+Each if these custom assets can in a project with or without supporting code. It is possible, for example, to have a `Float` value set in the ***On Value Changed*** field of a Slider or Scrollbar, then displayed using listener like `CustomAsset.IOImageFillListener()` to set the fill amount on a health bar,
+
 ### Integer
 ### String
 ### Trigger
@@ -311,3 +368,7 @@ The default picker chooses a random asset from the list. By overriding `Pick()`.
 Meet `Selector.Cycle()`, one of AssetSelector optional pickers. Pickers can be selected in `OnEnable` or by code that has a reference to the Custom Asset. `Selector.Random()` is the default. `Exhaustive()` is like random but it guarantees not to repeat an item until all the other options are exhausted. See `Selector` for more details.
 
 If you need another way of choosing your item, subclass `AssetSelector` and override the `Pick()` method.
+
+### Objects Helpers
+
+### Play Mode Test Runner Support

@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32e1aaa2843747f3b99cb9303b22279, type: 3}
   m_Name: SampleUnityEventTrigger
   m_EditorClassIdentifier: 
-  Description: 
+  Description: Trigger

@@ -3,16 +3,16 @@
  */
 
 using System.Collections.Generic;
-using Askowl;
 
 namespace CustomAsset {
   using JetBrains.Annotations;
   using UnityEngine;
 
+  /// <inheritdoc />
   /// <summary>
   /// Dynaic custom asset without any values. Use it to trigger and listen to events.
   /// </summary>
-  public partial class Base : ScriptableObject {
+  public class Base : ScriptableObject {
 #if UNITY_EDITOR
     /// <summary>
     /// Editor only description of what the asset is alla bout.
@@ -28,7 +28,7 @@ namespace CustomAsset {
     /// of that class is changed. In these cases, call Changed explicitly.
     /// </summary>
     [UsedImplicitly]
-    public virtual void Changed() {
+    public void Changed() {
       for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered();
     }
 
@@ -52,7 +52,5 @@ namespace CustomAsset {
     public void Deregister(Listener listener) {
       if (listeners.Contains(listener)) listeners.Remove(listener);
     }
-
-    protected virtual void OnEnable() { }
   }
 }

@@ -88,12 +88,11 @@ namespace CustomAsset {
       PlayerPrefs.SetString(Key, JsonUtility.ToJson(new ForJson<T> {Value = value}));
     }
 
-    /// <inheritdoc />
-    protected override void OnEnable() {
+    /// <inheritdoc cref="OfType{T}()" />
+    protected void OnEnable() {
 #if UNITY_EDITOR
       ResetValueInEditorOnly();
 #endif
-      base.OnEnable();
       hideFlags = HideFlags.DontUnloadUnusedAsset;
       Load();
     }

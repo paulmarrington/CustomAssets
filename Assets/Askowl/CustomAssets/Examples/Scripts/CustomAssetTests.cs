@@ -7,18 +7,25 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+/// <inheritdoc />
+/// <summary>
+/// Unity Test Runner PlayMode tests
+/// </summary>
 public class CustomAssetTests : PlayModeTests {
   private Text  results;
-  private Float maxFloat, currentFloat;
+  private Float currentFloat;
 
   private IEnumerator Setup() {
     yield return LoadScene("Askowl-CustomAssets-Examples");
 
     results      = Component<Text>("Canvas/Results Panel/Text");
     currentFloat = FindObject<Float>("SampleFloatVariable");
-    maxFloat     = FindObject<Float>("MaxFloatVariable");
   }
 
+  /// <summary>
+  /// Have the test scene open and press a button to display data in the results panel.
+  /// </summary>
+  /// <returns></returns>
   [UnityTest]
   public IEnumerator AccessCustomAssets() {
     yield return Setup();
@@ -30,6 +37,10 @@ public class CustomAssetTests : PlayModeTests {
       results.text);
   }
 
+  /// <summary>
+  /// Make sure we can update the contents of custom assets in memory
+  /// </summary>
+  /// <returns></returns>
   [UnityTest]
   public IEnumerator UpdateCustomAssets() {
     yield return Setup();
@@ -37,7 +48,7 @@ public class CustomAssetTests : PlayModeTests {
     currentFloat.Value = 1;
     yield return PushButton("CustomAssetSet");
 
-    int count = 0;
+    const int count = 0;
 
     while (Math.Abs(currentFloat.Value) > 0.1f) {
       yield return null;
@@ -46,6 +57,10 @@ public class CustomAssetTests : PlayModeTests {
     }
   }
 
+  /// <summary>
+  /// Check for picking elements from a set sequentially
+  /// </summary>
+  /// <returns></returns>
   [UnityTest]
   public IEnumerator TestSetPickerCyclic() {
     yield return Setup();
@@ -58,6 +73,10 @@ public class CustomAssetTests : PlayModeTests {
     for (int i = 0; i < 3; i++) Assert.AreEqual(clips[i], clips[i + 3]);
   }
 
+  /// <summary>
+  /// Check for picking elements from a set randomly, but restricted to new ones until a cycle is exhausted
+  /// </summary>
+  /// <returns></returns>
   [UnityTest]
   public IEnumerator TestSetPickerExhaustive() {
     yield return Setup();
@@ -68,15 +87,141 @@ public class CustomAssetTests : PlayModeTests {
     for (int i = 0; i < clips.Length; i++) clips[i] = picker.Pick();
 
     for (int i = 0; i < 3; i++) {
-      bool ok = false;
+      for (int j = 0; j < 10; j++) {
+        bool ok = false;
 
-      for (int j = 4; j < 6; j++) {
-        if (clips[i].Equals(clips[j])) {
-          ok = true;
-          break;
+        for (int k = 3; k < 6; k++) {
+          if ((i != k) && (clips[i] == clips[k])) {
+            ok = true;
+            break;
+          }
         }
+
+        Assert.IsTrue(ok);
       }
-      Assert.IsTrue(ok);
     }
+  }
+
+  /// <summary>
+  /// Check that we can transfer a CustomAsset change event to a UnityEvent
+  /// </summary>
+  /// <returns></returns>
+  [UnityTest, Timeout(10000)]
+  public IEnumerator TestUnityEvent() {
+    yield return Setup();
+
+    Trigger     trigger     = FindObject<Trigger>("SampleUnityEventTrigger");
+    AudioSource audioSource = Component<AudioSource>("Canvas/UnityEvent/UnityEventListener");
+
+    trigger.Changed();
+    while (!audioSource.isPlaying) yield return null;
+    while (audioSource.isPlaying) yield return null;
+  }
+
+  /// <summary>
+  /// React to a CustomAsset change event directly in a MonoBehaviour
+  /// </summary>
+  /// <returns></returns>
+  [UnityTest]
+  public IEnumerator TestDirectEvent() {
+    yield return Setup();
+
+    Trigger trigger = FindObject<Trigger>("SampleDirectEventTrigger");
+
+    trigger.Changed();
+    yield return null;
+
+    CheckPattern(@"^Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d", results.text);
+  }
+
+  /// <summary>
+  /// Have a CustomAsset.Trigger change event set of an animation
+  /// </summary>
+  /// <returns></returns>
+  [UnityTest, Timeout(10000)]
+  public IEnumerator TestAnimationTriggerEvent() {
+    yield return Setup();
+
+    Trigger trigger = FindObject<Trigger>("SampleAnimatorTriggerEventTrigger");
+    trigger.Changed();
+    yield return CheckButtonAnimation();
+  }
+
+  private IEnumerator CheckButtonAnimation() {
+    Button button = Component<Button>("CustomAssetEventListeners/Canvas/Button");
+
+    float before = Time.realtimeSinceStartup;
+    while (button.colors.normalColor.Equals(Color.white)) yield return null;
+    while (!button.colors.normalColor.Equals(Color.white)) yield return null;
+
+    float elapsed = Time.realtimeSinceStartup - before;
+    Assert.Less(elapsed, 10.0f);
+  }
+
+  /// <summary>
+  /// Have a CustomAsset.Float change event change the colours on the results button.
+  /// </summary>
+  /// <returns></returns>
+  [UnityTest]
+  public IEnumerator TestFloatAsset() {
+    yield return Setup();
+
+    Slider slider = Component<Slider>("Canvas/Float Asset/Slider");
+    slider.value = 0.8f;
+    yield return CheckButtonAnimation();
+  }
+
+  private string ResultsButtonText {
+    get { return Component<Text>("CustomAssetEventListeners/Canvas/Button/Text").text; }
+  }
+
+  /// <summary>
+  /// Have a CustomAsset.String change event change the contents of the results button
+  /// </summary>
+  /// <returns></returns>
+  [UnityTest]
+  public IEnumerator TestStringAsset() {
+    yield return Setup();
+
+    Assert.AreNotEqual("The rain in spain", ResultsButtonText);
+    InputField inputField = Component<InputField>("Canvas/String Asset/InputField");
+    inputField.text = "The rain in spain";
+    Assert.AreEqual("The rain in spain", ResultsButtonText);
+  }
+
+  /// <summary>
+  /// Have a CustomAsset.Integer change event the contents of the results button
+  /// </summary>
+  /// <returns></returns>
+  [UnityTest]
+  public IEnumerator TestIntegerAsset() {
+    yield return Setup();
+
+    Slider slider = Component<Slider>("Canvas/Integer Asset/Slider");
+    slider.value = 0.77f;
+    yield return null;
+
+    int buttonValue = int.Parse(ResultsButtonText);
+    Assert.GreaterOrEqual(buttonValue, 76);
+    Assert.LessOrEqual(buttonValue, 78);
+  }
+
+  [UnityTest]
+  public IEnumerator TestBooleanAsset() {
+    yield return Setup();
+
+    Toggle toggle = Component<Toggle>("Canvas/Boolean Asset/Toggle");
+    toggle.isOn = false;
+    yield return null;
+
+    toggle.isOn = true;
+    yield return null;
+
+    Assert.AreEqual("True", ResultsButtonText);
+
+    toggle.isOn = false;
+    yield return null;
+
+    Assert.AreEqual("False", ResultsButtonText);
   }
 }
