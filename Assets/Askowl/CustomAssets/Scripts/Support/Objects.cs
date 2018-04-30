@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Askowl {
+namespace CustomAsset {
   /// <summary>
   /// Helper library for dealing with Unity Objects
   /// </summary>

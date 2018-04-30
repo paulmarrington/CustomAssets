@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Askowl {
+namespace CustomAsset {
   public sealed class Quotes : Pick<string> {
     private readonly TextAsset quoteAsset;
 

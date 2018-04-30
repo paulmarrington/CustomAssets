@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR && CustomAssets
 using System.Collections;
-using Askowl;
+using CustomAsset;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;

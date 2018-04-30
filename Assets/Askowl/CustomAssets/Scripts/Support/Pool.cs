@@ -1,4 +1,6 @@
-﻿namespace Askowl {
+﻿// With thanks to Jason Weimann  -- jason@unity3d.college
+
+namespace CustomAsset {
   using System.Collections;
   using System.Collections.Generic;
   using JetBrains.Annotations;

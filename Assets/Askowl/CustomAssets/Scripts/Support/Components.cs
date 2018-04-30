@@ -1,4 +1,4 @@
-﻿namespace Askowl {
+﻿namespace CustomAsset {
   using System.Linq;
   using JetBrains.Annotations;
   using UnityEngine;

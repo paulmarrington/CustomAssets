@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Askowl {
+namespace CustomAsset {
   /// <summary>
   /// Helper code to control a running application with the goal of preparing for live testing.
   /// </summary>
@@ -21,7 +21,6 @@ namespace Askowl {
     /// <returns>Enumerator that will allow a delay until the scene loading is complete</returns>
     [UsedImplicitly]
     protected virtual IEnumerator LoadScene(string name) {
-      Log("Loading scene {0}", name);
       var handle = SceneManager.LoadSceneAsync(sceneName: name, mode: LoadSceneMode.Single);
       while (!handle.isDone) yield return null;
 

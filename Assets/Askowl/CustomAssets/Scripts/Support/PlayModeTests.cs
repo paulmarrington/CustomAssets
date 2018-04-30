@@ -5,7 +5,7 @@ using NUnit.Framework;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-namespace Askowl {
+namespace CustomAsset {
   /// <summary>
   /// Base class for PlayMode Unity tests. Provides explicit `Setup` and `Teardown` functions.
   /// </summary>

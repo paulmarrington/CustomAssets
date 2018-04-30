@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Askowl;
 using CustomAsset;
 using NUnit.Framework;
 using UnityEngine;
