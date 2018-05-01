@@ -80,7 +80,7 @@ public class CustomAssetTests : PlayModeTests {
   public IEnumerator TestSetPickerExhaustive() {
     yield return Setup();
 
-    Clips       picker = FindObject<Clips>();
+    AudioClips       picker = FindObject<AudioClips>();
     AudioClip[] clips  = new AudioClip[6];
 
     for (int i = 0; i < clips.Length; i++) clips[i] = picker.Pick();

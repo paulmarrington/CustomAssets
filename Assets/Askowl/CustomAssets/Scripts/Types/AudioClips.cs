@@ -1,5 +1,7 @@
 ﻿// With thanks to Jason Weimann  -- jason@unity3d.college
 
+using Askowl;
+
 namespace CustomAsset {
   using JetBrains.Annotations;
   using UnityEngine;
@@ -10,7 +12,7 @@ namespace CustomAsset {
   /// </summary>
   /// <remarks><a href="http://customasset.marrington.net#sound-clips">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Sound Clips", fileName = "Clips")]
-  public sealed class Clips : Set<AudioClip> {
+  public sealed class AudioClips : Set<AudioClip> {
     [SerializeField, Header("Audio")]     private Range volume   = new Range(1, 1);
     [SerializeField, RangeBounds(0, 2)]   private Range pitch    = new Range(1, 2);
     [SerializeField, RangeBounds(0, 999)] private Range distance = new Range(1, 999);

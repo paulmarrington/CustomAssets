@@ -6,6 +6,12 @@ namespace CustomAsset {
   using JetBrains.Annotations;
   using UnityEngine;
 
+  /// <inheritdoc />
+  /// <summary>
+  /// Monobehaviour to provide pooling functionality for child GameObjects. Tob e eligible they must be created with `Acquire` and disabled but not destroyed.
+  /// </summary>
+  /// <remarks><a href="http://customasset.marrington.net#asset-pooling">More...</a></remarks>
+  [HelpURL("http://customasset.marrington.net#asset-pooling")]
   public sealed class Pool : MonoBehaviour {
     private void OnEnable() {
       DontDestroyOnLoad(target: gameObject);
@@ -32,6 +38,18 @@ namespace CustomAsset {
       }
     }
 
+    /// <summary>
+    /// Use `Pool.Acquire&lt;T>()` to get a reference to a cloned gameObject instead of `Instantiate&lt;T>(). All parameters are optional.
+    /// </summary>
+    /// <param name="name">Name of cloned gameObject - defaults to name of GameObject Type</param>
+    /// <param name="position">Position for clone in game space - defaults to (0, 0, 0)</param>
+    /// <param name="rotation">Direction GameObject clone will be pointing - defaults to 0 degrees</param>
+    /// <param name="parent">Parent GameObject - defaults to Pool</param>
+    /// <param name="enable">Whether GameObject clone is enabled and visible - defaults to be true</param>
+    /// <param name="poolOnDisable">Set to false if you want to be able to disable a clone without having it returned to the pool - defaults to true</param>
+    /// <typeparam name="T">Type of component to pool. Must be in the pool to be used as a master to clone</typeparam>
+    /// <returns>A cloned instance of T either reusing one returned to the pool or creating a new clone as needed</returns>
+    /// <remarks><a href="http://customasset.marrington.net#acquire-gameobject-by-type">More...</a></remarks>
     [CanBeNull]
     public static T Acquire<T>([CanBeNull] string    name          = null,
                                Vector3               position      = default(Vector3),
@@ -45,6 +63,17 @@ namespace CustomAsset {
       return (clone == null) ? null : clone.GetComponent<T>();
     }
 
+    /// <summary>
+    /// Use `Pool.Acquire()` to get a reference to a cloned gameObject by the name of the master gameObject held withing the Pool object.
+    /// </summary>
+    /// <param name="name">Name of cloned gameObject</param>
+    /// <param name="position">Position for clone in game space - defaults to (0, 0, 0)</param>
+    /// <param name="rotation">Direction GameObject clone will be pointing - defaults to 0 degrees</param>
+    /// <param name="parent">Parent GameObject - defaults to Pool</param>
+    /// <param name="enable">Whether GameObject clone is enabled and visible - defaults to be true</param>
+    /// <param name="poolOnDisable">Set to false if you want to be able to disable a clone without having it returned to the pool - defaults to true</param>
+    /// <returns>A cloned instance of T eitherr reusing one returned to the pool or creating a new clone as needed</returns>
+    /// <remarks><a href="http://customasset.marrington.net#acquire-gameobject-by-name">More...</a></remarks>
     [CanBeNull]
     public static GameObject Acquire(string                name,
                                      Vector3               position      = default(Vector3),
@@ -63,7 +92,7 @@ namespace CustomAsset {
         poolMonitor = clone.gameObject.GetComponent<PoolMonitor>();
       } while (!poolMonitor.OkToPool);
 
-      clone.transform.SetParent(parent ?? poolMonitor.PoolRoot);
+      clone.transform.SetParent(parent ? parent : poolMonitor.PoolRoot);
       clone.transform.position  = position;
       clone.transform.rotation  = rotation;
       poolMonitor.PoolOnDisable = poolOnDisable;
@@ -74,14 +103,19 @@ namespace CustomAsset {
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public static void Return([NotNull] GameObject clone) { returns.Enqueue(clone); }
+    /// <summary>
+    /// Give an object created by `Acquire` in any pool, return it to the pool for
+    /// reuse. Only needed if `poolOnDisable` is false
+    /// </summary>
+    /// <param name="clone">Clone of a master GameObject in any pool within the application</param>
+    public static void Return([NotNull] GameObject clone) { Returns.Enqueue(clone); }
 
-    private static readonly Queue<GameObject> returns = new Queue<GameObject>();
+    private static readonly Queue<GameObject> Returns = new Queue<GameObject>();
 
     private IEnumerator SetParentOnReturn() {
       while (true) {
-        while (returns.Count > 0) {
-          GameObject  clone       = returns.Dequeue();
+        while (Returns.Count > 0) {
+          GameObject  clone       = Returns.Dequeue();
           PoolMonitor poolMonitor = clone.GetComponent<PoolMonitor>();
           PoolQueue   pool        = PoolFor(poolMonitor.MasterName);
 
@@ -98,8 +132,15 @@ namespace CustomAsset {
 
         yield return null;
       }
+
+      // ReSharper disable once IteratorNeverReturns
     }
 
+    /// <summary>
+    /// Retrieve a reference to the pooling queue for the GameObject named.
+    /// </summary>
+    /// <param name="name">Name of GameObject under inspection</param>
+    /// <returns>Reference to the `PoolQueue` or null if none exist for this name</returns>
     [CanBeNull]
     public static PoolQueue PoolFor(string name) {
       string poolName = string.Format("{0} Pool", name);
@@ -136,11 +177,21 @@ namespace CustomAsset {
       }
     }
 
+    /// <summary>
+    /// Each GameObject enabled for pooling resides is a `PoolQueue`.
+    /// </summary>
     public sealed class PoolQueue : Queue<GameObject> {
+      /// <summary>
+      /// Master GameObject from which copies are cloned
+      /// </summary>
       public GameObject Master;
 
       private int count = 0;
 
+      /// <summary>
+      /// Fetch a cloned GameObject - either from a list of those returned or instantiating a new instance
+      /// </summary>
+      /// <returns>Reference to the cone of `Master` above</returns>
       [NotNull]
       public GameObject Fetch() {
         GameObject clone;

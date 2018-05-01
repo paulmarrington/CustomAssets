@@ -3,15 +3,20 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace CustomAsset {
+namespace Askowl {
+  /// <inheritdoc />
+  /// <summary>
+  /// Unity Editor drawer used for <see cref="T:Askowl.Range" /> fields. Displays minimum and maximum values along with a dual-slider.
+  /// </summary>
   [CustomPropertyDrawer(type: typeof(Range), useForChildren: true)]
   public class RangeDrawer : PropertyDrawer {
-    private SerializedProperty minProp,  maxProp;
-    private float              minValue, maxValue;
-    private float              rangeMin, rangeMax;
-    private string             boundsFormat;
-    private GUIStyle           style = new GUIStyle(GUI.skin.textField);
+    private          SerializedProperty minProp,  maxProp;
+    private          float              minValue, maxValue;
+    private          float              rangeMin, rangeMax;
+    private          string             boundsFormat;
+    private readonly GUIStyle           style = new GUIStyle(GUI.skin.textField);
 
+    /// <inheritdoc />
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
       LoadCurrentMinMax(property);
       LoadRangeBounds();

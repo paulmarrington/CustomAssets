@@ -1,4 +1,6 @@
-﻿namespace CustomAsset {
+﻿using Askowl;
+
+namespace CustomAsset {
   using System;
   using System.Collections.Generic;
   using JetBrains.Annotations;
