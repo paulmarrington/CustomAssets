@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using Askowl;
-using CustomAsset;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -72,12 +71,13 @@ namespace CustomAsset {
 
     private Selector<T> selector;
 
+    /// <inheritdoc />
     /// <summary>
-    /// Pick one element from the set based on parameters <see cref="cycle"/> and <see cref="exhaustiveBelow"/>
+    /// Pick one element from the set based on parameters <see cref="F:CustomAsset.Set`1.cycle" /> and <see cref="F:CustomAsset.Set`1.exhaustiveBelow" />
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#pick">More...</a></remarks>
     /// <returns>Element chosen</returns>
-    public T Pick() {
+    public virtual T Pick() {
       if (selector == null) {
         selector = new Selector<T>(Value.ToArray(), !cycle, exhaustiveBelow);
       }

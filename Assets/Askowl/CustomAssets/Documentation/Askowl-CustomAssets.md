@@ -159,7 +159,7 @@ All CustomAsset instances have a description field. Since you can use generic as
 Each if these custom assets can in a project with or without supporting code. It is possible, for example, to have a `Float` value set in the ***On Value Changed*** field of a Slider or Scrollbar, then displayed using listener like `CustomAsset.UIImageFillListener()` to set the fill amount on a health bar,
 
 ### Trigger
-Trigger is unusual in that it does not have any data apart from CustomAsset requirements. Triggers do not have persistence, so a subclass containing data cannot be saved.
+A trigger is unusual in that it does not have any data apart from CustomAsset requirements. Triggers do not have persistence, so a subclass containing data cannot be saved.
 
 ### Custom Asset Sets
 `Set`, like `OfType` is a generic class. To instantiate it requires the type of the set entries.
@@ -173,20 +173,47 @@ public sealed class SetPickerSample : Set<AudioClip> {
 This example can be used to play one of a selection of sounds. This is a great way to make a game sound less tedious.
 
 ####Pick()
-All Set subclasses have a `Pick()` method with two controlling field entries:
+All classes inheriting from `Set` have a `Pick()` method with two controlling field entries:
 * ***cycle***: True to return entries sequentially, false to get a random selection.
 * ***exhaustiveBelow***: If the number of entries in the set is below this value, then while `Pick()` will return a random entry, no entry will be retrieved twice before all the others have had a turn. From a list of three, nothing appears random.
 
 These options are available in the editor when you create a custom asset from a `Set`.
 
 #### Add(entry)
+While in most cases the `Set` will be filled by the Unity Editor to save as an Asset, there are occasions where adding additional elements will be needed.
 #### Remove(entry)
+On occasions, a `Set` entry will expire, and it will be necessary to remove them.
 #### Contains(entry)
+See if a `Set` contains a specific entry.
 #### Count
+Retrieve the number of entries in a set.
 #### ForAll
+Call an action for every entry in a set.
+#### StringSet
+Strings as a set have many usages. `Quotes` is an implementation of `StringSet`.
 
-#### Enum Replacements
-#### Sound Clips
+### AudioClips
+Playing one from a selection of audio clips have been a well-used proof of concept for `ScriptableObject`. Because custom assets, sets and some other toys from this package make the implementation even simpler, I am displaying the source here.
+
+```C#
+  [CreateAssetMenu(menuName = "Custom Assets/Sound Clips", fileName = "Clips")]
+  public sealed class AudioClips : Set<AudioClip> {
+    [SerializeField, Header("Audio")]     private Range volume   = new Range(1, 1);
+    [SerializeField, RangeBounds(0, 2)]   private Range pitch    = new Range(1, 2);
+    [SerializeField, RangeBounds(0, 999)] private Range distance = new Range(1, 999);
+
+    public void Play(AudioSource source) {
+      source.clip        = Pick();
+      source.pitch       = pitch.Pick();
+      source.volume      = volume.Pick();
+      source.minDistance = distance.Min;
+      source.maxDistance = distance.Max;
+      source.Play();
+    }
+  }
+```
+Using `AudioClips` wherever you have sound effects will make your game sound a lot more lively. You could also consider making similar assets for visual effects or animations.
+
 ## Editing Custom Assets
 ## Custom Assets as Resources
 ## Custom Assets as Event Sources
@@ -245,6 +272,8 @@ Calling `Acquire` with the name of the GameObject will retrieve a clone from the
 
 Seeding some of the GameObject information using optional parameters is possible.
 
+#### Acquire GameObject by Type
+
 #### Transform parent
 An effect will have the target as the parent, while a character may have a spawn point or a team leader. Position and rotation below are relative to that of the parent.
 
@@ -282,21 +311,9 @@ script = (clone == null) ? null : clone.GetComponent<T>();
 The same optional parameters are available as the non-generic game object - with the addition of name so that you can return a prefab with a different name to the MonoBehaviour inside.
 
 ### Quotes
-`Quotes` is a C# class that if given a list of lines or a text file in a Resources folder will return a line randomly using the `Pick` interface. A quote is formatted as a ***body of the quote (attribution)*** where the attribution is optional. The attribution is surrounded in brackets and must be at the end of the line. RTF is acceptable in the quote.
+`Quotes` is a `StringSet` Custom Asset that if given a list of lines and a `TextAsset` will return a line using the `Pick` interface. A quote is formatted as a ***body of the quote (attribution)*** where the attribution is optional. The attribution is surrounded in brackets and must be at the end of the line. RTF is acceptable in the quote.
 
-```C#
-Quotes QuotesA = new Quotes();
-Quotes QuotesB = new Quotes("path-to-a-text-file-in-Resources");
-Quotes QuotesC = new Quotes(new string[]{
-    "The trouble with having an open mind, of course, is that people will insist on coming along and trying to put things in it (Terry Pratchett)",
-    "Never say, 'oops'. Always say, 'Ah, interesting'.",
-    "Hints on how to play <b>the game</b> are rarely attributed."
-    "Success does not consist in never making mistakes but in never making the same one a second time. (George Bernard Shaw)");
-
-string aQuote = QuotesC.Pick();
-```
-
-If there are less than one hundred options, they are cycled through sequentially rather than chose randomly.
+I would recommend setting ***Exhaustive Below*** to a figure like 50 or 100. Otherwise shorter lists will appear to repeat entries too often.
 
 ### Selector
 It is useful to select one item from a list as needed.
@@ -335,8 +352,15 @@ selector.Choices = new int[] { 5, 6, 7, 8 };
 
 There is are NUnit Editor tests in ***Examples/Scripts*** that demonstrate all the pickers.
 
+### Preview Custom Editor
 
+### Range
 
+### RangeBounds Attribute
+
+### Objects Helpers
+
+### PlayMode Test Runner Support
 
 ==========================================================
 
@@ -393,6 +417,3 @@ Meet `Selector.Cycle()`, one of AssetSelector optional pickers. Pickers can be s
 
 If you need another way of choosing your item, subclass `AssetSelector` and override the `Pick()` method.
 
-### Objects Helpers
-
-### Play Mode Test Runner Support

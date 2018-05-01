@@ -95,7 +95,7 @@ namespace CustomAsset {
     /// Called when an asset is loaded and enabled. Used to ensure the custom asset does not leave memory prematurely and to load it if persistent
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
-    protected void OnEnable() {
+    protected virtual void OnEnable() {
 #if UNITY_EDITOR
       ResetValueInEditorOnly();
 #endif
