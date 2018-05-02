@@ -64,9 +64,11 @@ namespace CustomAsset {
     /// <param name="action">Action called with one entry from the set</param>
     /// <remarks><a href="http://customasset.marrington.net#forall">More...</a></remarks>
     [UsedImplicitly]
-    public void ForAll(Action<T> action) {
+    public void ForEach(Func<T, bool> action) {
       // Loop backwards since the list may change when disabling
-      for (int i = Value.Count - 1; i >= 0; i--) action(Value[i]);
+      for (int i = Value.Count - 1; i >= 0; i--) {
+        if (!action(Value[i])) break;
+      }
     }
 
     private Selector<T> selector;

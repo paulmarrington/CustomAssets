@@ -1,5 +1,7 @@
-﻿using System;
+﻿#if UNITY_EDITOR && CustomAssets
+using System;
 using System.Collections;
+using System.Linq;
 using CustomAsset;
 using NUnit.Framework;
 using UnityEngine;
@@ -80,7 +82,7 @@ public class CustomAssetTests : PlayModeTests {
   public IEnumerator TestSetPickerExhaustive() {
     yield return Setup();
 
-    AudioClips       picker = FindObject<AudioClips>();
+    AudioClips  picker = FindObject<AudioClips>();
     AudioClip[] clips  = new AudioClip[6];
 
     for (int i = 0; i < clips.Length; i++) clips[i] = picker.Pick();
@@ -227,4 +229,29 @@ public class CustomAssetTests : PlayModeTests {
 
     Assert.AreEqual("False", ResultsButtonText);
   }
+
+  [UnityTest, Timeout(10000)]
+  public IEnumerator TestPooling() {
+    yield return Setup();
+
+    yield return PushButton("Show Pooling at Work");
+
+    int                      length;
+    PoolPrefabScriptSample[] all;
+
+    do {
+      yield return null;
+
+      all    = Resources.FindObjectsOfTypeAll<PoolPrefabScriptSample>();
+      length = all.Length;
+    } while (length < 21);
+
+    do {
+      yield return null;
+
+      all    = Resources.FindObjectsOfTypeAll<PoolPrefabScriptSample>();
+      length = all.Count(one => !one.gameObject.activeSelf);
+    } while (length < 16);
+  }
 }
+#endif
