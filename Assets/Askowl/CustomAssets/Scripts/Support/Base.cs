@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace CustomAsset {
   using JetBrains.Annotations;
@@ -52,5 +53,22 @@ namespace CustomAsset {
     public void Deregister(Listener listener) {
       if (listeners.Contains(listener)) listeners.Remove(listener);
     }
+
+#if UNITY_EDITOR
+    static Base() { EditorApplication.playModeStateChanged += UnloadResources; }
+
+    /// <inheritdoc />
+    public Base() { AssetsToUnload.Add(this); }
+
+    private static readonly List<Base> AssetsToUnload = new List<Base>();
+
+    private static void UnloadResources(PlayModeStateChange playModeState) {
+      if (playModeState != PlayModeStateChange.ExitingPlayMode) return;
+
+      EditorApplication.playModeStateChanged -= UnloadResources;
+
+      foreach (var asset in AssetsToUnload) Resources.UnloadAsset(asset);
+    }
+#endif
   }
 }

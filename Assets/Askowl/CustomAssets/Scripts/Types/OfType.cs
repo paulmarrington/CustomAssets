@@ -73,7 +73,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     [UsedImplicitly]
     public void Load() {
-      if (!persistent) return;
+      if (!persistent || !readWrite) return;
 
       string json = PlayerPrefs.GetString(Key, null);
       Value = JsonUtility.FromJson<ForJson<T>>(json).Value;
@@ -86,7 +86,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     [UsedImplicitly]
     public void Save() {
-      if (!persistent) return;
+      if (!persistent || !readWrite) return;
 
       PlayerPrefs.SetString(Key, JsonUtility.ToJson(new ForJson<T> {Value = value}));
     }
@@ -96,9 +96,6 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     protected virtual void OnEnable() {
-#if UNITY_EDITOR
-      ResetValueInEditorOnly();
-#endif
       hideFlags = HideFlags.DontUnloadUnusedAsset;
       Load();
     }
@@ -108,23 +105,5 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     protected void OnDisable() { Save(); }
-
-#if UNITY_EDITOR
-    private void ResetValueInEditorOnly() {
-      // so editor behaves like a target platform - and has the asset contents, not those from last run
-      if (!string.IsNullOrEmpty(jsonForReset)) {
-        var wrapper = JsonUtility.FromJson<ForJson<T>>(jsonForReset);
-
-        if (wrapper != null) {
-          value = wrapper.Value;
-          return;
-        }
-      }
-
-      jsonForReset = JsonUtility.ToJson(new ForJson<T> {Value = value});
-    }
-
-    private string jsonForReset;
-#endif
   }
 }

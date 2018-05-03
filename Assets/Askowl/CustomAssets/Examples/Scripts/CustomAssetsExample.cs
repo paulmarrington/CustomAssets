@@ -22,6 +22,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   [SerializeField] private LargerAssetSample largerSample;
   [SerializeField] private Integer           persistent;
   [SerializeField] private Float             critical;
+  [SerializeField] private Quotes            quotes;
 
   [SerializeField] private Slider integerSlider;
 
@@ -116,5 +117,11 @@ public sealed class CustomAssetsExample : MonoBehaviour {
         "Float " + ((float) maxFloat) + " reached " + (++count) + " of 5 times\n";
     } while (count < 5);
   }
+
+  /// <summary>
+  /// Show a random quote in the results text panel
+  /// </summary>
+  [UsedImplicitly]
+  public void ShowQuote() { textComponent.text = quotes.Pick(); }
 }
 #endif

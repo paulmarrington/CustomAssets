@@ -1,5 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -18,12 +20,21 @@ namespace CustomAsset {
     /// <inheritdoc />
     protected override void OnEnable() {
       base.OnEnable();
+
+#if UNITY_EDITOR
+      if (!EditorApplication.isPlayingOrWillChangePlaymode) return;
+#endif
+
+      if (Value == null) Value = new List<string>();
+
       for (int i = 0; i < Value.Count; i++) Value[i] = RTF(Value[i]);
 
       if (textFile != null) {
         string[] quotes = textFile.text.Split('\n');
 
-        for (int i = 0; i < quotes.Length; i++) quotes[i] = RTF(quotes[i]);
+        for (int i = 0; i < quotes.Length; i++) {
+          if (!string.IsNullOrEmpty(quotes[i])) Value.Add(RTF(quotes[i]));
+        }
       }
     }
 

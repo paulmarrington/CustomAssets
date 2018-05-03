@@ -25,8 +25,7 @@ namespace CustomAsset {
       choices = this.choices;
 
       if (!isRandom) { // cycle through list
-        picker = () =>
-          (choices.Length > 0) ? choices[cycleIndex++ % choices.Length] : default(T);
+        picker = () => choices[cycleIndex++ % choices.Length];
       } else if (choices.Length >= exhaustiveBelow) { // randoms election
         picker = () => choices[random.Next(minValue: 0, maxValue: choices.Length)];
       } else {
@@ -74,6 +73,6 @@ namespace CustomAsset {
 
     private List<T> remainingSelections;
 
-    public virtual T Pick() { return picker(); }
+    public virtual T Pick() { return (choices.Length > 0) ? picker() : default(T); }
   }
 }
