@@ -23,13 +23,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   [SerializeField] private Integer           persistent;
   [SerializeField] private Float             critical;
   [SerializeField] private Quotes            quotes;
-
-  [SerializeField] private Slider integerSlider;
-
-//  public float UpdateIntegerValue {
-//    get { return integer; }
-//    set { integer.Value = (int) (value * 10); }
-//  }
+  [SerializeField] private Slider            integerSlider;
 
   /// <summary>
   /// A CustomAsset need not be just a primative - as long as it is serializable.
@@ -61,8 +55,8 @@ public sealed class CustomAssetsExample : MonoBehaviour {
                     "boolean asset is {3}\n"      +
                     "larger asset is {4} / {5} / {6}",
                     (float) currentFloat, (int) integer, (string) str, (bool) boolean,
-                    largerSample.Value.I, largerSample.Value.F,
-                    largerSample.Value.S);
+                    largerSample.AnInteger, largerSample.AFloat,
+                    largerSample.AString);
   }
 
   /// <summary>
@@ -74,7 +68,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
     persistent.Save();
     persistent.Value = 33;
     persistent.Load();
-    textComponent.text = "Persistent value - expecting 12, got " + persistent.Value;
+    textComponent.text = "Persistent value - expecting 12, got " + persistent;
   }
 
   /// <summary>
@@ -84,7 +78,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   public void CheckCriticalPersistence() {
     critical.Value = 44;
     critical.Load();
-    textComponent.text = "Persistent value - expecting 44, got " + critical.Value;
+    textComponent.text = "Persistent value - expecting 44, got " + critical;
   }
 
   /// <summary>
@@ -107,7 +101,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
     do {
       yield return new WaitForSeconds(0.1f);
 
-      currentFloat.Value += 1;
+      currentFloat.Value = currentFloat + 1;
 
       if (!(currentFloat >= maxFloat)) continue;
 

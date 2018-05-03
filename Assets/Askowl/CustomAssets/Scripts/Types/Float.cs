@@ -1,6 +1,7 @@
 ﻿namespace CustomAsset {
   using UnityEngine;
 
+  /// <inheritdoc />
   /// <summary>
   /// Float CustomAsset contains a float value which can be connected directly to OnValueChange
   /// callbacks in UI slider and scrollbar components. Connect it to event listeners to interact

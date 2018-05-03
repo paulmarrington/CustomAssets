@@ -115,7 +115,9 @@ namespace CustomAsset {
     private IEnumerator SetParentOnReturn() {
       while (true) {
         while (Returns.Count > 0) {
-          GameObject  clone       = Returns.Dequeue();
+          GameObject clone = Returns.Dequeue();
+          if (clone == null) continue;
+
           PoolMonitor poolMonitor = clone.GetComponent<PoolMonitor>();
           PoolQueue   pool        = PoolFor(poolMonitor.MasterName);
 

@@ -27,7 +27,9 @@ namespace CustomAsset {
 
       if (Value == null) Value = new List<string>();
 
-      for (int i = 0; i < Value.Count; i++) Value[i] = RTF(Value[i]);
+      for (int i = 0; i < Value.Count; i++) {
+        Value[i] = RTF(Value[i]);
+      }
 
       if (textFile != null) {
         string[] quotes = textFile.text.Split('\n');

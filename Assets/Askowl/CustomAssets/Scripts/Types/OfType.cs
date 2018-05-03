@@ -14,6 +14,9 @@ namespace CustomAsset {
   /// <remarks><a href="http://customasset.marrington.net#oftypet">More...</a></remarks>
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
   public abstract class OfType<T> : Base {
+    /// <summary>
+    /// Used by concrete classes for the getter/setter
+    /// </summary>
     [SerializeField] private T value;
 
     [Header("Persistence"), SerializeField, Tooltip("Allow the data to be changed")]
@@ -26,20 +29,40 @@ namespace CustomAsset {
     private bool critical;
 
     /// <summary>
-    /// Value contained within the custom asset. The getter is plain, but the setter
-    /// calls registered events. It will also persist the data for critical
-    /// applications
+    /// For safe access to the contents field
     /// </summary>
-    public T Value {
-      get { return value; }
-      // ReSharper disable once MemberCanBePrivate.Global
-      set {
-        if (!readWrite) return;
+    [UsedImplicitly]
+    public T Value { protected get { return value; } set { Set(() => this.value = value); } }
 
-        this.value = value;
-        if (persistent && critical) Save();
-        Changed();
-      }
+//
+//    /// <summary>
+//    /// Value contained within the custom asset. The getter is plain, but the setter
+//    /// calls registered events. It will also persist the data for critical
+//    /// applications
+//    /// </summary>
+//    public T Value {
+//      get { return value; }
+//      // ReSharper disable once MemberCanBePrivate.Global
+//      set {
+//        if (!readWrite) return;
+//
+//        this.value = value;
+//        if (persistent && critical) Save();
+//        Changed();
+//      }
+//    }
+    /// <summary>
+    /// Tells the event listeners that something in this value has changed. Designed to be used in setters.
+    /// It will also save the data on critical and call all listeners using `Changed`
+    /// </summary>
+    /// <code>public float aFloat { get { return Value.F; } set { Set(() => Value.F = value); } }</code>
+    /// <param name="action">Lambda called if custom asset is read/write</param>
+    protected void Set(Action action) {
+      if (!readWrite && !persistent && !critical) return;
+
+      action();
+      if (critical) Save();
+      Changed();
     }
 
     /// <summary>
@@ -57,7 +80,7 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#accessing-custom-assets">More...</a></remarks>
     /// <returns>String representation of the contents of the containing value</returns>
-    public override string ToString() { return Value.ToString(); }
+    public override string ToString() { return value.ToString(); }
 
     [Serializable]
     private class ForJson<TJ> {
@@ -73,10 +96,9 @@ namespace CustomAsset {
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     [UsedImplicitly]
     public void Load() {
-      if (!persistent || !readWrite) return;
-
-      string json = PlayerPrefs.GetString(Key, null);
-      Value = JsonUtility.FromJson<ForJson<T>>(json).Value;
+      string     json            = PlayerPrefs.GetString(Key, defaultValue: "");
+      ForJson<T> forJson         = JsonUtility.FromJson<ForJson<T>>(json);
+      if (forJson != null) Value = forJson.Value;
     }
 
     /// <summary>
@@ -86,9 +108,9 @@ namespace CustomAsset {
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     [UsedImplicitly]
     public void Save() {
-      if (!persistent || !readWrite) return;
-
-      PlayerPrefs.SetString(Key, JsonUtility.ToJson(new ForJson<T> {Value = value}));
+      if (persistent || critical) {
+        PlayerPrefs.SetString(Key, JsonUtility.ToJson(new ForJson<T> {Value = value}));
+      }
     }
 
     /// <summary>

@@ -1,6 +1,9 @@
-﻿namespace CustomAsset {
+﻿using JetBrains.Annotations;
+
+namespace CustomAsset {
   using UnityEngine;
 
+  /// <inheritdoc />
   /// <summary>
   /// CustomAsset that contains a string. Events are triggered every time the string changes
   /// </summary>

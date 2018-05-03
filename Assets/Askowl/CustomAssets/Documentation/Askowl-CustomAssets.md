@@ -187,8 +187,11 @@ On occasions, a `Set` entry will expire, and it will be necessary to remove them
 See if a `Set` contains a specific entry.
 #### Count
 Retrieve the number of entries in a set.
-#### ForAll
-Call an action for every entry in a set.
+#### ForEach
+Call an action for every entry in a set. If the action returns false, all is complete.
+```C#
+mySet.ForEach((s) => {return s!="Exit";});
+```
 #### StringSet
 Strings as a set have many usages. `Quotes` is an implementation of `StringSet`.
 
@@ -215,6 +218,8 @@ Playing one from a selection of audio clips have been a well-used proof of conce
 Using `AudioClips` wherever you have sound effects will make your game sound a lot more lively. You could also consider making similar assets for visual effects or animations.
 
 ## Editing Custom Assets
+Serialised fields can be edited in the Unity Inspector just as you would a MonoBehaviour attached to a game object. Unlike a scriptable object, custom assets unload when play mode completes. In this way, they behave more like MonoBehaviours. There is a reason for this madness. In the Unity editor, scriptable objects remain loaded and only reload if the backing code or asset changes on disk. If we don't reset on leaving play mode, changed data from one run lives to the next.
+
 ## Custom Assets as Resources
 ## Custom Assets as Event Sources
 ## Custom Assets as Event Listeners

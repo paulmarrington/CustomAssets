@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR && CustomAssets
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using CustomAsset;
 using NUnit.Framework;
@@ -34,7 +35,7 @@ public class CustomAssetTests : PlayModeTests {
     yield return PushButton("CustomAssetGet");
 
     CheckPattern(
-      @"^currentFloat asset is 0\ninteger asset is 0\nstr asset is\s*\nboolean asset is True\nlarger asset is 1 / 5 / three$",
+      @"^currentFloat asset is 0\ninteger asset is 0\nstr asset is\s*\nboolean asset is True\nlarger asset is 1 / 5.2 / three$",
       results.text);
   }
 
@@ -51,7 +52,7 @@ public class CustomAssetTests : PlayModeTests {
 
     const int count = 0;
 
-    while (Math.Abs(currentFloat.Value) > 0.1f) {
+    while (Math.Abs(currentFloat) > 0.1f) {
       yield return null;
 
       Assert.Less(count, 200);
@@ -230,6 +231,10 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual("False", ResultsButtonText);
   }
 
+  /// <summary>
+  /// Create and return some pooled custom assets and game objects to see if they behave
+  /// </summary>
+  /// <returns></returns>
   [UnityTest, Timeout(10000)]
   public IEnumerator TestPooling() {
     yield return Setup();
@@ -252,6 +257,30 @@ public class CustomAssetTests : PlayModeTests {
       all    = Resources.FindObjectsOfTypeAll<PoolPrefabScriptSample>();
       length = all.Count(one => !one.gameObject.activeSelf);
     } while (length < 16);
+  }
+
+  /// <summary>
+  /// Make sure quotes are retrieved as expected - exhaustive random
+  /// </summary>
+  /// <returns></returns>
+  [UnityTest, Timeout(10000)]
+  public IEnumerator TestQuotes() {
+    yield return Setup();
+
+    var quotes  = new Dictionary<string, int>();
+    int repeats = 0;
+
+    for (int i = 0; i < 20; i++) {
+      yield return PushButton("Show Quote");
+
+      if (!quotes.ContainsKey(results.text)) quotes[results.text] = 0;
+      repeats = (quotes[results.text] += 1);
+    }
+
+    // they should all be the same since we have 4 entries repeated 5 times
+    foreach (KeyValuePair<string, int> quote in quotes) {
+      Assert.AreEqual(repeats, quote.Value);
+    }
   }
 }
 #endif

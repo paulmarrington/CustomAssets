@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace CustomAsset {
+  /// <inheritdoc />
   /// <summary>
   /// Base class for PlayMode Unity tests. Provides explicit `Setup` and `Teardown` functions.
   /// </summary>

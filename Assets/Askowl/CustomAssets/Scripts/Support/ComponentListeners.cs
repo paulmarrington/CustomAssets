@@ -34,7 +34,11 @@
   /// <typeparam name="TD">Type of data contained in the custom asset</typeparam>
   public abstract class ComponentListenerBase<TC, TA, TD> : ComponentListenerBase<TC>
     where TC : Object where TA : OfType<TD> {
-    public override void OnTriggered() { Change(((TA) CustomAsset).Value); }
+    /// <inheritdoc />
+    ///  <summary>
+    /// On a change the listener needs a copy of the changed data to react to
+    ///  </summary>
+    public override void OnTriggered() { Change((TD) ((TA) CustomAsset)); }
 
     /// <summary>
     /// Called with new value of the data within the custom asset
@@ -73,6 +77,10 @@
     /// <param name="value">Reference to a string representation of the changed value</param>
     protected abstract void Change(string value);
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Good for any listener that can deal with the changed data as a string. Changing a float, for example will still need a string representation to display
+    /// </summary>
     public override void OnTriggered() { Change(CustomAsset.ToString()); }
   }
 }

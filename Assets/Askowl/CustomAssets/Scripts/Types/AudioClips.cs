@@ -18,10 +18,11 @@ namespace CustomAsset {
     [SerializeField, RangeBounds(0, 999)] private Range distance = new Range(1, 999);
 
     /// <summary>
-    /// Play a random, exhaustive random or sequential sound.
+    /// Play a random, exhaustive random or sequential sound - with random variations of volume, pitch and distance heard.
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#sound-clips">More...</a></remarks>
     [UsedImplicitly]
+    // ReSharper disable once ParameterHidesMember
     public void Play(AudioSource source) {
       source.clip        = Pick();
       source.pitch       = pitch.Pick();
@@ -30,5 +31,13 @@ namespace CustomAsset {
       source.maxDistance = distance.Max;
       source.Play();
     }
+
+    /// <summary>
+    /// Play a random, exhaustive random or sequential sound from location 0,0,0.
+    /// </summary>
+    /// <remarks><a href="http://customasset.marrington.net#sound-clips">More...</a></remarks>
+    [UsedImplicitly]
+    // ReSharper disable once ParameterHidesMember
+    public void Play() { AudioSource.PlayClipAtPoint(clip: Pick(), position: Vector3.zero); }
   }
 }

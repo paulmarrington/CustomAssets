@@ -14,7 +14,7 @@ MonoBehaviour:
   Description: 
   value:
     I: 1
-    F: 5
+    F: 5.2
     S: three
   readWrite: 1
   persistent: 0
