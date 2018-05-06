@@ -98,7 +98,7 @@ public sealed class CustomAssetsExample: MonoBehaviour {
   // ...
 }
 ```
-![Sample Custom Asset](SampleCustomAsset.png)
+<img src="SampleCustomAsset.png" width="50%">
 
 Custom assets aid decoupling. Many components can operate without directly knowing each other.
 
@@ -221,21 +221,130 @@ Using `AudioClips` wherever you have sound effects will make your game sound a l
 Serialised fields can be edited in the Unity Inspector just as you would a MonoBehaviour attached to a game object. Unlike a scriptable object, custom assets unload when play mode completes. In this way, they behave more like MonoBehaviours. There is a reason for this madness. In the Unity editor, scriptable objects remain loaded and only reload if the backing code or asset changes on disk. If we don't reset on leaving play mode, changed data from one run lives to the next.
 
 ## Custom Assets as Resources
+If you can accept the tighter coupling, you can load custom assets my name. It is an alternative to dropping them into referring fields in the Unity inspector. The custom asset must reside in a directory under a ***Resources*** path - anywhere in the project.
+
+```C#
+// expects /anywhere-in-assets/Resources/Audio/cow-sounds.asset
+var moos = Resources.Load<AudioClips>("Audio/cow-sounds");
+```
+
 ## Custom Assets as Event Sources
+The first significant departure from ScriptableObject that CustomAsset provides is the ability to act as an event source.
+
+Primitive custom assets (trigger, boolean, integer, float and string) are extremely easy to use. Drag a reference using the Unity editor into any MonoBehaviour or CustomEvent that needs to access or update them.
+
+Listeners (described below) also need a reference. They will then register for changing events. The event fires when and only when the custom asset changes.
+
+```C#
+  [SerializeField] private Float             currentFloat;
+  //Called by button press
+  public void UpdateCustomFloat() { currentFloat.Value = currentFloat + 1; }
+//...
+public sealed class DirectEventListenerSample : CustomAsset.Listener {
+  [SerializeField] private Text textComponent;
+
+  public override void OnTriggered() {
+    textComponent.text = "Direct Event heard at " + DateTime.Now;
+  }
+}
+```
+<img src="ButtonToUpdateFloat.png" width="50%">
+<img src="ListenerToDisplayFloat.png" width="50%">
+
 ## Custom Assets as Event Listeners
-### Component Listeners
-#### ComponentListener (string)
-#### Float
-#### Integer
-#### Boolean
+Life begins now. Without writing any code, you can use the prepackaged custom assets and listeners to connect components without them knowing about each other.
+
+Don't believe me? Create a game object inside a canvas and add a slider component.
+
+***Step 1***: Create a Float custom asset from the Unity editor main or context menu.
+<img src="Slider-6-Create-Custom-Asset.png" width="50%">
+
+***Step 2***: Select the custom asset and add any initial data. Make sure it is set read/write.
+<img src="Slider-1-Hierarchy.png" width="25%">
+
+***Step 3***: Create a new GameObject in the Unity Hierarchy window. Make sure it is inside a Canvas GameObject.
+<img src="ListenerToDisplayFloat.png" width="50%">
+![Create a new GameObject in the Hierarchy](Slider - 1 - Hierarchy.png)
+
+***Step 4***: Go to the inspector for the game object *Slider* and add a slider component.
+<img src="Slider-3-Component1.png" width="50%">
+
+***Step 5***: Add an *On Value Change* field and drag the Float custom asset into the associated field. Use the function drop-down to select ***Float: Value***.
+<img src="Slider-4-Component2.png" width="50%">
+
+***Step 6***: Lock the inspector on the Float custom asset and run the scene. Drag the slider and watch the value change in the inspector.
+<img src="Slider-2-Screen.png" width="25%">
+
+For extra points, we can create a codeless listener.
+
+***Step 7***: Create a UI Button GameObject in a Canvas and change the image type to *Filled*. Note that moving the *Fill Amount* slider causes the button to change background proportionately.
+<img src="Slider-7-Image-to-Fill.png" width="50%">
+
+***Step 8***: Press the *Add Component* Button then search for and add the *UI Image Fill Listener* component. Set the custom asset to the one created above.
+<img src="Slider-8-Listener.png" width="50%">
+
+***Step 9***: Run the application and move the slider created above. The button will fill and empty accordingly
+<img src="Slider-9-Image-Filling.png" width="25%">
+
+### Generic Component Listeners
+The other end of the Custom Asset event pipeline can be a listener MonoBehaviour. The generic implementations below are designed to support functionality for the attached GameObject. Concrete listeners must implement `Change(value)` where *value* is the primitive encapsulated by a base custom asset.
+
+In the example below, we see a component for changing the text in a UI Text component. It finds one element on the current GameObject of the generic type. `Change()` can then use it to manipulate said item given the new value.
+
+```C#
+  public sealed class UITextListener : StringListener<Text> {
+    protected override void Change(string value) { Component.text = value; }
+  }
+```
+<img src="TextListenerInspector.png" width="50%">
+
+#### BooleanListener
+```C#
+  public sealed class AnimatorBooleanListener: BooleanListener<Animator> {
+    [SerializeField] private string   parameterName;
+    [SerializeField] private Animator animator;
+
+    protected override void Change(bool value) { animator.SetBool(parameterName, value); }
+  }
+```
+#### StringListener
+Not that unlike other generic listeners, a string listener will work with any custom asset that implements `ToString()`
+
+#### FloatListener
+```C#
+  public sealed class UIImageFillListener : FloatListener<Image> {
+    protected override void Change(float value) { Component.fillAmount = value; }
+  }
+```
+#### IntegerListener
+  public sealed class AnimatorIntegerListener : IntegerListener<Animator> {
+    [SerializeField] private string   parameterName;
+    [SerializeField] private Animator animator;
+
+    protected override void Change(int value) { animator.SetInteger(parameterName, value); }
+  }
+### Concrete Component Listeners
+The components listed here are part of a growing list of listeners that can used to minimise coupling and reduce project specific code.
+
+### UI Listeners
+#### UICanvasGroupAlphaListener
+By adding a canvas group to any GameObject inside a canvas, we can change the transparency (alpha) for all GameObjects inside the hierarchy.
+
+This listener, when added to the same GameObject, will monitor a Float custom asset and change the canvas group transparency accordingly. I find it useful to fade panels in and out.
+
 #### UIImageFillListener
+Images in fill mode make good health and stamina bars. Rather than code them separately for each requirement in each project, create a Float custom asset. Use this listener to change the fill amount on the upper image. You can even consider making the Float persistent so that it does not change if the game restarts.
+
 #### UITextListener
+Because it is a `StringListener`, `UITextListener` can accept any custom asset and display the `ToString()` conversion.
+
 ### Animation Listeners
-#### Trigger
+#### Boolean
 #### Float
 #### Integer
-#### Boolean
+#### Trigger
 ### Unity Event Listeners
+
 ## Custom Asset Persistence
 ## Asset Support
 ### Components
@@ -259,13 +368,13 @@ Unity3D games can run on lightweight platforms such as phones, tablets and conso
 
 A GameObject becomes a pool of it has the `Pool` script attached. Any child object becomes candidates for pooling. Alternatively, you can drag the ***Askowl/Assets/Prefabs/Pools*** prefab into the hierarchy. You can have as many pools as you wish and they may reside in any scene. The names have to be unique.
 
-![Pool in Scene](PoolInScene.png)
+<img src="PoolInScene.png" width="50%">
 
 In this example, three GameObjects are pooling aware. ***Scene GameObject*** has been created within the scene, while the other two copies of the same prefab with differing values in editor-available fields. They represent two different characters or effects that differ only in detail.
 
 To retrieve a clone from the pool, use `Acquire()`. A new GameObject is cloned from the master if the pool is empty.
 
-To release an object back to the pool, just disable it.
+To release an object back to the pool, disable it.
 
 ```C#
 myClone.gameObject.SetActive(false);

@@ -118,7 +118,7 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     protected virtual void OnEnable() {
-      hideFlags = HideFlags.DontUnloadUnusedAsset;
+      if (readWrite && !(persistent || critical)) hideFlags = HideFlags.DontUnloadUnusedAsset;
       Load();
     }
 

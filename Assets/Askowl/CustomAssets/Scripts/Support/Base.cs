@@ -39,7 +39,7 @@ namespace CustomAsset {
     /// supplied listeners for text objects, unity events and animation among others. Normally
     /// this would be called in OnEnable() for the interested component.
     /// </summary>
-    /// <param name="listener"></param>
+    /// <param name="listener">Listener to register. Must implement `OnTriggered`</param>
     [UsedImplicitly]
     public void Register(Listener listener) {
       if (!listeners.Contains(listener)) listeners.Add(listener);
@@ -49,7 +49,7 @@ namespace CustomAsset {
     /// Remove a listener who no longer cares about the custom asset. Called in OnDisable if set in OnEnable.
     /// Called in Destroy if it was set in Awake.
     /// </summary>
-    /// <param name="listener"></param>
+    /// <param name="listener">Previously registered Listener. Acceptable to deregister twice, or attempt to deregister one never regisgered</param>
     [UsedImplicitly]
     public void Deregister(Listener listener) {
       if (listeners.Contains(listener)) listeners.Remove(listener);

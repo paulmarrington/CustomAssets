@@ -4,6 +4,7 @@ using System.Collections;
 using CustomAsset;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Boolean = CustomAsset.Boolean;
 using String = CustomAsset.String;
@@ -12,6 +13,7 @@ using String = CustomAsset.String;
 /// <summary>
 /// Show and update custom asset values to provide examples for their use.
 /// </summary>
+[RequireComponent(typeof(AudioSource))]
 public sealed class CustomAssetsExample : MonoBehaviour {
   [SerializeField] private Float             maxFloat;
   [SerializeField] private Float             currentFloat;
@@ -24,6 +26,9 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   [SerializeField] private Float             critical;
   [SerializeField] private Quotes            quotes;
   [SerializeField] private Slider            integerSlider;
+
+  [SerializeField, UsedImplicitly] private AudioClips audioClips;
+  [SerializeField]                 private UnityEvent audioClipsEvent;
 
   /// <summary>
   /// A CustomAsset need not be just a primative - as long as it is serializable.
@@ -117,5 +122,11 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// </summary>
   [UsedImplicitly]
   public void ShowQuote() { textComponent.text = quotes.Pick(); }
+
+  /// <summary>
+  /// Press a button and a random sound fires
+  /// </summary>
+  [UsedImplicitly]
+  public void PlayAudioEvent() { audioClipsEvent.Invoke(); }
 }
 #endif

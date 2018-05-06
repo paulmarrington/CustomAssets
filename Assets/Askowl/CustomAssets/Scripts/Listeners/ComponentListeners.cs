@@ -70,7 +70,7 @@
   /// Converts custom asset to a string for components that deal with string data.
   /// </summary>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
-  public abstract class ComponentListener<T> : ComponentListenerBase<T> where T : Object {
+  public abstract class StringListener<T> : ComponentListenerBase<T> where T : Object {
     /// <summary>
     /// Called with new value of the data within the custom asset
     /// </summary>
