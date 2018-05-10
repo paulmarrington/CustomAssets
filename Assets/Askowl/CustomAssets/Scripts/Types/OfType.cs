@@ -73,16 +73,22 @@ namespace CustomAsset {
     private string Key { get { return string.Format("{0}:{1}", name, typeof(T)); } }
 
     /// <summary>
+    /// Load the last previously saved value from persistent storage.
+    /// </summary>
+    /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
+    [UsedImplicitly]
+    protected TS Loader<TS>() {
+      string      json    = PlayerPrefs.GetString(Key, defaultValue: "");
+      ForJson<TS> forJson = JsonUtility.FromJson<ForJson<TS>>(json);
+      return (forJson != null) ? forJson.Value : default(TS);
+    }
+
+    /// <summary>
     /// Load the last previously saved value from persistent storage. Called
     /// implicitly when persistent flag is set and custom asset is enabled.
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
-    [UsedImplicitly]
-    public void Load() {
-      string     json            = PlayerPrefs.GetString(Key, defaultValue: "");
-      ForJson<T> forJson         = JsonUtility.FromJson<ForJson<T>>(json);
-      if (forJson != null) Value = forJson.Value;
-    }
+    public virtual void Load() { Value = Loader<T>(); }
 
     /// <summary>
     /// Save current value to persistent storage. Called emplicitly when  when persistent flag is set
@@ -90,9 +96,11 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
     [UsedImplicitly]
-    public void Save() {
+    public virtual void Save() { Saver<T>(value); }
+
+    protected void Saver<TS>(TS data) {
       if (persistent || critical) {
-        PlayerPrefs.SetString(Key, JsonUtility.ToJson(new ForJson<T> {Value = value}));
+        PlayerPrefs.SetString(Key, JsonUtility.ToJson(new ForJson<TS> {Value = data}));
       }
     }
 

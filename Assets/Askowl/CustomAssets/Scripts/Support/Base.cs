@@ -29,7 +29,7 @@ namespace CustomAsset {
     /// of that class is changed. In these cases, call Changed explicitly.
     /// </summary>
     [UsedImplicitly]
-    public bool Changed() {
+    public virtual bool Changed() {
       for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered();
       return true;
     }
