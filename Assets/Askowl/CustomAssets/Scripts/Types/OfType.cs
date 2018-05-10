@@ -34,23 +34,6 @@ namespace CustomAsset {
     [UsedImplicitly]
     public T Value { protected get { return value; } set { Set(() => this.value = value); } }
 
-//
-//    /// <summary>
-//    /// Value contained within the custom asset. The getter is plain, but the setter
-//    /// calls registered events. It will also persist the data for critical
-//    /// applications
-//    /// </summary>
-//    public T Value {
-//      get { return value; }
-//      // ReSharper disable once MemberCanBePrivate.Global
-//      set {
-//        if (!readWrite) return;
-//
-//        this.value = value;
-//        if (persistent && critical) Save();
-//        Changed();
-//      }
-//    }
     /// <summary>
     /// Tells the event listeners that something in this value has changed. Designed to be used in setters.
     /// It will also save the data on critical and call all listeners using `Changed`

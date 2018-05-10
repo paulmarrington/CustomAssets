@@ -15,6 +15,7 @@ namespace CustomAsset {
     // ReSharper disable once MissingXmlDoc
     public void OneTimeTearDown() { Log("Tests complete"); }
 
+    /// <inheritdoc />
     [UsedImplicitly]
     protected override IEnumerator LoadScene(string name) {
       yield return base.LoadScene(name);
@@ -53,6 +54,7 @@ namespace CustomAsset {
     /// <returns></returns>
     protected static T FindObject<T>() where T : Object { return FindObject<T>(typeof(T).Name); }
 
+    /// <inheritdoc />
     protected override IEnumerator PushButton(string name) {
       yield return PushButton(Component<Button>(name));
     }

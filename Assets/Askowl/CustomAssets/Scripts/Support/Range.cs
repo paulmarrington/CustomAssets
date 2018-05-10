@@ -6,6 +6,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Askowl {
+  /// <inheritdoc />
   /// <summary>
   /// Simple class to represent the high and low bounds for a float. It includes a picker to randomly choose a number within that range
   /// </summary>
@@ -40,6 +41,7 @@ namespace Askowl {
       Max = max;
     }
 
+    /// <inheritdoc />
     /// <summary>
     /// Choose a random number within the inclusive range
     /// </summary>

@@ -3,6 +3,11 @@
 
 > Read the code in the Examples Folder and run the Example scene
 
+## Executive Summary
+Custom assets are C# classes that are Unity3D aware so that it is a project asset. They hold data set in the Unity Inspector, changed in-game if allowed and written to persistent storage. It also has an event system to alert components on change. The package includes listener MonoBehaviours, both generic and specific. There are granular custom assets around triggers, booleans, integers, floats and strings for decoupling data from game specific code. Sets provide a compelling alternative to enumerations while a dictionary allows access by key. For additional functionality, build your own using the supplied `AudioClips` as a sample.
+
+The custom assets package includes an in-memory pooling system for performance, helpers for working with assets and a basic play mode test framework.
+
 ## Introduction
 Unity provides a base class called [ScriptableObject](https://docs.unity3d.com/ScriptReference/ScriptableObject.html). Derive from it to create objects or assets that don't need to be attached to game objects.
 
@@ -83,7 +88,7 @@ Cloning is much more expensive at runtime than baking in protection during the c
 ### Custom Assets and Persistence
 Custom Assets adds optional persistence to scriptable objects. Persistent assets must be read/write and have the `persistent` field set in the Unity Editor.
 
-Each persistent object is serialised to JSON and written as a `PlayerPref` entity. For this reason, the total storage is about one megabyte.For more massive storage needs, use a database.
+Each persistent object is serialised to JSON and written as a `PlayerPref` entity. For this reason, the total storage is about one megabyte. For more massive storage needs, use a database.
 
 The key is made up of the name of the asset and the class name, making it unique to the application.
 
@@ -215,6 +220,32 @@ Playing one from a selection of audio clips have been a well-used proof of conce
     }
   }
 ```
+`Range` class and `RangeBound` attribute are available in the custom assets package. `AudioClips` will work without them, but sliders are easier to use.
+
+The actor, `Play`, requires an `AudioSource`. An audio source must be attached to the game object that is to make a sound so that it comes from the correct source. It cannot be part of a custom asset which is not a component.
+
+Fortunately, the Unity framework has a solution for that problem. It is called `UnityEvent`.
+
+```C#
+  [SerializeField] private AudioClips audioClips;
+  [SerializeField] private UnityEvent audioClipsEvent;
+```
+will display in the inspector as follows.
+
+<img src="AudioClips1.png" width="50%">
+
+<img src="AudioClips2.png" width="50%">
+
+The reference to `AudioClips` is optional. It is only there so that we can change the fields in the editor without going to the asset.
+
+If you are calling `Play` from code, then you can supply an `AudioSource` or a game object that has an audio source component.
+
+```C#
+  [SerializeField] private AudioClips audioClips;
+  void Play() { audioClips.Play(gameObject); }
+  void Play1() { audioClips.Play(GetComponent<AudioSource>(); }
+```
+
 Using `AudioClips` wherever you have sound effects will make your game sound a lot more lively. You could also consider making similar assets for visual effects or animations.
 
 ## Editing Custom Assets
@@ -326,26 +357,57 @@ Not that unlike other generic listeners, a string listener will work with any cu
 ### Concrete Component Listeners
 The components listed here are part of a growing list of listeners that can used to minimise coupling and reduce project specific code.
 
-### UI Listeners
-#### UICanvasGroupAlphaListener
+#### UI Listeners
+##### UICanvasGroupAlphaListener
 By adding a canvas group to any GameObject inside a canvas, we can change the transparency (alpha) for all GameObjects inside the hierarchy.
 
 This listener, when added to the same GameObject, will monitor a Float custom asset and change the canvas group transparency accordingly. I find it useful to fade panels in and out.
 
-#### UIImageFillListener
+##### UIImageFillListener
 Images in fill mode make good health and stamina bars. Rather than code them separately for each requirement in each project, create a Float custom asset. Use this listener to change the fill amount on the upper image. You can even consider making the Float persistent so that it does not change if the game restarts.
 
-#### UITextListener
-Because it is a `StringListener`, `UITextListener` can accept any custom asset and display the `ToString()` conversion.
+##### UITextListener
+Because it is a `StringListener`, `UITextListener` can accept any custom asset and display the `ToString()` conversion. Just drop it on to any game object that has a Text component, and you can change the value from anywhere.
 
-### Animation Listeners
-#### Boolean
-#### Float
-#### Integer
-#### Trigger
+#### Animation Listeners
+Unity has an animation system that includes a state machine and associated animation timelines, packaged with the project as an Animator Controller and Animation assets.
+
+Given a reference to an Animator the code can trigger state changes directly or by modifications to boolean, float or integer parameters.
+
+<img src="AnimationTriggers.png" width="50%">
+
 ### Unity Event Listeners
+The Unity event system more tightly couples components than custom assets. Listeners must have a reference to the element containing it to be able to signal their interest. With custom assets, the event is owned by a third party that also happens to include the data that triggered it.
+
+In the following example, we have a UnityEventListener MonoBehaviour that has a reference to a Trigger custom access. When the trigger fires it plays the audio source.
+
+<img src="UnityEvent.png" width="50%">
 
 ## Custom Asset Persistence
+If a custom asset is marked persistent or critical in the Inspector, then it will write itself out to the PlayerPref database using a key combining the name and class.
+
+For *critical* this happens as soon as a value changes. Do not set this unless it is necessary. Non-critical persistence occurs when the asset's `OnDisable` method is called - typically when the operating system has decided to throw the game out of memory.
+
+For primitive assets, any updates happen without further coding.
+
+```C#
+  Float age;
+  age.Value = 32.2f;
+```
+
+For custom assets containing a more complicated class or struct, the creator is responsible for marking changes either directly with `Changed()` or as part of the update. For the latter, creating accessors in the custom asset provided for clearer calling code that using Value directly - while calling `Set` on the update will tell all listeners.
+
+```C#
+[CreateAssetMenu(menuName = "Examples/LargerAssetSample")]
+public class LargerAssetSample : CustomAsset.OfType<CustomAssetsExample.LargerAssetContents> {
+  public int AnInteger { get { return Value.I; } set { Set(() => Value.I = value); } }
+
+  public float AFloat { get { return Value.F; } set { Set(() => Value.F = value); } }
+
+  public string AString { get { return Value.S; } set { Set(() => Value.S = value); } }
+}
+```
+
 ## Asset Support
 ### Components
 `Components` is a static helper class with functions to create and find Components.
@@ -467,67 +529,133 @@ selector.Choices = new int[] { 5, 6, 7, 8 };
 There is are NUnit Editor tests in ***Examples/Scripts*** that demonstrate all the pickers.
 
 ### Preview Custom Editor
+Unity custom editors provide additional functionality for the Inspector panel. `PreviewEditor&lt;T>` is a generic that adds a ***Preview*** button to the bottom of the Component.
+
+`AudioClipsEditor` is a custom class that plays a sound when pressing ***Preview***.
+
+```C#
+  [CustomEditor(typeof(AudioClips))]
+  public class AudioClipsEditor : PreviewEditor<AudioSource> {
+    protected override void Preview() { ((AudioClips) target).Play(Source); }
+  }
+```
 
 ### Range
+`Range` is a `Pick` class with serialised low and high values. Calling `Pick()` will return a random value within but inclusive of the range.
+
+```C#
+    [SerializeField]     private Range volume   = new Range(1, 1);
+
+      source.volume      = volume.Pick();
+```
+A range drawer provides better visual editing of ranges in the Inspector.
+
+<img src="RangeDrawer.png" width="50%">
+
+Range values can be set with the sliders or by typing values on the boxes to the left and right.
 
 ### RangeBounds Attribute
+A Range is by default between zero and one. To change this, add a range bounds attribute.
+
+```C#
+    [SerializeField, RangeBounds(0, 2)]   private Range pitch    = new Range(1, 2);
+    [SerializeField, RangeBounds(0, 999)] private Range distance = new Range(1, 999);
+```
+The width of the range limit how many digits past the decimal point display.
 
 ### Objects Helpers
+I am lazy. I hate typing the same scaffolding code repeatedly. These are functions more often used in testing than production code.
 
-### PlayMode Test Runner Support
-
-==========================================================
-
-## CustomAsset
-
-
-For more detailed examples of all uses, view ***Askowl-Lib/Examples/Editor/TestCustomAsset.cs***.
-
-A script asset is a file in the Unity project used to contain data and functionality. When defining a custom asset, use the [CreateMenuAsset](https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html) Attribute. Selecting the specified item from Assets/Create writes the asset. Move it to a directory named ***Resources*** anywhere in your project.
-
-Fill the public data in the asset for use in methods to provide functionality. The classic example is a custom asset with an array of audio clips. A `Play` method can select a clip to play randomly. In this way, sound effects would be less monotonous.
+### Find&lt;T>
+Use `Find` to search the project for Unity Objects of a defined type with a known name. The object does not have to be enabled.
 
 ```C#
-[CreateAssetMenu(menuName = "Examples/Sound Clips", fileName = "Clips", order = 1)]
-public class ClipsExample: CustomAsset<ClipsExample> {
-  public AudioClip[] clips;
-
-  public void Play() {
-    AudioClip clip = clips [Random.Range(0, clips.Length)];
-    AudioSource.PlayClipAtPoint(clip, new Vector3 (0, 0, 0));
-  }
-}
+GameObject mainCamera = Objects.Find<GameObject>("Main Camera");
 ```
 
-From any ***Resources*** directory create an asset by selecting Examples / Sounds. Rename the asset to ***Birds***. Select the asset and add bird sounds to the list. A sample already exists in this package. Running the ***Askowl-Lib*** scene displays a ***Bird Sounds*** button that runs this script asset. The same technique could be used to select a prefab from a list to provide a variety of hazards.
-
-### Asset Selector
-
-Many assets are plug-and-play. We looked at sound clips earlier, but what about projectiles, opponents or even the cloths a hero is going to wear. It is easy to make a game more interesting with mix-and-match. A prefab is an asset allowing for dynamic behaviour.
-
-We can rewrite the `Clips` class above to use an `AssetSelector`.
+Often the object is unique and named after it's underlying class.
 
 ```C#
-[CreateAssetMenu(menuName = "Custom/Sound Clips", fileName = "Clips")]
-public class Clips: AssetSelector<AudioClip> {
-  public void Play() {
-    AudioSource.PlayClipAtPoint(Pick(), new Vector3 (0, 0, 0));
-  }
-}
+setPickerSample = Objects.Find<SetPickerSample>();
 ```
-Create a clip from the menu. Remember to put it in a ***Resources*** folder. Then fill the assets list with the clips to select from.
 
-The default picker chooses a random asset from the list. By overriding `Pick()`. An interesting variant would be a pick that chooses different items until all are exhausted. For a simpler example, cycle through the assets in order.
+`Find` is resource hungry. Only use it in rarely called methods like `Awake`, `Start` or `OnEnable`. It is never necessary for production code but is an excellent helper with play mode tests. 
+
+### Component&lt;T>
+`Component` is another tool for play mode testing. Without being part of the game, test code can retrieve a GameObject by unique name/path the then return a reference to a Component of that game object. Because we do not have a game object starting point, the name must be unique. Either a unique name within the scene or an absolute path.
 
 ```C#
-  int idx = 0;
+    results      = Component<Text>("Canvas/Results Panel/Text");
+    results.text = "I found you";
+```
+<img src="Component1.png" width="50%">
 
-  public override T Pick() {
-    return assets [idx++ % assets.Length];
+<img src="Component2.png" width="50%">
+
+## PlayMode Test Runner Support
+Askowl Custom Assets are tested using the Unity editor PlayMode test-runner. Because this is the core Askowl unity package, it includes the rudimentary support for testing. See the Askowl TestAutomator package for more exhaustive support.
+
+### PlayModeController
+PlayModeController is a base class for protected methods used to control actions in the game. Most of the methods are to be run in Coroutines so that control code can wait for them to complete. It is designed to be used by *PlayModeTests* and *RemoteControl* classes.
+
+#### LoadScene
+Load a scene by name from the scenes list in the build. Most often this function is used to load the starting scene for the game.
+
+Sometimes tests have a scene to highlight actions that are difficult to reproduce in game-play. They will have to be added to the build, but will not include much overhead to the release game.
+
+```C#
+  [UnityTest] public IEnumerator AccessCustomAssets() {
+    yield return LoadScene("Askowl-CustomAssets-Examples");
+    //...
   }
 ```
 
-Meet `Selector.Cycle()`, one of AssetSelector optional pickers. Pickers can be selected in `OnEnable` or by code that has a reference to the Custom Asset. `Selector.Random()` is the default. `Exhaustive()` is like random but it guarantees not to repeat an item until all the other options are exhausted. See `Selector` for more details.
+#### PushButton
+At the very least a player will have to push a button to start the game. You can select the button by the name and path in the hierarchy or a `Button` reference.
 
-If you need another way of choosing your item, subclass `AssetSelector` and override the `Pick()` method.
+```C#
+yield return PushButton("Canvas/Show Quote");
+// same as
+yield return PushButton(Objects.Component<Button>("Show Quote"));
+```
+The coroutine will return after one tick - giving time for the button watchers to react.
 
+#### Log
+Typing `Debug.LogFormat()` gets tiring. For classes that inherit, you can use `Log()` instead.
+
+```C#
+Log("Entering Scene {1}", Scene.name);
+```
+
+### PlayModeTests
+`PlayModeTests` inherits from `PlayModeController` and in turn is to the the ancestor of concrete tests within Unity.
+
+Firstly it overrides functions to add assertions.
+
+* LoadScene(string name) from PlayModeController
+* PushButton(string path) from PlayModeController
+* Component<T>(string name) from Objects.Component<T>(name)
+* FindObject<T>(string name) from Objects.Find<T>(name)
+* FindObject<T>() from Objects.Find<T>()
+
+#### CheckPattern
+Sometimes we need to look at some UI text and see if it is as expected. We use regular expressions for that.
+```C#
+    CheckPattern(@"^Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d", results.text);
+```
+### A Sample Play Mode Test
+Because we sent the slider with a quote, we need to test a range to make sure all is as it should be.
+```C#
+[UnityTest]
+  public IEnumerator TestIntegerAsset() {
+    yield return Setup();
+
+    Slider slider = Component<Slider>("Canvas/Integer Asset/Slider");
+    slider.value = 0.77f;
+    yield return null;
+
+    int buttonValue = int.Parse(ResultsButtonText);
+    Assert.GreaterOrEqual(buttonValue, 76);
+    Assert.LessOrEqual(buttonValue, 78);
+  }
+```

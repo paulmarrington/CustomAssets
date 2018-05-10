@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace CustomAsset {
   /// <summary>
@@ -11,6 +12,7 @@ namespace CustomAsset {
     /// </summary>
     /// <typeparam name="T">Class that inherits from UnityEngine.Object</typeparam>
     /// <returns>Object if found - or null if not</returns>
+    [UsedImplicitly]
     public static T Find<T>() where T : Object { return Find<T>(typeof(T).Name); }
 
     /// <summary>
@@ -18,6 +20,7 @@ namespace CustomAsset {
     /// If there are more than one of this type, only one is returned.
     /// </summary>
     /// <param name="name">Name of the asset within the project heirarchy</param>
+    /// <see cref="Resources.FindObjectsOfTypeAll"/>
     /// <typeparam name="T">Class that inherits from UnityEngine.Object</typeparam>
     /// <returns>Object if found - or null if not</returns>
     public static T Find<T>(string name) where T : Object {
