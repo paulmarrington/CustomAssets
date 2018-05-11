@@ -9,21 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a717b4fad8de4f3ebd4f9cf20b1a693, type: 3}
-  m_Name: Sample Audio Clips
+  m_Name: SampleAudioClips
   m_EditorClassIdentifier: 
   Description: 
-  value: []
-  readWrite: 1
+  seed:
+  - {fileID: 8300000, guid: 6f17090c9c229479bbbd98137f0e9fdc, type: 3}
+  - {fileID: 8300000, guid: a7c41028ebf0544feb298774a54b56d9, type: 3}
+  - {fileID: 8300000, guid: 44bb5b8ec7d4247b0ac430a4ae5065ed, type: 3}
+  members: []
+  readWrite: 0
   persistent: 0
-  critical: 0
   cycle: 0
-  exhaustiveBelow: 0
+  exhaustiveBelow: 10
   volume:
     min: 1
     max: 1
   pitch:
     min: 1
-    max: 2
+    max: 1.3527033
   distance:
     min: 1
     max: 999

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: SamplePersistentAsset
   m_EditorClassIdentifier: 
   Description: 
-  value: 0
+  seed: 0
+  members: []
   readWrite: 1
   persistent: 1
-  critical: 0

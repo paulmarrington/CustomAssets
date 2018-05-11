@@ -10,6 +10,7 @@
     [SerializeField] private string   parameterName;
     [SerializeField] private Animator animator;
 
-    public override void OnTriggered() { animator.SetTrigger(parameterName); }
+    /// <inheritdoc />
+    protected override void OnChange(string memberName) { animator.SetTrigger(parameterName); }
   }
 }

@@ -10,6 +10,7 @@ namespace CustomAsset {
   [RequireComponent(typeof(Text))]
   // ReSharper disable once InconsistentNaming
   public sealed class UITextListener : StringListener<Text> {
+    /// <inheritdoc />
     protected override void Change(string value) { Component.text = value; }
   }
 }

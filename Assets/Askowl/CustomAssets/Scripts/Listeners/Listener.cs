@@ -7,21 +7,31 @@ namespace CustomAsset {
   /// Common code for all event listeners. It registers and deregisters the listener with the channel.
   /// </summary>
   public abstract class Listener : MonoBehaviour {
-    [SerializeField] private Base customAsset;
-
-    /// <summary>
-    /// THe channel that holds the event of interest, as set as part of the asset.
-    /// </summary>
-    [UsedImplicitly]
-    public Base CustomAsset { get { return customAsset; } }
+    [SerializeField]                      protected internal Base   BaseAsset;
+    [SerializeField, Tooltip("Optional")] protected internal string ForMember;
 
     /// <summary>
     /// Called by the channel when an event occurs.
     /// </summary>
-    public abstract void OnTriggered();
+    [UsedImplicitly]
+    public void OnTriggered() { OnChange(null); }
 
-    private void OnEnable() { customAsset.Register(this); }
+    /// <summary>
+    /// Called by the channel when an event occurs.
+    /// </summary>
+    /// <param name="memberName">Member this event relates to</param>
+    public void OnTriggered(string memberName) {
+      if (memberName == ForMember) OnChange(memberName);
+    }
 
-    private void OnDisable() { customAsset.Deregister(this); }
+    protected abstract void OnChange(string memberName);
+
+    private void OnEnable() {
+      ForMember = ForMember.Trim();
+      if (string.IsNullOrEmpty(ForMember)) ForMember = null;
+      BaseAsset.Register(this);
+    }
+
+    private void OnDisable() { BaseAsset.Deregister(this); }
   }
 }

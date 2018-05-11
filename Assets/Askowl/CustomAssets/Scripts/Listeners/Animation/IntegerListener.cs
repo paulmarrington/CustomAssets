@@ -10,6 +10,7 @@
     [SerializeField] private string   parameterName;
     [SerializeField] private Animator animator;
 
+    /// <inheritdoc />
     protected override void Change(int value) { animator.SetInteger(parameterName, value); }
   }
 }

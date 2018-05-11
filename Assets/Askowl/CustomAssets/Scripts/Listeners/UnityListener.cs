@@ -9,6 +9,7 @@
   public sealed class UnityListener : Listener {
     [SerializeField] private UnityEvent unityEvent;
 
-    public override void OnTriggered() { unityEvent.Invoke(); }
+    /// <inheritdoc />
+    protected override void OnChange(string memberName) { unityEvent.Invoke(); }
   }
 }

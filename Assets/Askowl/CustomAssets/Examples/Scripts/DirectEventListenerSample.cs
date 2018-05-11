@@ -10,8 +10,8 @@ using UnityEngine.UI;
 public sealed class DirectEventListenerSample : CustomAsset.Listener {
   [SerializeField] private Text textComponent;
 
-  public override void OnTriggered() {
-    textComponent.text = "Direct Event heard at " + DateTime.Now;
+  protected override void OnChange(string memberName) {
+    textComponent.text = "Direct Event heard at " + DateTime.Now + " for " + memberName;
   }
 }
 #endif

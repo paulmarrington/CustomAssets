@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Name: Larger Asset Sample
   m_EditorClassIdentifier: 
   Description: 
-  value:
-    I: 1
-    F: 5.2
-    S: three
+  seed:
+    I: 0
+    F: 0
+    S: 
+  members: []
   readWrite: 1
   persistent: 0
-  critical: 0

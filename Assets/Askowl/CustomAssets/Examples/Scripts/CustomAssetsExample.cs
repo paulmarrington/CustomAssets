@@ -23,7 +23,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   [SerializeField] private Text              textComponent;
   [SerializeField] private LargerAssetSample largerSample;
   [SerializeField] private Integer           persistent;
-  [SerializeField] private Float             critical;
+  [SerializeField] private Float             withMembers;
   [SerializeField] private Quotes            quotes;
   [SerializeField] private Slider            integerSlider;
 
@@ -77,13 +77,25 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   }
 
   /// <summary>
-  /// Make sure that persistent custom assets marked as critical are saved on change
+  /// Checks that members can be added in the inspector and dunamically. Also tests
+  /// persistence by writing them out,clearing then retrieving them again.
   /// </summary>
   [UsedImplicitly]
-  public void CheckCriticalPersistence() {
-    critical.Value = 44;
-    critical.Load();
-    textComponent.text = "Persistent value - expecting 44, got " + critical;
+  public void CheckMemberPersistence() {
+    withMembers["One"]     = 22;
+    withMembers["Dynamic"] = 44;
+    withMembers.Save();
+    withMembers.Clear();
+    withMembers.Load();
+
+    string[] memberNames = withMembers.MemberNames;
+
+    textComponent.text =
+      "withMembers has " + memberNames.Length + " and a seed of " + (float) withMembers;
+
+    for (int i = 0; i < memberNames.Length; i++) {
+      textComponent.text += "\n" + memberNames[i] + " = " + withMembers[memberNames[i]];
+    }
   }
 
   /// <summary>
