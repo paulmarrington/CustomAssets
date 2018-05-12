@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: SampleBooleanVariable
   m_EditorClassIdentifier: 
   Description: 
-  value: 1
-  readWrite: 1
+  seed: 1
+  members: []
+  readWrite: 0
   persistent: 0
-  critical: 0

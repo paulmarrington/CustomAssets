@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Name: SampleQuotes
   m_EditorClassIdentifier: 
   Description: 
-  value:
-  - one of two lines in Quotes asset
-  - two of two lines in Quotes asset
+  seed:
+  - one of two from asset
+  - two of two from asset
+  members: []
   readWrite: 0
   persistent: 0
-  critical: 0
   cycle: 0
   exhaustiveBelow: 10
   textFile: {fileID: 4900000, guid: a2a98966f21864319b2a45683fc3f0ad, type: 3}

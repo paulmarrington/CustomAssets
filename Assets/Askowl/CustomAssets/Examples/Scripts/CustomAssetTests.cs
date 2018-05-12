@@ -83,7 +83,7 @@ public class CustomAssetTests : PlayModeTests {
   public IEnumerator TestSetPickerExhaustive() {
     yield return Setup();
 
-    AudioClips  picker = FindObject<AudioClips>();
+    AudioClips  picker = FindObject<AudioClips>("SampleAudioClips");
     AudioClip[] clips  = new AudioClip[6];
 
     for (int i = 0; i < clips.Length; i++) clips[i] = picker.Pick();
@@ -200,12 +200,11 @@ public class CustomAssetTests : PlayModeTests {
     yield return Setup();
 
     Slider slider = Component<Slider>("Canvas/Integer Asset/Slider");
-    slider.value = 0.77f;
+    slider.value = 6;
     yield return null;
 
     int buttonValue = int.Parse(ResultsButtonText);
-    Assert.GreaterOrEqual(buttonValue, 76);
-    Assert.LessOrEqual(buttonValue, 78);
+    Assert.AreEqual(buttonValue, 6);
   }
 
   /// <summary>
@@ -281,6 +280,15 @@ public class CustomAssetTests : PlayModeTests {
     foreach (KeyValuePair<string, int> quote in quotes) {
       Assert.AreEqual(repeats, quote.Value);
     }
+  }
+
+  [UnityTest]
+  public IEnumerator TestMembersAndPersistence() {
+    yield return Setup();
+
+    yield return PushButton("Asset with members");
+
+    CheckPattern(@"^.* has 3 .* seed of 11\nOne = 22\nTwo = 11\nDynamic = 44$", results.text);
   }
 }
 #endif

@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -14,7 +14,8 @@ namespace CustomAsset {
   /// <remarks><a href="http://customasset.marrington.net#quotes">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Quotes")]
   public sealed class Quotes : StringSet {
-    [SerializeField, Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
+    [SerializeField, Header("External Asset"),
+     Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
     private TextAsset textFile;
 
     /// <inheritdoc />

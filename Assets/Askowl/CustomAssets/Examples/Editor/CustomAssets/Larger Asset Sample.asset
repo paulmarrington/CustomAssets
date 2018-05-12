@@ -13,9 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Description: 
   seed:
-    I: 0
-    F: 0
-    S: 
+    I: 1
+    F: 5.2
+    S: three
   members: []
-  readWrite: 1
+  readWrite: 0
   persistent: 0

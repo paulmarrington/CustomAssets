@@ -33,7 +33,12 @@ namespace CustomAsset {
   /// </summary>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
   public abstract class StringListener<T> :
-    ComponentListenerBase<T, String, string> where T : Object { }
+    ComponentListenerBase<T, String, string> where T : Object {
+    /// <inheritdoc />
+    protected override void OnChange(string memberName) {
+      Change((memberName == null) ? BaseAsset.ToString() : BaseAsset.ToStringForMember(memberName));
+    }
+  }
 
   /// <inheritdoc />
   /// <summary>
@@ -71,7 +76,7 @@ namespace CustomAsset {
 
     private void Awake() {
       Component = GetComponent<TC>();
-      if (Component == null) CustomAsset.Deregister(this);
+      if (Component == null) BaseAsset.Deregister(this);
     }
   }
 }

@@ -18,7 +18,7 @@ namespace CustomAsset {
     /// For safe access to the contents field
     /// </summary>
     [UsedImplicitly]
-    public T Value { protected get { return seed; } set { Set(() => this.seed = value); } }
+    public T Value { protected get { return seed; } set { Set(() => seed = value); } }
 
     /// <summary>
     /// Tells the event listeners that something in this value has changed. Designed to be used in setters.

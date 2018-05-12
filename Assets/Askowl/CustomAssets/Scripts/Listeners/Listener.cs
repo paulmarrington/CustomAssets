@@ -21,9 +21,13 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="memberName">Member this event relates to</param>
     public void OnTriggered(string memberName) {
-      if (memberName == ForMember) OnChange(memberName);
+      if ((ForMember == null) || (memberName == ForMember)) OnChange(memberName);
     }
 
+    /// <summary>
+    /// After we have ensured the change is for the expected member, tell interested parties.
+    /// </summary>
+    /// <param name="memberName"></param>
     protected abstract void OnChange(string memberName);
 
     private void OnEnable() {

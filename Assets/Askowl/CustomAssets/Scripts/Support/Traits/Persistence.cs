@@ -20,6 +20,7 @@ namespace CustomAsset {
       if (!persistent) return default(TS);
 
       string json = PlayerPrefs.GetString(Key, defaultValue: "");
+
       return JsonUtility.FromJson<TS>(json);
     }
 

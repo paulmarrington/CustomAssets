@@ -526,7 +526,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 136088995}
-  - component: {fileID: 136088998}
   - component: {fileID: 136088997}
   - component: {fileID: 136088996}
   m_Layer: 5
@@ -593,34 +592,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 136088994}
---- !u!114 &136088998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 136088994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834e6221a374f4ff88e2e8be40d6ce20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxFloat: {fileID: 11400000, guid: 14fb215893f734f3c9634f358ecbc591, type: 2}
-  currentFloat: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
-  integer: {fileID: 11400000, guid: 6e626fa2cf7984ebeb7f4663c64d8f4e, type: 2}
-  str: {fileID: 11400000, guid: 1f59e2f4f4a1a4cb9b12734904f20220, type: 2}
-  boolean: {fileID: 11400000, guid: b0fcec34644ba410fb3e78b802485769, type: 2}
-  textComponent: {fileID: 255403010}
-  largerSample: {fileID: 0}
-  persistent: {fileID: 0}
-  withMembers: {fileID: 0}
-  quotes: {fileID: 0}
-  integerSlider: {fileID: 0}
-  audioClips: {fileID: 0}
-  audioClipsEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!1 &144035901
 GameObject:
   m_ObjectHideFlags: 0
@@ -958,9 +929,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 723503610}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0.122
+  m_MaxValue: 10
+  m_WholeNumbers: 1
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1304,7 +1275,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: a50966beb7b254156a5a426a3695cc54, type: 2}
-        m_MethodName: Changed
+        m_MethodName: Trigger
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2867,7 +2838,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
-        m_MethodName: Changed
+        m_MethodName: Trigger
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3755,7 +3726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77a22e6d615c43b1adeeeb2980a7ca3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseAsset: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
+  BaseAsset: {fileID: 11400000, guid: a50966beb7b254156a5a426a3695cc54, type: 2}
   ForMember: 
   parameterName: Colour
   animator: {fileID: 1092706610}
@@ -4154,14 +4125,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 3378a8b8ba99d4b1a94246c61a5a11bd, type: 2}
-        m_MethodName: Changed
-        m_Mode: 1
+        m_MethodName: Trigger
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: A-Member
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -5142,7 +5113,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1950414940}
-  - component: {fileID: 1950414943}
   - component: {fileID: 1950414942}
   - component: {fileID: 1950414941}
   m_Layer: 5
@@ -5209,34 +5179,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1950414939}
---- !u!114 &1950414943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1950414939}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834e6221a374f4ff88e2e8be40d6ce20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxFloat: {fileID: 11400000, guid: 14fb215893f734f3c9634f358ecbc591, type: 2}
-  currentFloat: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
-  integer: {fileID: 11400000, guid: 6e626fa2cf7984ebeb7f4663c64d8f4e, type: 2}
-  str: {fileID: 11400000, guid: 1f59e2f4f4a1a4cb9b12734904f20220, type: 2}
-  boolean: {fileID: 11400000, guid: b0fcec34644ba410fb3e78b802485769, type: 2}
-  textComponent: {fileID: 255403010}
-  largerSample: {fileID: 0}
-  persistent: {fileID: 0}
-  withMembers: {fileID: 0}
-  quotes: {fileID: 0}
-  integerSlider: {fileID: 0}
-  audioClips: {fileID: 0}
-  audioClipsEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1961574356
 GameObject:
   m_ObjectHideFlags: 0
@@ -5461,7 +5403,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: String Asset - boo for colour change
+  m_Text: String Asset - changes text on results button
 --- !u!222 &2035223614
 CanvasRenderer:
   m_ObjectHideFlags: 0

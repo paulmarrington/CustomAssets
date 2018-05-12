@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +13,13 @@ namespace CustomAsset {
   /// Dynaic custom asset without any values. Use it to trigger and listen to events.
   /// </summary>
   public partial class Base : ScriptableObject {
+    /// <summary>
+    /// Used by string listener who only can't cast a type it is not aware of. Overridden in Members.cs
+    /// </summary>
+    /// <param name="memberName">Name of member to retrieve and ToString()</param>
+    /// <returns></returns>
+    [UsedImplicitly]
+    public virtual string ToStringForMember(string memberName) { return memberName; }
 #if UNITY_EDITOR
     /// <summary>
     /// Editor only description of what the asset is alla bout.

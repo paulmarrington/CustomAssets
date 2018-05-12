@@ -15,6 +15,19 @@ namespace CustomAsset {
     }
 
     /// <summary>
+    /// Use in Unity inspector to trigger
+    /// </summary>
+    [UsedImplicitly]
+    public void Trigger() { Changed(null); }
+
+    /// <summary>
+    /// Use in Unity inspector to trigger for a specific member
+    /// </summary>
+    /// <param name="memberName">Name of member must match that for the listener</param>
+    [UsedImplicitly]
+    public void Trigger(string memberName) { Changed(memberName); }
+
+    /// <summary>
     /// Add a listener to those who want to be informed when a custom asset changed. There are
     /// supplied listeners for text objects, unity events and animation among others. Normally
     /// this would be called in OnEnable() for the interested component.

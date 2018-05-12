@@ -60,8 +60,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
                     "boolean asset is {3}\n"      +
                     "larger asset is {4} / {5} / {6}",
                     (float) currentFloat, (int) integer, (string) str, (bool) boolean,
-                    largerSample.AnInteger, largerSample.AFloat,
-                    largerSample.AString);
+                    largerSample.AnInteger, largerSample.AFloat, largerSample.AString);
   }
 
   /// <summary>
@@ -102,7 +101,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// Since the component to monitor is a float we need a conversion to CustomAsset.Integer
   /// </summary>
   [UsedImplicitly]
-  public void UpdateIntegerAsset() { integer.Value = (int) (integerSlider.value * 100); }
+  public void UpdateIntegerAsset() { integer.Value = (int) (integerSlider.value); }
 
   /// <summary>
   /// Button action to test the undating of a CustomAsset

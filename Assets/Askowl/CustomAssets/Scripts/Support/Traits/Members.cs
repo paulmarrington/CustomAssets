@@ -26,11 +26,11 @@ namespace CustomAsset {
       }
     }
 
+    /// <inheritdoc />
     [UsedImplicitly]
-    public T GetForMember(string memberName) { return this[memberName]; }
-
-    [UsedImplicitly]
-    public void TriggerForMember(string memberName) { Changed(memberName); }
+    public override string ToStringForMember(string memberName) {
+      return this[memberName].ToString();
+    }
 
     /// <summary>See if a set contains a specific element.</summary>
     /// <remarks><a href="http://customasset.marrington.net#dictionary-contains-entry">More...</a></remarks>
