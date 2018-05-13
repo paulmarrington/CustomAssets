@@ -6,6 +6,8 @@
 ## Executive Summary
 Custom assets are C# classes that are Unity3D aware so that it is a project asset. They hold data set in the Unity Inspector, changed in-game if allowed and written to persistent storage. It also has an event system to alert components on change. The package includes listener MonoBehaviours, both generic and specific. There are granular custom assets around triggers, booleans, integers, floats and strings for decoupling data from game specific code. Sets provide a compelling alternative to enumerations while a dictionary allows access by key. For additional functionality, build your own using the supplied `AudioClips` as a sample.
 
+As well as a single piece of Data, custom assets also have the concept of members. So, a health storage asset could have many results accessible by the name of the member.
+
 The custom assets package includes an in-memory pooling system for performance, helpers for working with assets and a basic play mode test framework.
 
 ## Introduction
@@ -19,6 +21,7 @@ Custom assets are scriptable objects with benefits.
 * Storage can be of anything serialisable - from primitives like float to complex objects, or even MonoBehaviours.
 * Custom assets can be saved on program exit and reloaded at startup, providing a clean and straightforward persistence mechanism. Assets marked as critical will persist immediately, and every time they change.
 * Basic types offered include Float, Integer, Boolean, Trigger, String and Set.
+* Every custom asset has a dictionary of members to save more than one copy of data - accessed by name.
 
 ### Custom Assets - the new Singleton
 Static variables are not evil, just inflexible. Singleton MonoBehaviour instances are not corrupt either. However, both encourage tight coupling between interested parties.
@@ -32,6 +35,7 @@ Using custom assets over traditional singletons provide some benefits:
 * Alternative custom assets can be injected into objects that are expecting them. An inventory may depend on location or whether the player is in training mode.
 * It is less error prone to pass custom assets between scenes and projects.
 * Functionality can be more generalised for direct reuse from within the editor without writing as much scaffolding code. A `Float` custom asset, for example, can have listeners that hook into display objects. It can also be updated by sliders and scroll-bars without additional code by adding it to the *On Value Changed* field.
+* A custom asset as a singleton to hold game data has one massive failing. There is one copy only. If you want to store player health for an unknown number of players, how do we save it? For this, custom assets have the concept of members. Each named entry holds a reference to the custom asset storage that can be accessed by member name.
 
 ### Custom Assets as Game Managers
 Managers are a favourite Unity pattern. As well as a system-wide master manager, many games have them for player, enemies, sound and more. They have some standard features:
@@ -165,6 +169,32 @@ Each if these custom assets can in a project with or without supporting code. It
 
 ### Trigger
 A trigger is unusual in that it does not have any data apart from CustomAsset requirements. Triggers do not have persistence, so a subclass containing data cannot be saved.
+
+### Members
+A custom asset with any content data also can store and retrieve separate copies by name. For persistent custom assets, the member names and values saved to storage along with the main value.
+
+```C#
+[SerializeField] CustomAsset.Integer myInt;
+// ...
+myInt.Value = 22;
+myInt["One"] = 1;
+myInt["Two"] = 2;
+
+string[] names = myInt.MemberNames;
+Assert.AreEqual(names.Length, 2);
+
+Assert.AreEqual(myInt["One"], 1);
+Assert.AreEqual(myInt.ToStringForMember("One"), "1");
+Assert.True(myInt.Contains("One"));
+
+myInt.Remove("One");
+Assert.False(myInt.Contains("One"));
+
+Assert.True(myInt.Contains("Two"));
+myInt.Clear();
+Assert.False(myInt.Contains("Two"));
+```
+`ToStringForMember` requires special mention as it can be use in Inspector event receivers to set values directly.
 
 ### Custom Asset Sets
 `Set`, like `OfType` is a generic class. To instantiate it requires the type of the set entries.
@@ -317,8 +347,14 @@ For extra points, we can create a codeless listener.
 ***Step 9***: Run the application and move the slider created above. The button will fill and empty accordingly
 <img src="Slider-9-Image-Filling.png" width="25%">
 
+All concrete listeners must implement `void OnChange(string memberName)`.
+
+A listener has a `ForMember` entry visible in the inspector. If this entry is not empty, then only events sent from matching members will pass through. It allows an image fill listener for a health bar to react with a related member.
+
 ### Generic Component Listeners
 The other end of the Custom Asset event pipeline can be a listener MonoBehaviour. The generic implementations below are designed to support functionality for the attached GameObject. Concrete listeners must implement `Change(value)` where *value* is the primitive encapsulated by a base custom asset.
+
+`Change` is member aware. If the event triggers with a member name, it provides the related value for processing.
 
 In the example below, we see a component for changing the text in a UI Text component. It finds one element on the current GameObject of the generic type. `Change()` can then use it to manipulate said item given the new value.
 
