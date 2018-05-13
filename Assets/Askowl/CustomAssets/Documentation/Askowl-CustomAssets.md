@@ -1,13 +1,5 @@
 # Custom Assets
-# Contents
-{:.no_toc}
-
-* Will be replaced with the ToC, excluding the "Contents" header
-{:toc}
-
-* Custom Assets
-{:toc}
-
+[TOC]
 > Read the code in the Examples Folder and run the Example scene
 
 ## Executive Summary
