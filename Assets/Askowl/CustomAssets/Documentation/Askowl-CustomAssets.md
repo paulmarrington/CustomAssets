@@ -1,5 +1,6 @@
 # Custom Assets
-[TOC]
+* Custom Assets
+{:toc}
 
 > Read the code in the Examples Folder and run the Example scene
 
