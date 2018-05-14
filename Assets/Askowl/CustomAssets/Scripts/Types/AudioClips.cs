@@ -7,7 +7,7 @@ namespace CustomAsset {
   /// <summary>
   /// Create an asset to store a list of sounds and play one randomly or cyclicly.
   /// </summary>
-  /// <remarks><a href="http://customasset.marrington.net#sound-clips">More...</a></remarks>
+  /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Audio Clips", fileName = "AudioClips")]
   public sealed class AudioClips : Set<AudioClip> {
     [SerializeField, Header("Audio")]     private Range volume   = new Range(1, 1);
@@ -17,6 +17,7 @@ namespace CustomAsset {
     /// <summary>
     /// Find an AudioSource to use for playing the sounds
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
     /// <see cref="Play(AudioSource)"/>
     /// <param name="gameObject">GameObject instance with an attached audio source</param>
     [UsedImplicitly]
@@ -26,7 +27,7 @@ namespace CustomAsset {
     /// Play a random, exhaustive random or sequential sound - with random variations of volume, pitch and distance heard.
     /// </summary>
     /// <see cref="Play(GameObject)"/>
-    /// <remarks><a href="http://customasset.marrington.net#sound-clips">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
     [UsedImplicitly]
     public void Play(AudioSource source) {
       source.clip        = Pick();

@@ -110,7 +110,7 @@ public sealed class CustomAssetsExample: MonoBehaviour {
 
 Custom assets aid decoupling. Many components can operate without directly knowing each other.
 
-Access custom asset values by either casting or using the `Value` getter. ToString() willways call ToString() on the Value field.
+Access custom asset values by either casting or using the `Value` getter. ToString() will aways call ToString() on the Value field.
 ```C#
 Debug.LogFormat("{0} == {1}",maxFloat.Value, ((float) maxFloat);
 Debug.LogFormat("{0} == {1}",maxFloat.Value.ToString(), maxFloat.ToString());
@@ -206,7 +206,7 @@ public sealed class SetPickerSample : Set<AudioClip> {
 ```
 This example can be used to play one of a selection of sounds. This is a great way to make a game sound less tedious.
 
-####Pick()
+#### Pick()
 All classes inheriting from `Set` have a `Pick()` method with two controlling field entries:
 * ***cycle***: True to return entries sequentially, false to get a random selection.
 * ***exhaustiveBelow***: If the number of entries in the set is below this value, then while `Pick()` will return a random entry, no entry will be retrieved twice before all the others have had a turn. From a list of three, nothing appears random.
@@ -317,33 +317,41 @@ Life begins now. Without writing any code, you can use the prepackaged custom as
 Don't believe me? Create a game object inside a canvas and add a slider component.
 
 ***Step 1***: Create a Float custom asset from the Unity editor main or context menu.
+
 <img src="Slider-6-Create-Custom-Asset.png" width="50%">
 
 ***Step 2***: Select the custom asset and add any initial data. Make sure it is set read/write.
+
 <img src="Slider-1-Hierarchy.png" width="25%">
 
 ***Step 3***: Create a new GameObject in the Unity Hierarchy window. Make sure it is inside a Canvas GameObject.
+
 <img src="ListenerToDisplayFloat.png" width="50%">
-![Create a new GameObject in the Hierarchy](Slider - 1 - Hierarchy.png)
 
 ***Step 4***: Go to the inspector for the game object *Slider* and add a slider component.
+
 <img src="Slider-3-Component1.png" width="50%">
 
 ***Step 5***: Add an *On Value Change* field and drag the Float custom asset into the associated field. Use the function drop-down to select ***Float: Value***.
+
 <img src="Slider-4-Component2.png" width="50%">
 
 ***Step 6***: Lock the inspector on the Float custom asset and run the scene. Drag the slider and watch the value change in the inspector.
+
 <img src="Slider-2-Screen.png" width="25%">
 
 For extra points, we can create a codeless listener.
 
 ***Step 7***: Create a UI Button GameObject in a Canvas and change the image type to *Filled*. Note that moving the *Fill Amount* slider causes the button to change background proportionately.
+
 <img src="Slider-7-Image-to-Fill.png" width="50%">
 
 ***Step 8***: Press the *Add Component* Button then search for and add the *UI Image Fill Listener* component. Set the custom asset to the one created above.
+
 <img src="Slider-8-Listener.png" width="50%">
 
 ***Step 9***: Run the application and move the slider created above. The button will fill and empty accordingly
+
 <img src="Slider-9-Image-Filling.png" width="25%">
 
 All concrete listeners must implement `void OnChange(string memberName)`.
@@ -363,6 +371,13 @@ In the example below, we see a component for changing the text in a UI Text comp
   }
 ```
 <img src="TextListenerInspector.png" width="50%">
+
+All component listeners will have access to the `Component` and the `CustomAsset` that will trigger the action.
+
+```C#
+    protected override void Change(float value) { Component.alpha = value; }
+      Change((memberName == null) ? (TD) CustomAsset : CustomAsset[memberName]);
+```
 
 #### BooleanListener
 ```C#
@@ -447,15 +462,18 @@ public class LargerAssetSample : CustomAsset.OfType<CustomAssetsExample.LargerAs
 ### Components
 `Components` is a static helper class with functions to create and find Components.
 
-#### Components.Find<T>(name)
+#### Components.Find&lt;T>(name)
 Search the current scene for components of type `T`, then return the one with the name supplied. For a call with no name, we use the name of T.
 
 If there are no matching objects in the scene, `Find` will try to load a resource of the supplied type and name. The name can be any path inside a ***Resources*** directory.
 
-#### Components.Create<T>(gameObject, name)
+####Components.Find&lt;T>(inGameObject)
+Find a component by type within a specified GameObject. If not found, do a global Find on the type.
+
+#### Components.Create&lt;T>(gameObject, name)
 Will create a component of type T inside the provided game object.  The instance of T is given the name supplied or the type name if the former is null.
 
-#### Components.Create<T>(name)
+#### Components.Create&lt;T>(name)
 The overload that does not supply a gameObject will create a new one and name the same as the component. The new gameObject is attached to the root of the current hierarchy.
 
 ### Asset Pooling
@@ -483,8 +501,6 @@ Calling `Acquire` with the name of the GameObject will retrieve a clone from the
 
 Seeding some of the GameObject information using optional parameters is possible.
 
-#### Acquire GameObject by Type
-
 #### Transform parent
 An effect will have the target as the parent, while a character may have a spawn point or a team leader. Position and rotation below are relative to that of the parent.
 
@@ -498,7 +514,7 @@ The facing direction, relative to the parent.
 Defaults to true so that the clone is enabled when it is taken from the pool or created.
 
 #### bool poolOnDisable
-PoolOnDisable also defaults to true. Using `SetActive(false) to disable a component will cause it to return to the pool. For situations where you want to enable and disable and as part of game processing, set `poolOnDisable` to false. Use `Pool.Return(clone)` to release the GameObject to the pool for reuse.
+PoolOnDisable also defaults to true. Using `SetActive(false)` to disable a component will cause it to return to the pool. For situations where you want to enable and disable and as part of game processing, set `poolOnDisable` to false. Use `Pool.Return(clone)` to release the GameObject to the pool for reuse.
 
 ```C#
     for (int i = 0; i < 21; i++) {
@@ -509,7 +525,7 @@ PoolOnDisable also defaults to true. Using `SetActive(false) to disable a compon
     }
 ```
 
-#### Acquire<T>
+#### Acquire GameObject by Type
 The generic form of `Acquire` is a shortcut to get a component.
 ```C#
 PoolPrefabScriptSample script = Pool.Asquire<PoolPrefabScriptSample>();
@@ -521,13 +537,31 @@ script = (clone == null) ? null : clone.GetComponent<T>();
 ```
 The same optional parameters are available as the non-generic game object - with the addition of name so that you can return a prefab with a different name to the MonoBehaviour inside.
 
+#### PoolFor
+Only in testing is it necessary to retrieve an item from a pool. 
+Provide the string name of the master GameObject used to create the pool. The instance returns are of `PoolQueue` and provide two public interfaces.
+
+1. public GameObject Master;
+1. public GameObject Fetch();
+
+Since `PoolQueue` is a C# `Queue` class, it inherits all those access and processing methods and fields.
+
 ### Quotes
 `Quotes` is a `StringSet` Custom Asset that if given a list of lines and a `TextAsset` will return a line using the `Pick` interface. A quote is formatted as a ***body of the quote (attribution)*** where the attribution is optional. The attribution is surrounded in brackets and must be at the end of the line. RTF is acceptable in the quote.
 
 I would recommend setting ***Exhaustive Below*** to a figure like 50 or 100. Otherwise shorter lists will appear to repeat entries too often.
 
+#### RTF
+RTF is a static function to convert a string quote into RTF format so that the attribution can be in grey. The text between brackets at the end of the line makes up the attribution.
+
+```C#
+Debug.Log(Quotes.RTF("Life wasn't meant to be easy (George Bernard Shaw)"));
+```
+produces
+***"***Life wasn't meant to be easy***"***     *George Bernard Shaw*
+
 ### Selector
-It is useful to select one item from a list as needed.
+It is useful to select one item from a list as needed from a random list of images and sounds to an ordered list of training steps.
 
 ```C#
 Selector<int> selector = new Selector<int> (new int[] { 0, 1, 2, 3, 4 });
@@ -537,7 +571,7 @@ for (int idx = 0; idx < 100; idx++) {
   Use(at);
 }
 ```
-
+#### Selector Initialiser
 The magic is in having different pickers for different requirements. The constructor allows for three types. Add more by overriding `Pick()`.
 
 ```C#
@@ -550,13 +584,16 @@ Selector(T[] choices = null, bool isRandom = true, int exhaustiveBelow = 0);
 
 In ***Exhaustive Random*** mode items are returned in a random order, but no entry shows up a second time until all are exhausted.
 
-#### Choices
+#### Selector Choices
 If the list of items to choose from changes, update the selector with `Choices`. The same picker will be reset and used.
 
 ```C#
 Selector<int> selector = new Selector<int> (new int[] { 0, 1, 2, 3, 4 });
 selector.Choices = new int[] { 5, 6, 7, 8 };
 ```
+
+#### Selector CycleIndex
+`CycleIndex` return the index in the `Choices` array of the last item returned. If we were using `Selector` to return the next training item, then we may well need the index to report progress.
 
 ### Pick&lt;T>
 `Random` is the default picker. In small lists is may appear to be favouring one or another asset.
@@ -578,11 +615,15 @@ Unity custom editors provide additional functionality for the Inspector panel. `
 ### Range
 `Range` is a `Pick` class with serialised low and high values. Calling `Pick()` will return a random value within but inclusive of the range.
 
-```C#
-    [SerializeField]     private Range volume   = new Range(1, 1);
+By default, the range can be between 0 and 1. Using `RangeBounds` below allows for different scales.
 
+```C#
+    [SerializeField]     private Range volume   = new Range(1.0f, 1.0f);
       source.volume      = volume.Pick();
 ```
+In this example, the potential range is between 0.0 and 1.0 inclusive, but the sliders are both to the right at 1.0.
+The initialiser can be empty and the values set by public `Min` and `Max` variables.
+
 A range drawer provides better visual editing of ranges in the Inspector.
 
 <img src="RangeDrawer.png" width="50%">
@@ -590,7 +631,7 @@ A range drawer provides better visual editing of ranges in the Inspector.
 Range values can be set with the sliders or by typing values on the boxes to the left and right.
 
 ### RangeBounds Attribute
-A Range is by default between zero and one. To change this, add a range bounds attribute.
+For more meaningful ranges we add an attribute called `RangeBounds`.
 
 ```C#
     [SerializeField, RangeBounds(0, 2)]   private Range pitch    = new Range(1, 2);
@@ -633,6 +674,9 @@ Askowl Custom Assets are tested using the Unity editor PlayMode test-runner. Bec
 ### PlayModeController
 PlayModeController is a base class for protected methods used to control actions in the game. Most of the methods are to be run in Coroutines so that control code can wait for them to complete. It is designed to be used by *PlayModeTests* and *RemoteControl* classes.
 
+#### Scene
+The protected reference to the loaded `Scene` object.
+
 #### LoadScene
 Load a scene by name from the scenes list in the build. Most often this function is used to load the starting scene for the game.
 
@@ -672,6 +716,25 @@ Firstly it overrides functions to add assertions.
 * Component<T>(string name) from Objects.Component<T>(name)
 * FindObject<T>(string name) from Objects.Find<T>(name)
 * FindObject<T>() from Objects.Find<T>()
+
+#### PlayModeTests.Component
+Use this static method rather than `Objects.Component` when testing to retrieve a typed component from a named `GameObject` in the current scene. It marks a failure if the component cannot be retrieved.
+
+```C#
+Text results = Component&lt;Text>("Canvas/Results Panel/Text");
+```
+
+#### PlayModeTests.FindObject
+Use this static method rather than `Objects.Find` when testing to retrieve a named `GameObject` in the current scene. It marks a failure if the component cannot be retrieved.
+
+```C#
+Float currentFloat = FindObject&lt;Float>("SampleFloatVariable");
+AudioClips  picker = FindObject<AudioClips>();
+```
+The latter example will find a GameObject called *AudioClips*.
+
+#### PlayModeTests.PushButton
+Given the text name of a game component in the scene, treat it as a button and perform the same action as when a player pushed it on the game screen.
 
 #### CheckPattern
 Sometimes we need to look at some UI text and see if it is as expected. We use regular expressions for that.

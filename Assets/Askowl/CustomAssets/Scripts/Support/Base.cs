@@ -10,20 +10,24 @@ using UnityEngine;
 namespace CustomAsset {
   /// <inheritdoc />
   /// <summary>
-  /// Dynaic custom asset without any values. Use it to trigger and listen to events.
+  /// Dynamic custom asset without any values. Use it to trigger and listen to events.
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
   public partial class Base : ScriptableObject {
     /// <summary>
     /// Used by string listener who only can't cast a type it is not aware of. Overridden in Members.cs
     /// </summary>
-    /// <param name="memberName">Name of member to retrieve and ToString()</param>
-    /// <returns></returns>
+    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
+    /// <param name="memberName">Name of member to retrieve and ToStringify</param>
+    /// <returns>string reprentation of value associated with this member</returns>
     [UsedImplicitly]
     public virtual string ToStringForMember(string memberName) { return memberName; }
+
 #if UNITY_EDITOR
     /// <summary>
-    /// Editor only description of what the asset is alla bout.
+    /// Editor only description of what the asset is all about.
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
     [Multiline] public string Description = "";
 
     static Base() { EditorApplication.playModeStateChanged += UnloadResources; }

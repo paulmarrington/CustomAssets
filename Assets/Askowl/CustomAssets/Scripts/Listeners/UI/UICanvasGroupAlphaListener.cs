@@ -5,6 +5,7 @@ namespace CustomAsset {
   /// <summary>
   /// Drop into the same Game Object as a canvas group component to update the transparency whenever the Float custom asset changes.
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#uicanvasgroupalphalistener">More...</a></remarks>
   [RequireComponent(typeof(CanvasGroup))]
   // ReSharper disable once InconsistentNaming
   public sealed class UICanvasGroupAlphaListener : FloatListener<CanvasGroup> {

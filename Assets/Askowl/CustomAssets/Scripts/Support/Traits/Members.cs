@@ -15,6 +15,7 @@ namespace CustomAsset {
     /// <summary>
     /// Accessor for dictionary entries that will raise changed event on entry changed
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Generic dictionary key</param>
     [UsedImplicitly]
     public T this[string memberName] {
@@ -27,20 +28,21 @@ namespace CustomAsset {
     }
 
     /// <inheritdoc />
+    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     [UsedImplicitly]
     public override string ToStringForMember(string memberName) {
       return this[memberName].ToString();
     }
 
     /// <summary>See if a set contains a specific element.</summary>
-    /// <remarks><a href="http://customasset.marrington.net#dictionary-contains-entry">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Key to value that may or may not be in the set</param>
     /// <returns>True if the element supplied is in this set</returns>
     [UsedImplicitly]
     public bool Contains(string memberName) { return dictionary.ContainsKey(memberName); }
 
     /// <summary>Remove an entry if it exists - and trigger a change event.</summary>
-    /// <remarks><a href="http://customasset.marrington.net#removeentry">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Member to remove if it is in the list</param>
     [UsedImplicitly]
     internal void Remove(string memberName) {
@@ -54,6 +56,7 @@ namespace CustomAsset {
     /// <summary>
     /// Clear members list for a clean slate
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     [UsedImplicitly]
     internal void Clear() {
       dictionary.Clear();
@@ -64,6 +67,7 @@ namespace CustomAsset {
     /// <summary>
     /// Used to get all member names
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <returns>withMembers</returns>
     [UsedImplicitly]
     public string[] MemberNames { get { return members.ToArray(); } }
@@ -83,7 +87,7 @@ namespace CustomAsset {
     /// Load the last previously saved value from persistent storage. Called
     /// implicitly when persistent flag is set and custom asset is enabled.
     /// </summary>
-    /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
     internal void Load() {
       seedSaver = seed;
       ToPersist data = Loader<ToPersist>();
@@ -104,7 +108,7 @@ namespace CustomAsset {
     /// Save current value to persistent storage. Called emplicitly when  when persistent flag is set
     /// and custom asset is disabled or on every change if it is marked critical.
     /// </summary>
-    /// <remarks><a href="http://customasset.marrington.net#custom-asset-persistence">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
     [UsedImplicitly]
     internal void Save() {
       toPersist.CurrentValue = seed;

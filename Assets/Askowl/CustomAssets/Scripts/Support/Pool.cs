@@ -10,7 +10,7 @@ namespace CustomAsset {
   /// <summary>
   /// Monobehaviour to provide pooling functionality for child GameObjects. Tob e eligible they must be created with `Acquire` and disabled but not destroyed.
   /// </summary>
-  /// <remarks><a href="http://customasset.marrington.net#asset-pooling">More...</a></remarks>
+  /// <remarks><a href="http://customassets.marrington.net#asset-pooling">More...</a></remarks>
   [HelpURL("http://customasset.marrington.net#asset-pooling")]
   public sealed class Pool : MonoBehaviour {
     private void OnEnable() {
@@ -49,8 +49,7 @@ namespace CustomAsset {
     /// <param name="poolOnDisable">Set to false if you want to be able to disable a clone without having it returned to the pool - defaults to true</param>
     /// <typeparam name="T">Type of component to pool. Must be in the pool to be used as a master to clone</typeparam>
     /// <returns>A cloned instance of T either reusing one returned to the pool or creating a new clone as needed</returns>
-    /// <remarks><a href="http://customasset.marrington.net#acquire-gameobject-by-type">More...</a></remarks>
-    [CanBeNull]
+    /// <remarks><a href="http://customassets.marrington.net#acquire-gameobject-by-type">More...</a></remarks>
     public static T Acquire<T>([CanBeNull] string    name          = null,
                                Vector3               position      = default(Vector3),
                                Quaternion            rotation      = default(Quaternion),
@@ -73,8 +72,7 @@ namespace CustomAsset {
     /// <param name="enable">Whether GameObject clone is enabled and visible - defaults to be true</param>
     /// <param name="poolOnDisable">Set to false if you want to be able to disable a clone without having it returned to the pool - defaults to true</param>
     /// <returns>A cloned instance of T eitherr reusing one returned to the pool or creating a new clone as needed</returns>
-    /// <remarks><a href="http://customasset.marrington.net#acquire-gameobject-by-name">More...</a></remarks>
-    [CanBeNull]
+    /// <remarks><a href="http://customassets.marrington.net#acquire-gameobject-by-name">More...</a></remarks>
     public static GameObject Acquire(string                name,
                                      Vector3               position      = default(Vector3),
                                      Quaternion            rotation      = default(Quaternion),
@@ -107,8 +105,9 @@ namespace CustomAsset {
     /// Give an object created by `Acquire` in any pool, return it to the pool for
     /// reuse. Only needed if `poolOnDisable` is false
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#bool-poolondisable">More...</a></remarks>
     /// <param name="clone">Clone of a master GameObject in any pool within the application</param>
-    public static void Return([NotNull] GameObject clone) { Returns.Enqueue(clone); }
+    public static void Return(GameObject clone) { Returns.Enqueue(clone); }
 
     private static readonly Queue<GameObject> Returns = new Queue<GameObject>();
 
@@ -141,6 +140,7 @@ namespace CustomAsset {
     /// <summary>
     /// Retrieve a reference to the pooling queue for the GameObject named.
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#poolfor">More...</a></remarks>
     /// <param name="name">Name of GameObject under inspection</param>
     /// <returns>Reference to the `PoolQueue` or null if none exist for this name</returns>
     [CanBeNull]
@@ -164,8 +164,6 @@ namespace CustomAsset {
       public string    MasterName;
       public Transform PoolRoot;
 
-//      private void Awake() { DontDestroyOnLoad(gameObject); }
-
       private void OnDisable() {
         OkToPool = true;
         if (PoolOnDisable && !InPool) Return(gameObject);
@@ -180,7 +178,7 @@ namespace CustomAsset {
     }
 
     /// <summary>
-    /// Each GameObject enabled for pooling resides is a `PoolQueue`.
+    /// Each GameObject enabled for pooling resides in a `PoolQueue`.
     /// </summary>
     public sealed class PoolQueue : Queue<GameObject> {
       /// <summary>

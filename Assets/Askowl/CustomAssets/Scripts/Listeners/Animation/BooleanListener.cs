@@ -5,6 +5,7 @@
   /// <summary>
   /// Fire an animation trigger event when a custom asset value changes
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
   [RequireComponent(typeof(Animator))]
   public sealed class BooleanListener : BooleanListener<Animator> {
     [SerializeField] private string   parameterName;

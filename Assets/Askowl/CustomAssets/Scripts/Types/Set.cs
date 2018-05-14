@@ -1,4 +1,4 @@
-﻿﻿/*
+﻿/*
  * With thanks to Ryan Hipple -- https://github.com/roboryantron/Unite2017
  */
 
@@ -14,7 +14,7 @@ namespace CustomAsset {
   /// <summary>
   /// Set of any serialised type as a custom asset.
   /// </summary>
-  /// <remarks><a href="http://customasset.marrington.net#custom-asset-sets">More...</a></remarks>
+  /// <remarks><a href="http://customassets.marrington.net#custom-asset-sets">More...</a></remarks>
   public class Set<T> : OfType<List<T>>, Pick<T> {
     [Header("Set Picker"), SerializeField,
      Tooltip("true for sequential, false for random")]
@@ -25,7 +25,7 @@ namespace CustomAsset {
     private int exhaustiveBelow;
 
     /// <summary>Add an entry if one does not exist already - and trigger a change event.</summary>
-    /// <remarks><a href="http://customasset.marrington.net#addentry">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#addentry">More...</a></remarks>
     /// <param name="entry">Element to add if it isn't in the list</param>
     [UsedImplicitly]
     public void Add(T entry) {
@@ -37,7 +37,7 @@ namespace CustomAsset {
     }
 
     /// <summary>Remove an entry if it exists - and trigger a change event.</summary>
-    /// <remarks><a href="http://customasset.marrington.net#removeentry">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#removeentry">More...</a></remarks>
     /// <param name="entry">Element to remove if it is in the list</param>
     [UsedImplicitly]
     public void Remove(T entry) {
@@ -49,14 +49,14 @@ namespace CustomAsset {
     }
 
     /// <summary>See if a set contains a specific element.</summary>
-    /// <remarks><a href="http://customasset.marrington.net#containsentry">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#containsentry">More...</a></remarks>
     /// <param name="entry">Element that may or may not be in the set</param>
     /// <returns>True if the element supplied is in this set</returns>
     [UsedImplicitly]
     public bool Contains(T entry) { return Value.Contains(entry); }
 
     /// <summary>Return the number of entries in the Set</summary>
-    /// <remarks><a href="http://customasset.marrington.net#count">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#count">More...</a></remarks>
     [UsedImplicitly]
     public int Count { get { return Value.Count; } }
 
@@ -77,7 +77,7 @@ namespace CustomAsset {
     /// <summary>
     /// Pick one element from the set based on parameters <see cref="F:CustomAsset.Set`1.cycle" /> and <see cref="F:CustomAsset.Set`1.exhaustiveBelow" />
     /// </summary>
-    /// <remarks><a href="http://customasset.marrington.net#pick">More...</a></remarks>
+    /// <remarks><a href="http://customassets.marrington.net#pick">More...</a></remarks>
     /// <returns>Element chosen</returns>
     public virtual T Pick() {
       if (selector == null) {

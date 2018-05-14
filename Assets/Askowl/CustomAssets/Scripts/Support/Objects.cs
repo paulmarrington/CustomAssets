@@ -5,11 +5,13 @@ namespace CustomAsset {
   /// <summary>
   /// Helper library for dealing with Unity Objects
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#objects-helpers">More...</a></remarks>
   public static class Objects {
     /// <summary>
     /// Find an object that has already been loaded into memory given it's type.
     /// If there are more than one of this type, only one is returned.
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#findt">More...</a></remarks>
     /// <typeparam name="T">Class that inherits from UnityEngine.Object</typeparam>
     /// <returns>Object if found - or null if not</returns>
     [UsedImplicitly]
@@ -19,6 +21,7 @@ namespace CustomAsset {
     /// Find an object that has already been loaded into memory given it's type and it's asset name.
     /// If there are more than one of this type, only one is returned.
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#findt">More...</a></remarks>
     /// <param name="name">Name of the asset within the project heirarchy</param>
     /// <see cref="Resources.FindObjectsOfTypeAll"/>
     /// <typeparam name="T">Class that inherits from UnityEngine.Object</typeparam>
@@ -36,6 +39,7 @@ namespace CustomAsset {
     /// <summary>
     /// Retrieve a reference to an active component by type from GameObject
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#componentt">More...</a></remarks>
     /// <param name="name">Name of a GameObject in the scene</param>
     /// <typeparam name="T">Type of the Component in the GameObject</typeparam>
     /// <returns>Reference to the component or null if not found</returns>

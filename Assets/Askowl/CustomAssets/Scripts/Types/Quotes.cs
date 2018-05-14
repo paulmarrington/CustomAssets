@@ -11,7 +11,7 @@ namespace CustomAsset {
   /// Each quote is on a separate line in the form:
   /// <code>Quote body (attribution)</code>
   /// </summary>
-  /// <remarks><a href="http://customasset.marrington.net#quotes">More...</a></remarks>
+  /// <remarks><a href="http://customassets.marrington.net#quotes">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Quotes")]
   public sealed class Quotes : StringSet {
     [SerializeField, Header("External Asset"),
@@ -44,6 +44,7 @@ namespace CustomAsset {
     /// <summary>
     /// Turn a string into a quote. Any text at the end of the string that is in brackets becomes an attribution in grey.
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#rtf">More...</a></remarks>
     /// <param name="quote">Text for of quote</param>
     /// <returns>Unity RTF form of quote</returns>
     [UsedImplicitly]

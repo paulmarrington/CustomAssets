@@ -7,6 +7,7 @@ namespace CustomAsset {
   /// <summary>
   /// Base class for listeners that need a float parameter
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#floatlistener">More...</a></remarks>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
   public abstract class FloatListener<T> :
     ComponentListenerBase<T, Float, float> where T : Object { }
@@ -15,6 +16,7 @@ namespace CustomAsset {
   /// <summary>
   /// Base class for listeners that need an integer parameter
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#integerlistener">More...</a></remarks>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
   public abstract class IntegerListener<T> :
     ComponentListenerBase<T, Integer, int> where T : Object { }
@@ -23,6 +25,7 @@ namespace CustomAsset {
   /// <summary>
   /// Base class for listeners that need an boolean parameter
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#booleanlistener">More...</a></remarks>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
   public abstract class BooleanListener<T> :
     ComponentListenerBase<T, Boolean, bool> where T : Object { }
@@ -31,6 +34,7 @@ namespace CustomAsset {
   /// <summary>
   /// Converts custom asset to a string for components that deal with string data.
   /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#stringlistener">More...</a></remarks>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
   public abstract class StringListener<T> :
     ComponentListenerBase<T, String, string> where T : Object {
@@ -52,17 +56,20 @@ namespace CustomAsset {
     /// <summary>
     /// Component we are going to give the custom asset data to.
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     protected TC Component;
 
     /// <summary>
     /// THe channel that holds the event of interest, as set as part of the asset.
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     [UsedImplicitly]
     public TA CustomAsset { get { return BaseAsset as TA; } }
 
     /// <summary>
     /// Called with new value of the data within the custom asset
     /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     /// <param name="value">Reference to the changed value</param>
     protected abstract void Change(TD value);
 
@@ -70,6 +77,7 @@ namespace CustomAsset {
     ///  <summary>
     /// On a change the listener needs a copy of the changed data to react to
     ///  </summary>
+    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     protected override void OnChange(string memberName) {
       Change((memberName == null) ? (TD) CustomAsset : CustomAsset[memberName]);
     }
