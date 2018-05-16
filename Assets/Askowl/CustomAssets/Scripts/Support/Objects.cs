@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -28,6 +30,10 @@ namespace CustomAsset {
     /// <returns>Object if found - or null if not</returns>
     public static T Find<T>(string name) where T : Object {
       T[] all = Resources.FindObjectsOfTypeAll<T>();
+
+      if (name == null) {
+        return (all.Length > 0) ? all[0] : null;
+      }
 
       for (int i = 0; i < all.Length; i++) {
         if (all[i].name == name) return all[i];

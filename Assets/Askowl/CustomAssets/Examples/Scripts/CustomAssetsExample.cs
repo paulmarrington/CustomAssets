@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using CustomAsset;
 using JetBrains.Annotations;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -139,5 +140,20 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// </summary>
   [UsedImplicitly]
   public void PlayAudioEvent() { audioClipsEvent.Invoke(); }
+
+  /// <summary>
+  /// Check Base.Instance for accuracy
+  /// </summary>
+  [UsedImplicitly]
+  public void CheckInstance() {
+    Float floatRef = Base.Instance<Float>("SampleFloatVariable");
+    textComponent.text = "Find existing " + floatRef.name + " as " + currentFloat.name + "\n";
+
+    Float newFloat = Base.Instance<Float>("NewFloat");
+    newFloat.Value = 1234;
+    Float secondRef = Base.Instance<Float>("NewFloat");
+
+    textComponent.text += "Created " + ((float) newFloat) + " same as " + ((float) secondRef);
+  }
 }
 #endif

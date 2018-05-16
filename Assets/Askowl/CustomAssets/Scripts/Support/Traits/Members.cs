@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -9,8 +11,8 @@ namespace CustomAsset {
     [SerializeField, Header("Value")] private T            seed;
     [SerializeField]                  private List<string> members;
 
-    private          T                     seedSaver;
-    private readonly Dictionary<string, T> dictionary = new Dictionary<string, T>();
+    private T                     seedSaver;
+    private Dictionary<string, T> dictionary;
 
     /// <summary>
     /// Accessor for dictionary entries that will raise changed event on entry changed
@@ -89,8 +91,11 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
     internal void Load() {
-      seedSaver = seed;
+      dictionary = new Dictionary<string, T>();
+      seedSaver  = seed;
       ToPersist data = Loader<ToPersist>();
+
+      if (members == null) members = new List<string>();
 
       if (data != default(ToPersist)) {
         seed = data.CurrentValue;

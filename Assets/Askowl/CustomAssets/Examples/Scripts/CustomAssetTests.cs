@@ -290,5 +290,14 @@ public class CustomAssetTests : PlayModeTests {
 
     CheckPattern(@"^.* has 3 .* seed of 11\nOne = 22\nTwo = 11\nDynamic = 44$", results.text);
   }
+
+  [UnityTest]
+  public IEnumerator TestInstance() {
+    yield return Setup();
+
+    yield return PushButton("Check Instance");
+
+    CheckPattern(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 1234 .* 1234$", results.text);
+  }
 }
 #endif

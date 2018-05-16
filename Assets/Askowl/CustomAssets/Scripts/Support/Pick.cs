@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using JetBrains.Annotations;
 
 namespace Askowl {
   /// <summary>

@@ -23,12 +23,36 @@ namespace CustomAsset {
     [UsedImplicitly]
     public virtual string ToStringForMember(string memberName) { return memberName; }
 
+    /// <summary>
+    /// If this is a project asset, then you will need to reference it somewhere.
+    /// Other classes can get a reference using `Instance()` or `Instance(string name)`.
+    /// Also useful for creating in-memory versions to share between hosts.
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#instance">More...</a></remarks>
+    /// <code>Float lifetime = Float.Instance("Lifetime")</code>
+    /// <param name="name"></param>
+    /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
+    [UsedImplicitly]
+    public static TI Instance<TI>(string name = null) where TI : Base {
+      TI instance = Objects.Find<TI>(name);
+      if (instance != null) return instance;
+
+      instance      = CreateInstance<TI>();
+      instance.name = name ?? typeof(TI).Name;
+#if UNITY_EDITOR
+      instance.unloadable = false;
+#endif
+      return instance;
+    }
+
 #if UNITY_EDITOR
     /// <summary>
     /// Editor only description of what the asset is all about.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
     [Multiline] public string Description = "";
+
+    private bool unloadable = true;
 
     static Base() { EditorApplication.playModeStateChanged += UnloadResources; }
 
@@ -42,7 +66,9 @@ namespace CustomAsset {
 
       EditorApplication.playModeStateChanged -= UnloadResources;
 
-      foreach (var asset in AssetsToUnload) Resources.UnloadAsset(asset);
+      foreach (var asset in AssetsToUnload) {
+        if (asset.unloadable) Resources.UnloadAsset(asset);
+      }
     }
 #endif
   }

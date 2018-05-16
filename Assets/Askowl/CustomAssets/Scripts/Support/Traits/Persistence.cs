@@ -1,15 +1,24 @@
-﻿using JetBrains.Annotations;
+﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace CustomAsset {
   public abstract partial class OfType<T> {
     [Header("Variability"), SerializeField, Tooltip("Allow the data to be changed")]
-    private bool readWrite;
+    private bool readWrite = true;
 
     [SerializeField, Tooltip("Save to storage")]
     private bool persistent;
 
     private string Key { get { return string.Format("{0}:{1}", name, typeof(T)); } }
+
+    /// <summary>
+    /// Get or set the Persistence flag to override the inspector setting
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#instance">More...</a></remarks>
+    [UsedImplicitly]
+    public bool Persistent { get { return persistent; } set { persistent = value; } }
 
     /// <summary>
     /// Load the last previously saved value from persistent storage.

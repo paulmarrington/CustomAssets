@@ -1,5 +1,6 @@
 # Custom Assets
 [TOC]
+
 > Read the code in the Examples Folder and run the Example scene
 
 ## Executive Summary
@@ -95,6 +96,12 @@ Each persistent object is serialised to JSON and written as a `PlayerPref` entit
 
 The key is made up of the name of the asset and the class name, making it unique to the application.
 
+Set persistence from the Unity inspector or code.
+
+```C#
+myAsset.Persistence = true;
+```
+
 ## Accessing Custom Assets
 
 A custom asset is like any other Unity asset. Create a field for it in a MonoBehaviour or other CustomAsset class and drop in the reference.
@@ -114,6 +121,20 @@ Access custom asset values by either casting or using the `Value` getter. ToStri
 ```C#
 Debug.LogFormat("{0} == {1}",maxFloat.Value, ((float) maxFloat);
 Debug.LogFormat("{0} == {1}",maxFloat.Value.ToString(), maxFloat.ToString());
+```
+
+### Instance
+There is a second way. As long as a custom asset is referenced as above at least once, it is available with code access elsewhere.
+
+```C#
+Float lifetime = Float.Instance("Lifetime");
+UniqueAsset = UniqueAsset.Instance(); // "UniqueAsset" name optional
+```
+
+The static Instance method is also useful for in-memory custom "assets". The first call creates a copy while other calls will retrieve a reference. You can even keep the value between invocations of the game by setting persistence.
+
+```C#
+lifetime.Persistence = true;
 ```
 
 ## Creating Custom Assets

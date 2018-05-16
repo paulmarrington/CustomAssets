@@ -1,4 +1,6 @@
-﻿namespace CustomAsset.Animation {
+﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+namespace CustomAsset.Animation {
   using UnityEngine;
 
   /// <inheritdoc />
