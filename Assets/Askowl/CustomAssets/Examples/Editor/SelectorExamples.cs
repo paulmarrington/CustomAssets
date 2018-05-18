@@ -1,5 +1,6 @@
-﻿using CustomAsset;
+﻿#if UNITY_EDITOR && CustomAssets
 using UnityEngine;
+using CustomAsset;
 using NUnit.Framework;
 using System.Linq;
 
@@ -64,3 +65,4 @@ internal sealed class SelectorExamples {
     Debug.Log(message: "Exhaustive: " + results);
   }
 }
+#endif
