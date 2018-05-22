@@ -7,8 +7,7 @@ As well as a single piece of Data, custom assets also have the concept of member
 
 The custom assets package includes an in-memory pooling system for performance, helpers for working with assets and a basic play mode test framework.
 
-
-[TOC]
+* {:toc}
 
 > Read the code in the Examples Folder and run the Example scene
 
