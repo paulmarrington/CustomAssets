@@ -4,6 +4,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -54,7 +55,17 @@ namespace CustomAsset {
     /// <see cref="Objects"/>
     /// <param name="name">Name of object to find</param>
     /// <typeparam name="T">Type of object to find</typeparam>
-    /// <returns></returns>
+    /// <returns>GameObject</returns>
+    protected static GameObject FindGameObject(string name) { return FindObject<GameObject>(name); }
+
+    /// <summary>
+    /// Override for Objects.Find to check the result for compliance. Finds an active object. Used to retrieve custom assets that have been loaded into the scene elsewhere.
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
+    /// <see cref="Objects"/>
+    /// <param name="name">Name of object to find</param>
+    /// <typeparam name="T">Type of object to find</typeparam>
+    /// <returns>Object</returns>
     protected static T FindObject<T>(string name) where T : Object {
       T gameObject = Objects.Find<T>(name);
       Assert.NotNull(gameObject, "No active Objects called '{0}'", name);

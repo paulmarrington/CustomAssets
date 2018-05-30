@@ -20,6 +20,15 @@ namespace CustomAsset {
     public static T Find<T>() where T : Object { return Find<T>(typeof(T).Name); }
 
     /// <summary>
+    /// Find an GameObject that has already been loaded into memory given it's name in the hierarchy.
+    /// If there are more than one of this type, only one is returned.
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#findt">More...</a></remarks>
+    /// <param name="name">Name of the asset within the project heirarchy</param>
+    /// <returns>Object if found - or null if not</returns>
+    public static GameObject Find(string name) { return Find<GameObject>(name); }
+
+    /// <summary>
     /// Find an object that has already been loaded into memory given it's type and it's asset name.
     /// If there are more than one of this type, only one is returned.
     /// </summary>
