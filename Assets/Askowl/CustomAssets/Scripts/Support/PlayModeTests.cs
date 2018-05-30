@@ -14,9 +14,15 @@ namespace CustomAsset {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
   public class PlayModeTests : PlayModeController {
+    /*
+     * Built-In Helpers
+     * https://docs.unity3d.com/Manual/PlaymodeTestFramework.html
+     * LogAssert.Expect(LogType, string);
+     * LogAssert.Expect(LogType, Regex);
+     */
+
     [OneTimeTearDown]
-    // ReSharper disable once MissingXmlDoc
-    public void OneTimeTearDown() { Log("Tests complete"); }
+    private void OneTimeTearDown() { Log("Tests complete"); }
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
