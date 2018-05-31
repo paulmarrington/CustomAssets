@@ -58,10 +58,41 @@ namespace CustomAsset {
     /// <param name="name">Name of a GameObject in the scene</param>
     /// <typeparam name="T">Type of the Component in the GameObject</typeparam>
     /// <returns>Reference to the component or null if not found</returns>
-    public static T Component<T>(string name) {
-      GameObject gameObject = GameObject.Find(name);
+    public static T Component<T>(params string[] path) where T : Component {
+      if (path.Length == 0) return default(T);
 
-      return (gameObject == null) ? default(T) : gameObject.GetComponent<T>();
+      GameObject parentObject = FindGameObject(path[0]);
+      if (parentObject == null) return default(T);
+
+      T[] components = parentObject.GetComponentsInChildren<T>();
+      if (components.Length == 0) return default(T);
+
+      if (path.Length == 1) return components[0];
+
+      for (int i = 0; i < components.Length; i++) {
+        bool found = true;
+
+        GameObject childObject = components[i].gameObject;
+
+        for (int j = path.Length - 1; found && (j >= 0); j--) {
+          while (found && (childObject.name != path[j])) {
+            if ((childObject == parentObject)) {
+              found = false;
+            } else {
+              childObject = childObject.transform.parent.gameObject;
+            }
+          }
+        }
+
+        if (found) return components[i];
+      }
+
+      return default(T);
+    }
+
+    public static bool IsEnabled(string name) {
+      GameObject gameObject = FindGameObject(name);
+      return (gameObject != null) && gameObject.activeInHierarchy;
     }
   }
 }

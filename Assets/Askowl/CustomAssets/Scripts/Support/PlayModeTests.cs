@@ -3,8 +3,8 @@
 using System.Collections;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -21,9 +21,6 @@ namespace CustomAsset {
      * LogAssert.Expect(LogType, string);
      * LogAssert.Expect(LogType, Regex);
      */
-
-    [OneTimeTearDown]
-    private void OneTimeTearDown() { Log("Tests complete"); }
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
@@ -42,9 +39,11 @@ namespace CustomAsset {
     /// <typeparam name="T">Type of component to retrieve</typeparam>
     /// <returns></returns>
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
-    protected static T Component<T>(string name) {
-      T component = Objects.Component<T>(name);
-      Assert.AreNotEqual(component, default(T), "No GameObject named {0}", name);
+    protected static T Component<T>(params string[] path) where T : Component {
+      T component = Objects.Component<T>(path);
+
+      Assert.AreNotEqual(default(T), component);
+
       return component;
     }
 
@@ -68,7 +67,7 @@ namespace CustomAsset {
     /// <returns>Object</returns>
     protected static T FindObject<T>(string name) where T : Object {
       T gameObject = Objects.Find<T>(name);
-      Assert.NotNull(gameObject, "No active Objects called '{0}'", name);
+      Assert.IsNotNull(gameObject);
       return gameObject;
     }
 
@@ -88,6 +87,22 @@ namespace CustomAsset {
       yield return PushButton(Component<Button>(name));
     }
 
+    [UsedImplicitly]
+    protected IEnumerator IsDisabled(string name) {
+      yield return null;
+
+      GameObject gameObject = FindGameObject(name);
+      Assert.IsFalse(gameObject.activeInHierarchy);
+    }
+
+    [UsedImplicitly]
+    protected IEnumerator IsEnabled(string name) {
+      yield return null;
+
+      GameObject gameObject = FindGameObject(name);
+      Assert.IsTrue(gameObject.activeInHierarchy);
+    }
+
     /// <summary>
     /// Given text extracted from the running game, check it against a regular expression and freak out if it doesn't match
     /// </summary>
@@ -97,7 +112,7 @@ namespace CustomAsset {
     protected static void CheckPattern(string pattern, string against) {
       Regex           regex   = new Regex(pattern);
       MatchCollection matches = regex.Matches(against);
-      Assert.AreEqual(1, matches.Count, "Pattern\n======{0}======Text======{1}", pattern, against);
+      Assert.AreEqual(matches.Count, 1);
     }
   }
 }
