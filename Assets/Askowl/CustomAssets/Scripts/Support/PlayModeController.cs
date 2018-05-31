@@ -55,6 +55,15 @@ namespace CustomAsset {
       yield return PushButton(Objects.Component<Button>(name));
     }
 
+    [UsedImplicitly]
+    protected virtual IEnumerator WaitOnEnabled(string name) {
+      yield return WaitOnEnabled(Objects.FindGameObject(name));
+    }
+
+    protected virtual IEnumerator WaitOnEnabled(GameObject gameObject) {
+      if (gameObject == null) yield break;
+    }
+
     /// <summary>
     /// Shortcut to display formatted log messages to the console.
     /// </summary>

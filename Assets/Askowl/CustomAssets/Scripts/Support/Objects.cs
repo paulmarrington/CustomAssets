@@ -26,7 +26,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#findt">More...</a></remarks>
     /// <param name="name">Name of the asset within the project heirarchy</param>
     /// <returns>Object if found - or null if not</returns>
-    public static GameObject Find(string name) { return Find<GameObject>(name); }
+    public static GameObject FindGameObject(string name) { return Find<GameObject>(name); }
 
     /// <summary>
     /// Find an object that has already been loaded into memory given it's type and it's asset name.
