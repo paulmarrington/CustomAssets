@@ -7,12 +7,8 @@ namespace CustomAsset {
   public partial class Base {
     private readonly List<Listener> listeners = new List<Listener>();
 
-    /// <summary>
-    /// Called automatically when a custom asset is changed to let all the listeners into the secret.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
     [UsedImplicitly]
-    public bool Changed(string memberName = null) {
+    protected bool Changed(string memberName = null) {
       for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered(memberName);
       return true;
     }

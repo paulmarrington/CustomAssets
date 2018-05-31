@@ -20,6 +20,8 @@ namespace CustomAsset {
     [UsedImplicitly]
     public T Value { protected get { return seed; } set { Set(() => seed = value); } }
 
+    public bool ChangeAllowed { get { return (readWrite || persistent); } }
+
     /// <summary>
     /// Tells the event listeners that something in this value has changed. Designed to be used in setters.
     /// It will also save the data on critical and call all listeners using `Changed`
@@ -28,11 +30,25 @@ namespace CustomAsset {
     /// <param name="action">Lambda called if custom asset is read/write</param>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
     protected void Set(Action action) {
-      if (!readWrite && !persistent) return;
+      if (!ChangeAllowed) return;
 
       action();
       Changed();
     }
+
+    protected void Set<T>(ref T field, T from) {
+      if (!ChangeAllowed || field.Equals(from)) return;
+
+      field = from;
+      Changed();
+    }
+
+    protected void Set(ref float  field, float  from) { Set<float>(ref field, from); }
+    protected void Set(ref double field, double from) { Set<double>(ref field, from); }
+    protected void Set(ref int    field, int    from) { Set<int>(ref field, from); }
+    protected void Set(ref long   field, long   from) { Set<long>(ref field, from); }
+    protected void Set(ref bool   field, bool   from) { Set<bool>(ref field, from); }
+    protected void Set(ref string field, string from) { Set<string>(ref field, from); }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -
