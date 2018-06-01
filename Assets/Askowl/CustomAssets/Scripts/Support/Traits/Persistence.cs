@@ -11,6 +11,12 @@ namespace CustomAsset {
     [SerializeField, Tooltip("Save to storage")]
     private bool persistent;
 
+    /// <summary>
+    /// Sometimes we know we need to allow update to override incorrect settings in the inspector.
+    /// </summary>
+    [UsedImplicitly]
+    protected bool ReadWrite { get { return readWrite; } set { readWrite = value; } }
+
     private string Key { get { return string.Format("{0}:{1}", name, typeof(T)); } }
 
     /// <summary>

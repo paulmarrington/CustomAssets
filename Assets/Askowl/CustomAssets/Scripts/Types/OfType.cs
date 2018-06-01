@@ -40,6 +40,12 @@ namespace CustomAsset {
       Changed();
     }
 
+    protected void Set(Func<bool> action) {
+      if (!ChangeAllowed) return;
+
+      if (action()) Changed();
+    }
+
     /// <summary>
     /// Set a field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
@@ -138,6 +144,6 @@ namespace CustomAsset {
     /// OnDisable is called when the program exits or is closed by the platform. It is the last chance to save persistent data.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    protected void OnDisable() { Save(); }
+    protected virtual void OnDisable() { Save(); }
   }
 }
