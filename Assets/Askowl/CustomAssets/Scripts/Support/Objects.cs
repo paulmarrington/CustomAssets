@@ -55,7 +55,7 @@ namespace CustomAsset {
     /// Retrieve a reference to an active component by type from GameObject
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#componentt">More...</a></remarks>
-    /// <param name="name">Name of a GameObject in the scene</param>
+    /// <param name="path">Unique path to a GameObject in the scene. Doesn't need to be contiguous</param>
     /// <typeparam name="T">Type of the Component in the GameObject</typeparam>
     /// <returns>Reference to the component or null if not found</returns>
     public static T Component<T>(params string[] path) where T : Component {
