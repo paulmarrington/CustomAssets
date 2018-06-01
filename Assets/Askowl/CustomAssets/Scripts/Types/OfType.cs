@@ -20,6 +20,10 @@ namespace CustomAsset {
     [UsedImplicitly]
     public T Value { protected get { return seed; } set { Set(() => seed = value); } }
 
+    /// <summary>
+    /// Does the CustomAsset have permission to change it's values?
+    /// </summary>
+    // ReSharper disable once MemberCanBePrivate.Global
     public bool ChangeAllowed { get { return (readWrite || persistent); } }
 
     /// <summary>
@@ -36,6 +40,13 @@ namespace CustomAsset {
       Changed();
     }
 
+    /// <summary>
+    /// Set a field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <param name="field">ref myCustomAsset.aField</param>
+    /// <param name="from">Value to set the field to if all checks pass</param>
+    /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
+    [UsedImplicitly]
     protected void Set<TF>(ref TF field, TF from) {
       if (!ChangeAllowed || field.Equals(from)) return;
 
@@ -43,11 +54,58 @@ namespace CustomAsset {
       Changed();
     }
 
-    protected void Set(ref float  field, float  from) { Set<float>(ref field, from); }
+    /// <summary>
+    /// Set a float field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <see cref="Set&lt;TF>"/>
+    /// <param name="field">ref float myCustomAsset.aField to update</param>
+    /// <param name="from">float to set the field to if all checks pass</param>
+    [UsedImplicitly]
+    protected void Set(ref float field, float from) { Set<float>(ref field, from); }
+
+    /// <summary>
+    /// Set a double field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <see cref="Set&lt;TF>"/>
+    /// <param name="field">ref double myCustomAsset.aField to update</param>
+    /// <param name="from">double to set the field to if all checks pass</param>
+    [UsedImplicitly]
     protected void Set(ref double field, double from) { Set<double>(ref field, from); }
-    protected void Set(ref int    field, int    from) { Set<int>(ref field, from); }
-    protected void Set(ref long   field, long   from) { Set<long>(ref field, from); }
-    protected void Set(ref bool   field, bool   from) { Set<bool>(ref field, from); }
+
+    /// <summary>
+    /// Set a int field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <see cref="Set&lt;TF>"/>
+    /// <param name="field">ref int myCustomAsset.aField to to update</param>
+    /// <param name="from">int to set the field to if all checks pass</param>
+    [UsedImplicitly]
+    protected void Set(ref int field, int from) { Set<int>(ref field, from); }
+
+    /// <summary>
+    /// Set a long field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <see cref="Set&lt;TF>"/>
+    /// <param name="field">ref long myCustomAsset.aField to update</param>
+    /// <param name="from">long to set the field to if all checks pass</param>
+    [UsedImplicitly]
+    protected void Set(ref long field, long from) { Set<long>(ref field, from); }
+
+    /// <summary>
+    /// Set a bool field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <see cref="Set&lt;TF>"/>
+    /// <param name="field">ref bool myCustomAsset.aField to update</param>
+    /// <param name="from">bool to set the field to if all checks pass</param>
+    [UsedImplicitly]
+    protected void Set(ref bool field, bool from) { Set<bool>(ref field, from); }
+
+    /// <summary>
+    /// Set a float string inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <see cref="Set&lt;TF>"/>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    [UsedImplicitly]
     protected void Set(ref string field, string from) { Set<string>(ref field, from); }
 
     /// <summary>

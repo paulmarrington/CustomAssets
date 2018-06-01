@@ -35,15 +35,13 @@ namespace CustomAsset {
     /// Override for Objects.Component to check the result for compliance. Finds an active GameObject in the scene and retrieved a component by type from it.
     /// </summary>
     /// <see cref="Objects"/>
-    /// <param name="name">Name of GameObject holding required component</param>
+    /// <param name="path">Path to GameObject - that need only include unique elements</param>
     /// <typeparam name="T">Type of component to retrieve</typeparam>
     /// <returns></returns>
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
     protected static T Component<T>(params string[] path) where T : Component {
       T component = Objects.Component<T>(path);
-
       Assert.AreNotEqual(default(T), component);
-
       return component;
     }
 
@@ -53,8 +51,8 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
     /// <see cref="Objects"/>
     /// <param name="name">Name of object to find</param>
-    /// <typeparam name="T">Type of object to find</typeparam>
     /// <returns>GameObject</returns>
+    [UsedImplicitly]
     protected static GameObject FindGameObject(string name) { return FindObject<GameObject>(name); }
 
     /// <summary>
@@ -87,6 +85,11 @@ namespace CustomAsset {
       yield return PushButton(Component<Button>(name));
     }
 
+    /// <summary>
+    /// Find a game object with a unique name and see if it is disabled.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     [UsedImplicitly]
     protected IEnumerator IsDisabled(string name) {
       yield return null;
@@ -95,6 +98,11 @@ namespace CustomAsset {
       Assert.IsFalse(gameObject.activeInHierarchy);
     }
 
+    /// <summary>
+    /// Find a game object with a unique name and see if it is enabled.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     [UsedImplicitly]
     protected IEnumerator IsEnabled(string name) {
       yield return null;
