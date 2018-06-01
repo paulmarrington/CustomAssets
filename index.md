@@ -1,5 +1,1 @@
----
-redirect_to:
-  - /Assets/Askowl/CustomAssets/Documentation/Askowl-CustomAssets
----
-
+redirect_to:\n  - /Assets/Askowl/CustomAssets/Documentation/Askowl-CustomAssets

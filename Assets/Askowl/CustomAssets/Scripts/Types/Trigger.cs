@@ -11,5 +11,11 @@ namespace CustomAsset {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#trigger">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Trigger")]
-  public class Trigger : Base { }
+  public class Trigger : Base {
+    // ReSharper disable once UnusedMember.Global
+    /// <summary>
+    /// Call to fire off a Changed event, since we have no data to change...
+    /// </summary>
+    public void Fire() { Changed(); }
+  }
 }

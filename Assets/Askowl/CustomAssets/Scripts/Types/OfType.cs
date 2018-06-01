@@ -36,7 +36,7 @@ namespace CustomAsset {
       Changed();
     }
 
-    protected void Set<T>(ref T field, T from) {
+    protected void Set<TF>(ref TF field, TF from) {
       if (!ChangeAllowed || field.Equals(from)) return;
 
       field = from;

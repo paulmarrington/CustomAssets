@@ -115,7 +115,7 @@ public class CustomAssetTests : PlayModeTests {
     Trigger     trigger     = FindObject<Trigger>("SampleUnityEventTrigger");
     AudioSource audioSource = Component<AudioSource>("Canvas/UnityEvent/UnityEventListener");
 
-    trigger.Changed();
+    trigger.Fire();
     while (!audioSource.isPlaying) yield return null;
     while (audioSource.isPlaying) yield return null;
   }
@@ -130,7 +130,7 @@ public class CustomAssetTests : PlayModeTests {
 
     Trigger trigger = FindObject<Trigger>("SampleDirectEventTrigger");
 
-    trigger.Changed();
+    trigger.Fire();
     yield return null;
 
     CheckPattern(@"^Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d", results.text);
@@ -145,7 +145,7 @@ public class CustomAssetTests : PlayModeTests {
     yield return Setup();
 
     Trigger trigger = FindObject<Trigger>("SampleAnimatorTriggerEventTrigger");
-    trigger.Changed();
+    trigger.Fire();
     yield return CheckButtonAnimation();
   }
 
