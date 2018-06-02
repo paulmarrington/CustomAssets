@@ -24,7 +24,7 @@ namespace CustomAsset {
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
-    [UsedImplicitly]
+    
     protected override IEnumerator LoadScene(string name) {
       yield return base.LoadScene(name);
 
@@ -52,7 +52,7 @@ namespace CustomAsset {
     /// <see cref="Objects"/>
     /// <param name="name">Name of object to find</param>
     /// <returns>GameObject</returns>
-    [UsedImplicitly]
+    
     protected static GameObject FindGameObject(string name) { return FindObject<GameObject>(name); }
 
     /// <summary>
@@ -76,7 +76,7 @@ namespace CustomAsset {
     /// <see cref="FindObject{T}(string)"/>
     /// <typeparam name="T">Type of object to find</typeparam>
     /// <returns></returns>
-    [UsedImplicitly]
+    
     protected static T FindObject<T>() where T : Object { return FindObject<T>(typeof(T).Name); }
 
     /// <inheritdoc />
@@ -90,7 +90,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    [UsedImplicitly]
+    
     protected IEnumerator IsDisabled(string name) {
       yield return null;
 
@@ -103,7 +103,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    [UsedImplicitly]
+    
     protected IEnumerator IsEnabled(string name) {
       yield return null;
 

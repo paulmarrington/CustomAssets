@@ -17,7 +17,7 @@ namespace CustomAsset {
     /// Called by the channel when an event occurs.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
-    [UsedImplicitly]
+    
     public void OnTriggered() { OnChange(null); }
 
     /// <summary>

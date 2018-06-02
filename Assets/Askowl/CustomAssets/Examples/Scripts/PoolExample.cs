@@ -13,7 +13,7 @@ public sealed class PoolExample : MonoBehaviour {
   /// <summary>
   /// Test pooling on the press of a button
   /// </summary>
-  [UsedImplicitly]
+  
   public void StartPoolTest() { StartCoroutine(PoolTest()); }
 
   private const float Frequency = 0.01f;

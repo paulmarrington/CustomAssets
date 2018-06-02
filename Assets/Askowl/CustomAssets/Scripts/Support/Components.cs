@@ -17,7 +17,7 @@ namespace CustomAsset {
     /// <param name="gameObject">The GameObject we are expecting the component to be inside of</param>
     /// <typeparam name="T">Type of component we are looking for</typeparam>
     /// <returns>a reference to the named object</returns>
-    [UsedImplicitly]
+    
     public static T Find<T>(GameObject gameObject) where T : Object {
       return gameObject.GetComponent<T>() ?? Find<T>();
     }
@@ -46,7 +46,7 @@ namespace CustomAsset {
     /// <param name="name">The name given to both the game object and contained component</param>
     /// <typeparam name="T">Type of component we are creating</typeparam>
     /// <returns>a reference to the game object containing the newly minted component</returns>
-    [UsedImplicitly]
+    
     public static T Create<T>(string name = null) where T : Component {
       GameObject gameObject = new GameObject();
 
@@ -63,7 +63,7 @@ namespace CustomAsset {
     /// <param name="name">The name given to both the game object and contained component</param>
     /// <typeparam name="T">Type of component we are creating</typeparam>
     /// <returns>a reference to the game object containing the newly minted component</returns>
-    [UsedImplicitly]
+    
     public static T Create<T>(GameObject gameObject, string name = null)
       where T : Component {
       T instance = gameObject.AddComponent<T>();

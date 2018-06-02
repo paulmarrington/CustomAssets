@@ -49,7 +49,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#rtf">More...</a></remarks>
     /// <param name="quote">Text for of quote</param>
     /// <returns>Unity RTF form of quote</returns>
-    [UsedImplicitly]
+    
     // ReSharper disable once InconsistentNaming
     public static string RTF(string quote) {
       return Regex.Replace(input: quote, pattern: @"^(.*?)\s*\((.*)\)$", evaluator: m =>

@@ -13,7 +13,7 @@ namespace Askowl {
     /// Method to call to return the selection
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#pickt">More...</a></remarks>
-    [UsedImplicitly]
+    
     T Pick();
   }
 }

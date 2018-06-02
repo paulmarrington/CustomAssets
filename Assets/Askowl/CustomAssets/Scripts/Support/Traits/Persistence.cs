@@ -14,7 +14,7 @@ namespace CustomAsset {
     /// <summary>
     /// Sometimes we know we need to allow update to override incorrect settings in the inspector.
     /// </summary>
-    [UsedImplicitly]
+    
     protected bool ReadWrite { get { return readWrite; } set { readWrite = value; } }
 
     private string Key { get { return string.Format("{0}:{1}", name, typeof(T)); } }
@@ -23,14 +23,14 @@ namespace CustomAsset {
     /// Get or set the Persistence flag to override the inspector setting
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#instance">More...</a></remarks>
-    [UsedImplicitly]
+    
     public bool Persistent { get { return persistent; } set { persistent = value; } }
 
     /// <summary>
     /// Load the last previously saved value from persistent storage.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    [UsedImplicitly]
+    
     protected TS Loader<TS>() {
       if (!persistent) return default(TS);
 

@@ -52,7 +52,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// <summary>
   /// Button action to display one of each CustomAsset under test.
   /// </summary>
-  [UsedImplicitly]
+  
   public void ShowCustomAssetValues() {
     textComponent.text =
       string.Format("currentFloat asset is {0}\n" +
@@ -67,7 +67,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// <summary>
   /// Make sure that a custom asset saved to persistent storage can be retrieved later
   /// </summary>
-  [UsedImplicitly]
+  
   public void CheckPersistence() {
     persistent.Value = 12;
     persistent.Save();
@@ -80,7 +80,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// Checks that members can be added in the inspector and dunamically. Also tests
   /// persistence by writing them out,clearing then retrieving them again.
   /// </summary>
-  [UsedImplicitly]
+  
   public void CheckMemberPersistence() {
     withMembers["One"]     = 22;
     withMembers["Dynamic"] = 44;
@@ -101,13 +101,13 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// <summary>
   /// Since the component to monitor is a float we need a conversion to CustomAsset.Integer
   /// </summary>
-  [UsedImplicitly]
+  
   public void UpdateIntegerAsset() { integer.Value = (int) (integerSlider.value); }
 
   /// <summary>
   /// Button action to test the undating of a CustomAsset
   /// </summary>
-  [UsedImplicitly]
+  
   public void UpdateCustomFloat() { StartCoroutine(UpdateCustomFloatCoroutine()); }
 
   // Update is called once per frame
@@ -132,19 +132,19 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// <summary>
   /// Show a random quote in the results text panel
   /// </summary>
-  [UsedImplicitly]
+  
   public void ShowQuote() { textComponent.text = quotes.Pick(); }
 
   /// <summary>
   /// Press a button and a random sound fires
   /// </summary>
-  [UsedImplicitly]
+  
   public void PlayAudioEvent() { audioClipsEvent.Invoke(); }
 
   /// <summary>
   /// Check Base.Instance for accuracy
   /// </summary>
-  [UsedImplicitly]
+  
   public void CheckInstance() {
     Float floatRef = Base.Instance<Float>("SampleFloatVariable");
     textComponent.text = "Find existing " + floatRef.name + " as " + currentFloat.name + "\n";

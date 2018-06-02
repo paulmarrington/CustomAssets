@@ -16,7 +16,7 @@ namespace CustomAsset {
     /// Current scene as seen on the screen
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#scene">More...</a></remarks>
-    [UsedImplicitly] protected Scene Scene = default(Scene);
+     protected Scene Scene = default(Scene);
 
     /// <summary>
     /// Load scene by name. The scene must be registered in the build for this to be successful
@@ -24,7 +24,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#loadscene">More...</a></remarks>
     /// <param name="name">Name of scene</param>
     /// <returns>Enumerator that will allow a delay until the scene loading is complete</returns>
-    [UsedImplicitly]
+    
     protected virtual IEnumerator LoadScene(string name) {
       var handle = SceneManager.LoadSceneAsync(sceneName: name, mode: LoadSceneMode.Single);
       while (!handle.isDone) yield return null;
@@ -50,7 +50,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#pushbutton">More...</a></remarks>
     /// <param name="name">Name of button in the project hierarchy</param>
     /// <returns>Waits one update cycle so that button actions get a chance to start</returns>
-    [UsedImplicitly]
+    
     protected virtual IEnumerator PushButton(string name) {
       yield return PushButton(Objects.Component<Button>(name));
     }
@@ -61,7 +61,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#log">More...</a></remarks>
     /// <param name="format">Format string - or simple string if no parameters</param>
     /// <param name="parameters">List of parameters to fill the format</param>
-    [UsedImplicitly]
+    
     protected void Log(string format, params object[] parameters) {
       Debug.LogFormat(format, parameters);
     }

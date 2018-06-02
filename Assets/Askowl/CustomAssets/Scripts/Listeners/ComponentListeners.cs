@@ -65,7 +65,7 @@ namespace CustomAsset {
     /// THe channel that holds the event of interest, as set as part of the asset.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    [UsedImplicitly]
+    
     public TA CustomAsset { get { return BaseAsset as TA; } }
 
     /// <summary>

@@ -57,7 +57,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#selectorchoices">More...</a></remarks>
     public T[] Choices {
       get { return choices; }
-      [UsedImplicitly]
+      
       set {
         choices = value;
         Init();
@@ -70,7 +70,7 @@ namespace CustomAsset {
     /// The location of the next choice in the sequence.
     /// <remarks><a href="http://customassets.marrington.net#selectorcycleindex">More...</a></remarks>
     /// </summary>
-    [UsedImplicitly]
+    
     public int CycleIndex { get { return cycleIndex % choices.Length; } }
 
     private List<T> remainingSelections;

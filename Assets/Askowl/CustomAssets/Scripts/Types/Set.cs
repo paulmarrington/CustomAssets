@@ -27,7 +27,7 @@ namespace CustomAsset {
     /// <summary>Add an entry if one does not exist already - and trigger a change event.</summary>
     /// <remarks><a href="http://customassets.marrington.net#addentry">More...</a></remarks>
     /// <param name="entry">Element to add if it isn't in the list</param>
-    [UsedImplicitly]
+    
     public void Add(T entry) {
       if (Contains(entry)) return;
 
@@ -39,7 +39,7 @@ namespace CustomAsset {
     /// <summary>Remove an entry if it exists - and trigger a change event.</summary>
     /// <remarks><a href="http://customassets.marrington.net#removeentry">More...</a></remarks>
     /// <param name="entry">Element to remove if it is in the list</param>
-    [UsedImplicitly]
+    
     public void Remove(T entry) {
       if (!Contains(entry)) return;
 
@@ -52,18 +52,18 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#containsentry">More...</a></remarks>
     /// <param name="entry">Element that may or may not be in the set</param>
     /// <returns>True if the element supplied is in this set</returns>
-    [UsedImplicitly]
+    
     public bool Contains(T entry) { return Value.Contains(entry); }
 
     /// <summary>Return the number of entries in the Set</summary>
     /// <remarks><a href="http://customassets.marrington.net#count">More...</a></remarks>
-    [UsedImplicitly]
+    
     public int Count { get { return Value.Count; } }
 
     /// <summary>Call an action on every entry in the set. Order is from last to first so that items can be removed safely.</summary>
     /// <param name="action">Action called with one entry from the set</param>
     /// <remarks><a href="http://customasset.marrington.net#forall">More...</a></remarks>
-    [UsedImplicitly]
+    
     public void ForEach(Func<T, bool> action) {
       // Loop backwards since the list may change when disabling
       for (int i = Value.Count - 1; i >= 0; i--) {

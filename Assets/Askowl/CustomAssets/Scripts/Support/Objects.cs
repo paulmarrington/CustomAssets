@@ -16,7 +16,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#findt">More...</a></remarks>
     /// <typeparam name="T">Class that inherits from UnityEngine.Object</typeparam>
     /// <returns>Object if found - or null if not</returns>
-    [UsedImplicitly]
+    
     public static T Find<T>() where T : Object { return Find<T>(typeof(T).Name); }
 
     /// <summary>

@@ -22,7 +22,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
     /// <see cref="Play(AudioSource)"/>
     /// <param name="gameObject">GameObject instance with an attached audio source</param>
-    [UsedImplicitly]
+    
     public void Play(GameObject gameObject) { Play(gameObject.GetComponent<AudioSource>()); }
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace CustomAsset {
     /// </summary>
     /// <see cref="Play(GameObject)"/>
     /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
-    [UsedImplicitly]
+    
     public void Play(AudioSource source) {
       source.clip        = Pick();
       source.pitch       = pitch.Pick();
