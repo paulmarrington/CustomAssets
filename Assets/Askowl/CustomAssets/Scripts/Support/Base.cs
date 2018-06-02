@@ -20,7 +20,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Name of member to retrieve and ToStringify</param>
     /// <returns>string reprentation of value associated with this member</returns>
-    
+
     public virtual string ToStringForMember(string memberName) { return memberName; }
 
     /// <summary>
@@ -32,12 +32,12 @@ namespace CustomAsset {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    
-    public static TI Instance<TI>(string name = null) where TI : Base {
-      TI instance = Objects.Find<TI>(name);
-      if (instance != null) return instance;
 
-      instance      = CreateInstance<TI>();
+    public static TI Instance<TI>(string name = null) where TI : Base {
+      TI[] instances = Objects.Find<TI>(name);
+      if (instances.Length>0) return instances[0];
+
+      TI instance      = CreateInstance<TI>();
       instance.name = name ?? typeof(TI).Name;
 #if UNITY_EDITOR
       instance.unloadable = false;
