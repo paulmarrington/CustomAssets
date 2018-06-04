@@ -1,5 +1,6 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -9,15 +10,28 @@ namespace CustomAsset {
   /// Common code for all event listeners. It registers and deregisters the listener with the channel.
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
-  public abstract class Listener : MonoBehaviour {
-    [SerializeField]                      protected internal Base   BaseAsset;
-    [SerializeField, Tooltip("Optional")] protected internal string ForMember;
+  [Serializable]
+  public class Listener {
+    [SerializeField] private Base   baseAsset;
+    [SerializeField] private string ForMember;
+
+    public Action<string> OnChange;
+
+    public Base BaseAsset { get { return baseAsset; } }
+
+    public void Register(Action<string> onChange) {
+      ForMember = ForMember.Trim();
+      if (string.IsNullOrEmpty(ForMember)) ForMember = null;
+      OnChange = onChange;
+      baseAsset.Register(this);
+    }
+
+    public void Deregister() { baseAsset.Deregister(this); }
 
     /// <summary>
     /// Called by the channel when an event occurs.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
-    
     public void OnTriggered() { OnChange(null); }
 
     /// <summary>
@@ -28,20 +42,5 @@ namespace CustomAsset {
     public void OnTriggered(string memberName) {
       if ((ForMember == null) || (memberName == ForMember)) OnChange(memberName);
     }
-
-    /// <summary>
-    /// After we have ensured the change is for the expected member, tell interested parties.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
-    /// <param name="memberName"></param>
-    protected abstract void OnChange(string memberName);
-
-    private void OnEnable() {
-      ForMember = ForMember.Trim();
-      if (string.IsNullOrEmpty(ForMember)) ForMember = null;
-      BaseAsset.Register(this);
-    }
-
-    private void OnDisable() { BaseAsset.Deregister(this); }
   }
 }

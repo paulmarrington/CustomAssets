@@ -299,5 +299,11 @@ public class CustomAssetTests : PlayModeTests {
 
     CheckPattern(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 1234 .* 1234$", results.text);
   }
+
+  [UnityTest]
+  public IEnumerator TestCompoundSetters() {
+    var largeAsset = Base.Instance<LargerAssetSample>();
+    yield return null;
+  }
 }
 #endif

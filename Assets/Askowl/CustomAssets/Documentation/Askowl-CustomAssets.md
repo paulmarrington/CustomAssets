@@ -1,10 +1,8 @@
 # [Custom Assets](http://www.askowl.net/unity-customassets-package)
 
 ## Executive Summary
-Custom assets are C# classes that are Unity3D aware so that it is a project asset. They hold data set in the Unity Inspector, changed in-game if allowed and written to persistent storage. It also has an event system to alert components on change. The package includes listener MonoBehaviours, both generic and specific. There are granular custom assets around triggers, booleans, integers, floats and strings for decoupling data from game specific code. Sets provide a compelling alternative to enumerations while a dictionary allows access by key. For additional functionality, build your own using the supplied `AudioClips` as a sample.
-
-As well as a single piece of Data, custom assets also have the concept of members. So, a health storage asset could have many results accessible by the name of the member.
-
+Custom assets are C# classes that are Unity3D aware so it is a project asset. They hold data set in the Unity Inspector, changed in-game if allowed and written to persistent storage. It also  an event system to alert components on change. The package includes listener MonoBehaviours, both generic and specific. There are granular custom assets around triggers, booleans, integers, floats and strings for decoupling data from game specific code. Sets provide a compelling alternative to enumerations while a dictionary allows access by key. For additional functionality, build your own using the supplied `AudioClips` as a sample.
+Every custom asset has a members dictionary to allow for multiple entries keyed on the name. A health asset, for example, may have references to the health for every member of the party.
 The custom assets package includes an in-memory pooling system for performance, helpers for working with assets and a basic play mode test framework.
 
 * {:toc}
@@ -12,38 +10,38 @@ The custom assets package includes an in-memory pooling system for performance, 
 > Read the code in the Examples Folder and run the Example scene
 
 ## Introduction
-Unity provides a base class called [ScriptableObject](https://docs.unity3d.com/ScriptReference/ScriptableObject.html). Derive from it to create objects or assets that don't need to be attached to game objects.
+Unity provides a base class called [ScriptableObject](https://docs.unity3d.com/ScriptReference/ScriptableObject.html). Derive from it to create objects or assets not attached to game objects.
 
-In short, a `ScriptableObject` is a class that contains serialisable data and functionality. Each instance of a class that derives from `ScriptableObject` has representation on disk as an asset. Each asset is a source for data and actions not coupled to a scene. The decoupling makes for functionality that is easy to test. It also provides modules to be shared across and between projects.
+A `ScriptableObject` is a class that contains serialisable data and functionality. Each instance of a class that derives from `ScriptableObject` has representation on disk as an asset. Each asset is a source for data and actions not coupled to a scene. The decoupling makes for functionality easy to test. It also provides modules shared across and between projects.
 
 Custom assets are scriptable objects with benefits.
-* They have a description associated with them that make editor usage easier. The creator can provide more information than just a name on the why and wherefore of an asset.
+* A description field to make Unity editor usage easier. The creator can provide more information than just a name on the why and wherefore of an asset.
 * All custom assets can have listeners registered against them that get informed of changes in value. In may, new cases components can react to or create changes without additional code.
 * Storage can be of anything serialisable - from primitives like float to complex objects, or even MonoBehaviours.
-* Custom assets can be saved on program exit and reloaded at startup, providing a clean and straightforward persistence mechanism.
+* Custom assets save on program exit and reloaded at startup, providing a clean and straightforward persistence mechanism.
 * Basic types offered include Float, Integer, Boolean, Trigger, String and Set.
-* Every custom asset has a dictionary of members to save more than one copy of data - accessed by name.
+* Every custom asset has a dictionary of members accessed by name.
 
 ### Custom Assets - the new Singleton
 Static variables are not evil, just inflexible. Singleton MonoBehaviour instances are not corrupt either. However, both encourage tight coupling between interested parties.
 
-So now for a bit of mild blasphemy. Assets created from scriptable objects, and hence custom assets are Unity supported *singletons*. Create `[SerializeField]` fields and drag an asset of the correct type onto them in the editor. All reference to the same in-memory instance.
+So now for mild blasphemy. Assets created from scriptable objects, and hence custom assets are Unity supported *singletons*. Create `[SerializeField]` fields and drag an asset of the correct type onto them in the editor. All reference to the same in-memory instance.
 
-Using custom assets over traditional singletons provide some benefits:
+Using custom assets over traditional singletons provide benefits:
 
 * Code is less coupled - or is that more decoupled?
-* Custom assets can be tested in isolation.
-* Alternative custom assets can be injected into objects that are expecting them. An inventory may depend on location or whether the player is in training mode.
+* Custom assets test in isolation.
+* Inject custom assets into objects that are expecting them. An inventory may depend on location or whether the player is in training mode.
 * It is less error prone to pass custom assets between scenes and projects.
-* Functionality can be more generalised for direct reuse from within the editor without writing as much scaffolding code. A `Float` custom asset, for example, can have listeners that hook into display objects. It can also be updated by sliders and scroll-bars without additional code by adding it to the *On Value Changed* field.
-* A custom asset as a singleton to hold game data has one massive failing. There is one copy only. If you want to store player health for an unknown number of players, how do we save it? For this, custom assets have the concept of members. Each named entry holds a reference to the custom asset storage that can be accessed by member name.
+* Functionality is more generalised for direct reuse from within the editor without writing as much scaffolding code. A `Float` custom asset, for example, can have listeners that hook into display objects. It can also update with sliders and scroll-bars without additional code by adding it to the *On Value Changed* field.
+* A custom asset as a singleton to hold game data has one massive failing. There is one copy only. If you want to store player health for an unknown number of players, how do we save it? For this, custom assets have the concept of members. Each named entry holds a reference to the custom asset storage that keyed to member name.
 
 ### Custom Assets as Game Managers
-Managers are a favourite Unity pattern. As well as a system-wide master manager, many games have them for player, enemies, sound and more. They have some standard features:
+Managers are a favourite Unity pattern. And a system-wide master manager, many games have them for player, enemies, sound and more. There are standard features:
 
-* They are accessed by a static `Instance` variable.
-* They are a MonoBehaviour that sets `Instance` in `Awake()`.
-* They call `DontDestroyOnLoad(gameObject)` if they are to be common across scenes.
+* Access by a static `Instance` variable.
+* A MonoBehaviour that sets `Instance` in `Awake()`.
+* Call `DontDestroyOnLoad(gameObject)` if they are to be common across scenes.
 * There is often one manager to rule them all.
 
 It is not uncommon to see code like:
@@ -54,7 +52,7 @@ health = GameManager.Instance.PlayerManager.MaxHealth;
 
 Try testing that component in isolation.
 
-By contrast, a custom asset approach would be more like:
+A custom asset approach would be more like:
 
 ```C#
 [SerializeField] PlayerManager;
@@ -67,16 +65,16 @@ To work with this version create a test scene and put in an individual PlayerMan
 ### Custom Assets as Configuration
 The most common use for scriptable objects is to ignore the scriptable part and use them as configuration containers. A Custom Asset is a file within the project. This file contains a reference to the script and serialised copies of all the data as added in the Unity editor.
 
-You can safeguard the serialisable data by making it a private `[SerializeField]` and using accessors to allow reading. Alternatively, you can use them as seed data and change them during program execution.
+You can safeguard the serialisable data by making it a private `[SerializeField]` and using accessors to allow reading, and use them as seed data and change them during program execution.
 
 ```C#
 class MyData : CustomAsset {
 [SerializeField] private int maxHealth;
 [SerializeField] private float timeOfDay;
 
-// maxHealth cannot be changed outside this class
+// maxHealth is read-only outside this class
 public int MaxHealth { get { return maxHealth; } };
-// timeOfDay can be updated
+// timeOfDay is read-write
 public float TimeOfDay { get { return timeOfDay; } set { timeOfDay = value; } };
 ```
 Later I will introduce better and more granular ways to handle data.
@@ -91,11 +89,10 @@ var clone = Object.Instantiate(myCustomAsset).Value;
 Cloning is much more expensive at runtime than baking in protection during the compile phase.
 
 ### Custom Assets and Persistence
-Custom Assets adds optional persistence to scriptable objects. Persistent assets must be read/write and have the `persistent` field set in the Unity Editor.
+Custom Assets adds optional persistence to scriptable objects.
+Each persistent object serialises to JSON and written as a `PlayerPref` entity. The total storage for an app is about one megabyte. For more massive storage needs, use a database.
 
-Each persistent object is serialised to JSON and written as a `PlayerPref` entity. For this reason, the total storage is about one megabyte. For more massive storage needs, use a database.
-
-The key is made up of the name of the asset and the class name, making it unique to the application.
+The key comprises the name of the asset and the class name, making it unique to the application.
 
 Set persistence from the Unity inspector or code.
 
@@ -116,7 +113,7 @@ public sealed class CustomAssetsExample: MonoBehaviour {
 ```
 <img src="SampleCustomAsset.png" width="50%">
 
-Custom assets aid decoupling. Many components can operate without directly knowing each other.
+Custom assets aid decoupling. Many components can operate without knowing each other.
 
 Access custom asset values by either casting or using the `Value` getter. ToString() will aways call ToString() on the Value field.
 ```C#
@@ -125,7 +122,7 @@ Debug.LogFormat("{0} == {1}",maxFloat.Value.ToString(), maxFloat.ToString());
 ```
 
 ### Instance
-There is a second way. As long as a custom asset is referenced as above at least once, it is available with code access elsewhere.
+There is a second way. Use `Instance` to retrieve a reference to any custom asset created or retrieved before.
 
 ```C#
 Float lifetime = Float.Instance("Lifetime");
@@ -176,7 +173,7 @@ public class LargerAssetSample : CustomAsset.OfType<LargerAssetContents> { }
   }
 ```
 
-All CustomAsset instances have a description field. Since you can use generic assets, it is useful to give others comments on what specific assets represent.
+All CustomAsset instances include a description field. Since you can use generic assets, it is useful to give others comments on what specific assets represent.
 
 ### Primitive Custom Assets
 ```C#
@@ -188,7 +185,7 @@ All CustomAsset instances have a description field. Since you can use generic as
 Each if these custom assets can in a project with or without supporting code. It is possible, for example, to have a `Float` value set in the ***On Value Changed*** field of a Slider or Scrollbar, then displayed using listener like `CustomAsset.UIImageFillListener()` to set the fill amount on a health bar,
 
 ### Trigger
-A trigger is unusual in that it does not have any data apart from CustomAsset requirements. Triggers do not have persistence, so a subclass containing data cannot be saved.
+A trigger is unusual because it has no data apart from event requirements. Triggers do not have persistence, so a subclass containing data will not save.
 
 ### Members
 A custom asset with any content data also can store and retrieve separate copies by name. For persistent custom assets, the member names and values saved to storage along with the main value.
@@ -214,10 +211,10 @@ Assert.True(myInt.Contains("Two"));
 myInt.Clear();
 Assert.False(myInt.Contains("Two"));
 ```
-`ToStringForMember` requires special mention as it can be use in Inspector event receivers to set values directly.
+`ToStringForMember` requires special mention as it can be use in Inspector event receivers to set values.
 
 ### Custom Asset Sets
-`Set`, like `OfType` is a generic class. To instantiate it requires the type of the set entries.
+`Set`, like `OfType` is a generic class. To instantiate it requires the set entries.
 
 ```C#
 [CreateAssetMenu(menuName = "Examples/SetPicker", fileName = "SetPickerSample")]
@@ -225,17 +222,17 @@ public sealed class SetPickerSample : Set<AudioClip> {
   public void Play() { AudioSource.PlayClipAtPoint(clip: Pick(), position: Vector3.zero); }
 }
 ```
-This example can be used to play one of a selection of sounds. This is a great way to make a game sound less tedious.
+This example can play  a sound from the list. This is a great way to make a game sound less tedious.
 
 #### Pick()
 All classes inheriting from `Set` have a `Pick()` method with two controlling field entries:
-* ***cycle***: True to return entries sequentially, false to get a random selection.
-* ***exhaustiveBelow***: If the number of entries in the set is below this value, then while `Pick()` returns a random entry, no entry is retrieved twice before all the others have had a turn. From a list of three, nothing appears random.
+* ***cycle***: True to return entries in order, false to get a random selection.
+* ***exhaustiveBelow***: If the number of entries in the set is below this value, then while `Pick()` returns a random entrywith no repeats. From a list of three, nothing appears random.
 
 These options are available in the editor when you create a custom asset from a `Set`.
 
 #### Add(entry)
-While in most cases the `Set` will be filled by the Unity Editor to save as an Asset, there are occasions where adding additional elements will be needed.
+While in most cases we use the Inspector to fill the `Set`, sometimes we need dynamic changes.
 #### Remove(entry)
 On occasions, a `Set` entry will expire, and it will be necessary to remove them.
 #### Contains(entry)
@@ -248,10 +245,10 @@ Call an action for every entry in a set. If the action returns false, all is com
 mySet.ForEach((s) => {return s!="Exit";});
 ```
 #### StringSet
-Strings as a set have many usages. `Quotes` is an implementation of `StringSet`.
+Strings as a set have many usages. `Quotes` implementats `StringSet`.
 
 ### AudioClips
-Playing one from a selection of audio clips have been a well-used proof of concept for `ScriptableObject`. Because custom assets, sets and some other toys from this package make the implementation even simpler, I am displaying the source here.
+Playing one audio clip from a list has been a well-used proof of concept for `ScriptableObject`. Because custom assets, sets and some other toys from this package simplify everything, I am displaying the source here.
 
 ```C#
   [CreateAssetMenu(menuName = "Custom Assets/Sound Clips", fileName = "Clips")]
@@ -272,11 +269,10 @@ Playing one from a selection of audio clips have been a well-used proof of conce
 ```
 `Range` class and `RangeBound` attribute are available in the custom assets package. `AudioClips` will work without them, but sliders are easier to use.
 
-The actor, `Play`, requires an `AudioSource`. An audio source must be attached to the game object that is to make a sound so that it comes from the correct source. It cannot be part of a custom asset which is not a component.
+The actor, `Play`, requires an `AudioSource` attached to the game object. It cannot be part of a custom asset.
+The Unity framework solves this problem with `UnityEvent`.
 
-Fortunately, the Unity framework has a solution for that problem. It is called `UnityEvent`.
-
-```C#
+```c#
   [SerializeField] private AudioClips audioClips;
   [SerializeField] private UnityEvent audioClipsEvent;
 ```
@@ -286,7 +282,7 @@ will display in the inspector as follows.
 
 <img src="AudioClips2.png" width="50%">
 
-The reference to `AudioClips` is optional. It is only there so that we can change the fields in the editor without going to the asset.
+The reference to `AudioClips` is optional. It is only there so we can change the fields in the editor without going to the asset.
 
 If you are calling `Play` from code, then you can supply an `AudioSource` or a game object that has an audio source component.
 
@@ -299,10 +295,10 @@ If you are calling `Play` from code, then you can supply an `AudioSource` or a g
 Using `AudioClips` wherever you have sound effects makes your game sound a lot more lively. You could also consider making similar assets for visual effects or animations.
 
 ## Editing Custom Assets
-Serialised fields can be edited in the Unity Inspector just as you would a MonoBehaviour attached to a game object. Unlike a scriptable object, custom assets unload when play mode completes. In this way, they behave more like MonoBehaviours. There is a reason for this madness. In the Unity editor, scriptable objects remain loaded and only reload if the backing code or asset changes on disk. If we don't reset on leaving play mode, changed data from one run lives to the next.
+Edit Serialised fields in the Unity Inspector just as you would a MonoBehaviour attached to a game object. Unlike a scriptable object, custom assets unload when play mode completes. In this way, they behave more like MonoBehaviours. There is a reason for this madness. In the Unity editor, scriptable objects remain loaded and only reload if the backing code or asset changes on disk. If we don't reset on leaving play mode, changed data from one run lives to the next.
 
 ## Custom Assets as Resources
-If you can accept the tighter coupling, you can load custom assets my name. It is an alternative to dropping them into referring fields in the Unity inspector. The custom asset must reside in a directory under a ***Resources*** path - anywhere in the project.
+If you can accept the tighter coupling, you can load custom assets my name. It is an alternative to dropping them into referring fields in the Unity inspector. The custom asset must live in a directory under a ***Resources*** path - anywhere in the project.
 
 ```C#
 // expects /anywhere-in-assets/Resources/Audio/cow-sounds.asset
@@ -312,7 +308,7 @@ var moos = Resources.Load<AudioClips>("Audio/cow-sounds");
 ## Custom Assets as Event Sources
 The first significant departure from ScriptableObject that CustomAsset provides is the ability to act as an event source.
 
-Primitive custom assets (trigger, boolean, integer, float and string) are extremely easy to use. Drag a reference using the Unity editor into any MonoBehaviour or CustomEvent that needs to access or update them.
+Primitive custom assets (trigger, boolean, integer, float and string) are easy to use. Drag a reference using the Unity editor into any MonoBehaviour or CustomEvent that needs to access or update them.
 
 Listeners (described below) also need a reference. They register for changing events. The event fires when and only when the custom asset changes.
 
@@ -333,7 +329,7 @@ public sealed class DirectEventListenerSample : CustomAsset.Listener {
 <img src="ListenerToDisplayFloat.png" width="50%">
 
 ## Custom Assets as Event Listeners
-Life begins now. Without writing any code, you can use the prepackaged custom assets and listeners to connect components without them knowing about each other.
+Life begins now. Writing no code, you can use the prepackaged custom assets and listeners to connect components without them knowing about each other.
 
 Don't believe me? Create a game object inside a canvas and add a slider component.
 
@@ -341,7 +337,7 @@ Don't believe me? Create a game object inside a canvas and add a slider componen
 
 <img src="Slider-6-Create-Custom-Asset.png" width="50%">
 
-***Step 2***: Select the custom asset and add any initial data. Make sure it is set read/write.
+***Step 2***: Select the custom asset and add any initial data. Make sure it  set read/write.
 
 <img src="Slider-1-Hierarchy.png" width="25%">
 
@@ -363,7 +359,7 @@ Don't believe me? Create a game object inside a canvas and add a slider componen
 
 For extra points, we can create a codeless listener.
 
-***Step 7***: Create a UI Button GameObject in a Canvas and change the image type to *Filled*. Note that moving the *Fill Amount* slider causes the button to change background proportionately.
+***Step 7***: Create a UI Button GameObject in a Canvas and change the image type to *Filled*. Note that moving the *Fill Amount* slider causes the button to change background.
 
 <img src="Slider-7-Image-to-Fill.png" width="50%">
 
@@ -371,7 +367,7 @@ For extra points, we can create a codeless listener.
 
 <img src="Slider-8-Listener.png" width="50%">
 
-***Step 9***: Run the application and move the slider created above. The button fills and empties accordingly.
+***Step 9***: Run the application and move the slider created above. The button fills and empties.
 
 <img src="Slider-9-Image-Filling.png" width="25%">
 
@@ -380,7 +376,7 @@ All concrete listeners must implement `void OnChange(string memberName)`.
 A listener has a `ForMember` entry visible in the inspector. If this entry is not empty, then only events sent from matching members pass through. It allows an image fill listener for a health bar to react with a related member.
 
 ### Generic Component Listeners
-The other end of the Custom Asset event pipeline can be a listener MonoBehaviour. The generic implementations below are designed to support functionality for the attached GameObject. Concrete listeners must implement `Change(value)` where *value* is the primitive encapsulated by a base custom asset.
+The other end of the Custom Asset event pipeline can be a listener MonoBehaviour. The generic implementations below support functionality for the attached GameObject. Concrete listeners must implement `Change(value)` where *value* is the primitive encapsulated by a base custom asset.
 
 `Change` is member aware. If the event triggers with a member name, it provides the related value for processing.
 
@@ -432,10 +428,10 @@ The components listed here are part of a growing list of listeners that can used
 ##### UICanvasGroupAlphaListener
 By adding a canvas group to any GameObject inside a canvas, we can change the transparency (alpha) for all GameObjects inside the hierarchy.
 
-This listener, when added to the same GameObject, monitors a Float custom asset and change the canvas group transparency accordingly. I find it useful to fade panels in and out.
+This listener, when added to the same GameObject, monitors a Float custom asset and change the canvas group transparency. I find it useful to fade panels in and out.
 
 ##### UIImageFillListener
-Images in fill mode make good health and stamina bars. Rather than code them separately for each requirement in each project, create a Float custom asset. Use this listener to change the fill amount on the upper image. You can even consider making the Float persistent so that it does not change if the game restarts.
+Images in fill mode make good health and stamina bars. Rather than code them for each requirement in each project, create a Float custom asset. Use this listener to change the fill amount on the upper image. You can even consider making the Float persistent so it does not change if the game restarts.
 
 ##### UITextListener
 Because it is a `StringListener`, `UITextListener` can accept any custom asset and display the `ToString()` conversion. Just drop it on to any game object that has a Text component, and you can change the value from anywhere.
@@ -443,21 +439,22 @@ Because it is a `StringListener`, `UITextListener` can accept any custom asset a
 #### Animation Listeners
 Unity has an animation system that includes a state machine and associated animation timelines, packaged with the project as an Animator Controller and Animation assets.
 
-Given a reference to an Animator the code can trigger state changes directly or by modifications to boolean, float or integer parameters.
+By Referencing an Animator, the code can trigger state changes.
 
 <img src="AnimationTriggers.png" width="50%">
 
 ### Unity Event Listeners
-The Unity event system more tightly couples components than custom assets. Listeners must have a reference to the element containing it to be able to signal their interest. With custom assets, the event is owned by a third party that also happens to include the data that triggered it.
+The Unity event system is more tightly coupled. Listeners must reference  the element containing an event. With custom assets, the event is a third party that also includes the data that triggered it.
 
-In the following example, we have a UnityEventListener MonoBehaviour that has a reference to a Trigger custom access. When the trigger fires it plays the audio source.
+In the following example, we have a UnityEventListener MonoBehaviour that references a Trigger custom access. When the trigger fires it plays the audio source.
 
 <img src="UnityEvent.png" width="50%">
 
 ## Custom Asset Persistence
-If a custom asset is marked persistent in the Inspector, then it writes itself out to the PlayerPref database using a key combining the name and class.
 
-Persistence occurs when the asset's `OnDisable` method is called - typically when the operating system has decided to throw the game out of memory.
+If a custom asset is persistent in the Inspector, then it writes itself out to the PlayerPref database using a key combining the name and class.
+
+Persistence occurs `OnDisable` - when the operating system has thrown the game out of memory.
 
 For primitive assets, any updates happen without further coding.
 
@@ -466,20 +463,77 @@ For primitive assets, any updates happen without further coding.
   age.Value = 32.2f;
 ```
 
-For custom assets containing a more complicated class or struct, the creator is responsible for marking changes either directly with `Changed()` or as part of the update. For the latter, creating accessors in the custom asset provided for clearer calling code that using Value directly - while calling `Set` on the update informs all listeners.
+For custom assets containing a more complicated class or struct, the creator marks changes as part of the update. Creating accessors in the custom asset provides for clearer calling code that using Value - while calling `Set` on the update informs all listeners, but only for read/write assets that have changed.
 
 ```C#
 [CreateAssetMenu(menuName = "Examples/LargerAssetSample")]
-public class LargerAssetSample : CustomAsset.OfType<CustomAssetsExample.LargerAssetContents> {
-  public int AnInteger { get { return Value.I; } set { Set(() => Value.I = value); } }
+public partial class LargerAssetSample : CustomAsset.OfType<CustomAssetsExample.LargerAssetContents> {
+  public int AnInteger { get { return Value.I; } set { Set(ref Value.I, value); } }
 
-  public float AFloat { get { return Value.F; } set { Set(() => Value.F = value); } }
+  public float AFloat { get { return Value.F; } set { Set(ref Value.F, value); } }
 
-  public string AString { get { return Value.S; } set { Set(() => Value.S = value); } }
+  public string AString { get { return Value.S; } set { Set(ref Value.S, value); } }
 }
 ```
 
+### But What if I'm Different?
+
+Then there are two generic setters for you.
+
+```c#
+protected void Set<TF>(ref TF field, TF from);
+// and
+protected void Set<TF>(ref TF field, TF from, Func<TF, TF, bool> equals);
+```
+
+The first used the `object.Equals` method to see if a change has happened. For non-primitives this will check for the same object (at the same address). This may be what you want. More often you will want to compare the members for equality. 
+
+When the custom asset data is not a class of your making, overriding `Equals` may not be suitable. In Unity3d, Quaternion and Vector2/3/4 are classic examples. Quaternion.Equals does an exact comparison and an exact comparison does not play well with floating point due to rounding. Quaternions also override `==` to provide an approximately equals function.
+
+```c#
+    protected void Set(ref Quaternion field, Quaternion from) {
+      Set(ref field, from, (a, b) => a == b);
+    }
+```
+
+
+
+### Singularities and the Importance of Equals
+
+Many components used to create a custom assets are atomic. This means that while code may need to inspect fields, a update will always be a complete change to the component.
+
+```c#
+public struct Location {
+    public float latitude;
+    public float longitude;
+    public float altitude;
+    public double timestamp;
+}
+  [CreateAssetMenu(menuName = "Custom Assets/Location")]
+  public sealed class LocationAsset : OfType<Location> {
+    public override bool Equals(object other) {
+      if (other == null || !(other is Location)) return false;
+      Location another = (Location) other;
+      return AlmostEqual(Value.latitude, another.latitude) &&
+             AlmostEqual(Value.longitude, another.longitude) &&
+             AlmostEqual(Value.altitude, another.altitude);
+    }
+    public float Latitude { get Value.latitude; }
+    // etc
+  }
+```
+
+I have introduced another helper function in `AlmostEqual`, defined as:
+
+```c#
+    protected bool AlmostEqual(float  a, float  b) { return Math.Abs(a - b) < 1e-5; }
+    protected bool AlmostEqual(double a, double b) { return Math.Abs(a - b) < 1e-5; }
+```
+
+It would be better to calculate the distance between the two points and check that.
+
 ## Asset Support
+
 ### Components
 `Components` is a static helper class with functions to create and find Components.
 
@@ -492,33 +546,33 @@ If there are no matching objects in the scene, `Find` tries to load a resource o
 Find a component by type within a specified GameObject. If not found, do a global Find on the type.
 
 #### Components.Create&lt;T>(gameObject, name)
-Calling this creates a component of type T inside the provided game object.  The instance of T is given the name supplied or the type name if the former is null.
+Calling this creates a component of type T inside the provided game object.  The instance of T has the name supplied or the type name if the former is null.
 
 #### Components.Create&lt;T>(name)
-The overload that does not supply a gameObject creates a new one and name the same as the component. The new gameObject is attached to the root of the current hierarchy.
+The overload that does not supply a gameObject creates a new one and name the same as the component. The new gameObject attaches to the root of the current hierarchy.
 
 ### Asset Pooling
-Unity3D games can run on lightweight platforms such as phones, tablets and consoles. Virtual or augmented reality games are immersive, and the least stutter in frame-rate is evident and annoying. Two of the most prominent culprits during gameplay are instantiating many complex objects and garbage collection.
+Unity3D games can run on lightweight platforms such as phones, tablets and consoles. Virtual or augmented reality games are immersive, and the least stutter in frame-rate is clear and annoying. Two of the most prominent culprits during gameplay are instantiating many complex objects and garbage collection.
 
-`Instantiate()` and `Destroy()` aren't evil, but using them on game objects that are regularly needed is an overhead that is better overcome. The solution is to use a pool of these objects. It minimises expensive instantiation, and the garbage collector does not have to reclaim the memory for every usage.
+`Instantiate()` and `Destroy()` aren't evil, but using them has a large impact on performance. The solution is to use a pool of these objects. It minimises expensive instantiation, and the garbage collector does not have to reclaim the memory for every usage.
 
-A GameObject becomes a pool of it has the `Pool` script attached. Any child object becomes candidates for pooling. Alternatively, you can drag the ***Askowl/Assets/Prefabs/Pools*** prefab into the hierarchy. You can have as many pools as you wish and they may reside in any scene. The names have to be unique.
+A GameObject becomes a pool of it has the `Pool` script attached. Any child object becomes candidates for pooling. Drag the ***Askowl/Assets/Prefabs/Pools*** prefab into the hierarchy. You can have as many pools as you wish and they may live in any scene. The names have to be unique.
 
 <img src="PoolInScene.png" width="50%">
 
-In this example, three GameObjects are pooling aware. ***Scene GameObject*** has been created within the scene, while the other two copies of the same prefab with differing values in editor-available fields. They represent two different characters or effects that differ only in detail.
+In this example, three GameObjects are pooling aware. ***Scene GameObject*** is in the scene, while the other two copies of the same prefab with differing values in editor-available fields. They represent two different characters or effects that differ.
 
-To retrieve a clone from the pool, use `Acquire()`. A new GameObject is cloned from the master if the pool is empty.
+To retrieve a clone from the pool, use `Acquire()`. Cloning of a new GameObject from the master occurs if the pool is empty.
 
 To release an object back to the pool, disable it.
 
 ```C#
 myClone.gameObject.SetActive(false);
 ```
-Never call `Destroy()` unless you don't want to reused the GameObject. It cannot be returned to the pool after `Destroy`.
+Never call `Destroy()` unless you don't want to reused the GameObject. A destroyed object does not return to the pool.
 
 #### Acquire GameObject by Name
-Calling `Acquire` with the name of the GameObject retrieves a clone from the pool, instantiating a new one if necessary. `Pool.Acquire("Scene GameObject")` does the trick, or returns null if the Pool did not contain an original by that name.
+Calling `Acquire` with the name of the GameObject retrieves a clone from the pool, instantiating a new one. `Pool.Acquire("Scene GameObject")` does the trick, or returns null if the Pool did not contain an original by that name.
 
 Seeding some of the GameObject information using optional parameters is possible.
 
@@ -532,7 +586,7 @@ The location where the clone spawns relative to the parent. It defaults to (0, 0
 The facing direction, relative to the parent.
 
 #### bool enable
-Defaults to true so that the clone is enabled when it is taken from the pool or created.
+Defaults to true to enable  the clone when taken from the pool or created.
 
 #### bool poolOnDisable
 PoolOnDisable also defaults to true. Using `SetActive(false)` to disable a component causes it to return to the pool. To enable and disable and as part of game processing, set `poolOnDisable` to false. Use `Pool.Return(clone)` to release the GameObject to the pool for reuse.
@@ -556,7 +610,7 @@ script = Pool.Asquire<PoolPrefabScriptSample>("PoolPrefabScriptSample");
 GameObject clone = Acquire(typeof(T).Name);
 script = (clone == null) ? null : clone.GetComponent<T>();
 ```
-The same optional parameters are available as the non-generic game object - with the addition of name so that you can return a prefab with a different name to the MonoBehaviour inside.
+The same optional parameters are available as the non-generic game object, adding name so you can return a prefab with a different name to the MonoBehaviour inside.
 
 #### PoolFor
 Only in testing is it necessary to retrieve an item from a pool. 
@@ -568,7 +622,7 @@ Provide the string name of the master GameObject used to create the pool. The in
 Since `PoolQueue` is a C# `Queue` class, it inherits all those access and processing methods and fields.
 
 ### Quotes
-`Quotes` is a `StringSet` Custom Asset that if given a list of lines and a `TextAsset` returns a line using the `Pick` interface. A quote is formatted as a ***body of the quote (attribution)*** where the attribution is optional. The attribution is surrounded in brackets and must be at the end of the line. RTF is acceptable in the quote.
+`Quotes` is a `StringSet` Custom Asset that if given a list of lines and a `TextAsset` returns a line using the `Pick` interface. A quote looks like ***body of the quote (attribution)*** where the attribution is optional. Surround attributions in brackets and place them at the end of the line. RTF is acceptable in the quote.
 
 I would recommend setting ***Exhaustive Below*** to a figure like 50 or 100. Otherwise shorter lists appear to repeat entries too often.
 
@@ -603,8 +657,7 @@ Selector(T[] choices = null, bool isRandom = true, int exhaustiveBelow = 0);
 * ***Random***: `exhaustiveBelow` is less than the number of choices.
 * ***Exhaustive Random***: `exhaustiveBelow` is greater than the number of choices.
 
-In ***Exhaustive Random*** mode items are returned in a random order, but no entry shows up a second time until all are exhausted.
-
+To return in a random order, set ***Exhaustive Random***. Nothing repeats until the end.
 #### Selector Choices
 If the list of items to choose from changes, update the selector with `Choices`. The same picker is reset and used.
 
@@ -619,7 +672,7 @@ selector.Choices = new int[] { 5, 6, 7, 8 };
 ### Pick&lt;T>
 `Random` is the default picker. In small lists is may appear to be favouring one or another asset.
 
-There is are NUnit Editor tests in ***Examples/Scripts*** that demonstrate all the pickers.
+There is are NUnit Editor tests in ***Examples/Scripts*** that show all the pickers.
 
 ### Preview Custom Editor
 Unity custom editors provide additional functionality for the Inspector panel. `PreviewEditor&lt;T>` is a generic that adds a ***Preview*** button to the bottom of the Component.
@@ -649,7 +702,7 @@ A range drawer provides better visual editing of ranges in the Inspector.
 
 <img src="RangeDrawer.png" width="50%">
 
-Range values can be set with the sliders or by typing values on the boxes to the left and right.
+Set range values with the sliders or by typing values on the boxes to the left and right.
 
 ### RangeBounds Attribute
 For more meaningful ranges we add an attribute called `RangeBounds`.
@@ -661,10 +714,10 @@ For more meaningful ranges we add an attribute called `RangeBounds`.
 The width of the range limit how many digits past the decimal point display.
 
 ### Objects Helpers
-I am lazy. I hate typing the same scaffolding code repeatedly. These are functions more often used in testing than production code.
+I am lazy. I hate typing the same scaffolding code. These are functions more often used in testing than production code.
 
 ### Find&lt;T>
-Use `Find` to search the project for Unity Objects of a defined type with a known name. The object does not have to be enabled.
+Use `Find` to search the project for Unity Objects of a defined type with a known name. The search includes disabled items.
 
 ```C#
 GameObject mainCamera = Objects.Find<GameObject>("Main Camera");
@@ -676,7 +729,7 @@ Often the object is unique and named after it's underlying class.
 setPickerSample = Objects.Find<SetPickerSample>();
 ```
 
-`Find` is resource hungry. Only use it in rarely called methods like `Awake`, `Start` or `OnEnable`. It is never necessary for production code but is an excellent helper with play mode tests. 
+`Find` is resource hungry. Only use it in called methods like `Awake`, `Start` or `OnEnable`. It is never necessary for production code but is an excellent helper with play mode tests. 
 
 ### Component&lt;T>
 `Component` is another tool for play mode testing. Without being part of the game, test code can retrieve a GameObject by unique name/path the then return a reference to a Component of that game object. Because we do not have a game object starting point, the name must be unique. Either a unique name within the scene or an absolute path.
@@ -690,18 +743,17 @@ setPickerSample = Objects.Find<SetPickerSample>();
 <img src="Component2.png" width="50%">
 
 ## PlayMode Test Runner Support
-Askowl Custom Assets are tested using the Unity editor PlayMode test-runner. Because this is the core Askowl unity package, it includes the rudimentary support for testing. See the Askowl TestAutomator package for more exhaustive support.
+Askowl Custom Assets have tests for Unity editor PlayMode test-runner. Because this is the core Askowl unity package, it includes the rudimentary support for testing. See the Askowl TestAutomator package for more exhaustive support.
 
 ### PlayModeController
-PlayModeController is a base class for protected methods used to control actions in the game. Most of the methods are to be run in Coroutines so that control code can wait for them to complete. It is designed to be used by *PlayModeTests* and *RemoteControl* classes.
+PlayModeController is a base class for protected methods used to control actions in the game. Most of the methods run in Coroutines so that control code can wait for them to complete. It uses by *PlayModeTests* and *RemoteControl* classes.
 
 #### Scene
 The protected reference to the loaded `Scene` object.
 
 #### LoadScene
-Load a scene by name from the scenes list in the build. Most often this function is used to load the starting scene for the game.
-
-Sometimes tests have a scene to highlight actions that are difficult to reproduce in game-play. They are added to the build but do not include much overhead to the release game.
+Load a scene by name from the scenes list in the build.
+Sometimes tests have a special scene to highlight actions difficult to reproduce in game-play. Add to the build but they will include little overhead to the release game.
 
 ```C#
   [UnityTest] public IEnumerator AccessCustomAssets() {
@@ -711,7 +763,7 @@ Sometimes tests have a scene to highlight actions that are difficult to reproduc
 ```
 
 #### PushButton
-At the very least a player has to push a button to start the game. You can select the button by the name and path in the hierarchy or a `Button` reference.
+At the least a player has to push a button to start the game. You can select the button by the name and path in the hierarchy or a `Button` reference.
 
 ```C#
 yield return PushButton("Canvas/Show Quote");
@@ -728,9 +780,9 @@ Log("Entering Scene {1}", Scene.name);
 ```
 
 ### PlayModeTests
-`PlayModeTests` inherits from `PlayModeController` and in turn is to the the ancestor of concrete tests within Unity.
+`PlayModeTests` inherits from `PlayModeController` and is the ancestor of concrete tests within Unity.
 
-Firstly it overrides functions to add assertions.
+It overrides functions to add assertions.
 
 * LoadScene(string name) from PlayModeController
 * PushButton(string path) from PlayModeController
@@ -739,14 +791,14 @@ Firstly it overrides functions to add assertions.
 * FindObject<T>() from Objects.Find<T>()
 
 #### PlayModeTests.Component
-Use this static method rather than `Objects.Component` when testing to retrieve a typed component from a named `GameObject` in the current scene. It marks a failure if the component cannot be retrieved.
+Use this static method rather than `Objects.Component` when testing to retrieve a typed component from a named `GameObject` in the current scene. It marks a failure if we cannot retrieve a component.
 
 ```C#
 Text results = Component&lt;Text>("Canvas/Results Panel/Text");
 ```
 
 #### PlayModeTests.FindObject
-Use this static method rather than `Objects.Find` when testing to retrieve a named `GameObject` in the current scene. It marks a failure if the component cannot be retrieved.
+Use this static method rather than `Objects.Find` when testing to retrieve a named `GameObject` in the current scene. It marks a failure if we cannot retrieve the component.
 
 ```C#
 Float currentFloat = FindObject&lt;Float>("SampleFloatVariable");
@@ -758,7 +810,7 @@ The latter example will find a GameObject called *AudioClips*.
 Given the text name of a game component in the scene, treat it as a button and perform the same action as when a player pushed it on the game screen.
 
 #### CheckPattern
-Sometimes we need to look at some UI text and see if it is as expected. We use regular expressions for that.
+Sometimes we need to look at some UI text. We use regular expressions for that.
 ```C#
     CheckPattern(@"^Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d", results.text);
 ```

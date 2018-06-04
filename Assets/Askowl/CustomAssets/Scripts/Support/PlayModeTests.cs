@@ -24,7 +24,6 @@ namespace CustomAsset {
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
-
     protected override IEnumerator LoadScene(string name) {
       yield return base.LoadScene(name);
 
@@ -40,7 +39,7 @@ namespace CustomAsset {
     /// <returns></returns>
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
     protected static T Component<T>(params string[] path) where T : Component {
-      T component = Objects.Component<T>(path);
+      T component = Components.Find<T>(path);
       Assert.AreNotEqual(default(T), component);
       return component;
     }
@@ -52,7 +51,6 @@ namespace CustomAsset {
     /// <see cref="Objects"/>
     /// <param name="name">Name of object to find</param>
     /// <returns>GameObject</returns>
-
     protected static GameObject FindGameObject(string name) { return FindObject<GameObject>(name); }
 
     /// <summary>
@@ -64,9 +62,9 @@ namespace CustomAsset {
     /// <typeparam name="T">Type of object to find</typeparam>
     /// <returns>Object</returns>
     protected static T FindObject<T>(string name) where T : Object {
-      T gameObject = Objects.Find<T>(name);
-      Assert.IsNotNull(gameObject);
-      return gameObject;
+      T[] objects = Objects.Find<T>(name);
+      Assert.AreNotEqual(objects.Length, 0);
+      return objects[0];
     }
 
     /// <summary>
@@ -76,13 +74,12 @@ namespace CustomAsset {
     /// <see cref="FindObject{T}(string)"/>
     /// <typeparam name="T">Type of object to find</typeparam>
     /// <returns></returns>
-
     protected static T FindObject<T>() where T : Object { return FindObject<T>(typeof(T).Name); }
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#playmodetests">More...</a></remarks>
-    protected override IEnumerator PushButton(string name) {
-      yield return PushButton(Component<Button>(name));
+    protected override IEnumerator PushButton(params string[] path) {
+      yield return PushButton(Component<Button>(path));
     }
 
     /// <summary>

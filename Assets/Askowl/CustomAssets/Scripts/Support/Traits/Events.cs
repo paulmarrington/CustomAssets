@@ -7,7 +7,6 @@ namespace CustomAsset {
   public partial class Base {
     private readonly List<Listener> listeners = new List<Listener>();
 
-    
     protected bool Changed(string memberName = null) {
       for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered(memberName);
       return true;
@@ -17,7 +16,6 @@ namespace CustomAsset {
     /// Use in Unity inspector to trigger
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
-    
     public void Trigger() { Changed(null); }
 
     /// <summary>
@@ -25,7 +23,6 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
     /// <param name="memberName">Name of member must match that for the listener</param>
-    
     public void Trigger(string memberName) { Changed(memberName); }
 
     /// <summary>
@@ -35,7 +32,6 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
     /// <param name="listener">Listener to register. Must implement `OnTriggered`</param>
-    
     internal void Register(Listener listener) {
       if (!listeners.Contains(listener)) listeners.Add(listener);
     }
@@ -46,7 +42,6 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
     /// <param name="listener">Previously registered Listener. Acceptable to deregister twice, or attempt to deregister one never regisgered</param>
-    
     internal void Deregister(Listener listener) {
       if (listeners.Contains(listener)) listeners.Remove(listener);
     }

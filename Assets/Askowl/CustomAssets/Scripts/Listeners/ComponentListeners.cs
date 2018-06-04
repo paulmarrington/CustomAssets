@@ -53,7 +53,7 @@ namespace CustomAsset {
   /// <typeparam name="TC">Type of component we are modifying on demand</typeparam>
   /// <typeparam name="TA">Type of custom asset</typeparam>
   /// <typeparam name="TD">Type of data contained in the custom asset</typeparam>
-  public abstract class ComponentListenerBase<TC, TA, TD> : Listener
+  public abstract class ComponentListenerBase<TC, TA, TD> : ListenerBehaviour
     where TC : Object where TA : OfType<TD> {
     /// <summary>
     /// Component we are going to give the custom asset data to.
@@ -65,7 +65,6 @@ namespace CustomAsset {
     /// THe channel that holds the event of interest, as set as part of the asset.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    
     public TA CustomAsset { get { return BaseAsset as TA; } }
 
     /// <summary>
@@ -86,7 +85,7 @@ namespace CustomAsset {
 
     private void Awake() {
       Component = GetComponent<TC>();
-      if (Component == null) BaseAsset.Deregister(this);
+      if (Component == null) Deregister();
     }
   }
 }

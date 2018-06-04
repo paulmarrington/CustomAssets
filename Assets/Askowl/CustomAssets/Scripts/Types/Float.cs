@@ -1,5 +1,7 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
+
 namespace CustomAsset {
   using UnityEngine;
 
@@ -12,5 +14,9 @@ namespace CustomAsset {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Float")]
-  public sealed class Float : OfType<float> { }
+  public sealed class Float : OfType<float> {
+    public override bool Equals(object other) {
+      return (other != null) && AlmostEqual(Value, (float) other);
+    }
+  }
 }

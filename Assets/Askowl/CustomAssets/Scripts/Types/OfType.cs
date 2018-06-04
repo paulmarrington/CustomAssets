@@ -15,50 +15,56 @@ namespace CustomAsset {
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
   public abstract partial class OfType<T> : Base {
     /// <summary>
-    /// For safe access to the contents field
+    /// For safe(ish) access to the contents field
     /// </summary>
-    
-    public T Value { protected get { return seed; } set { Set(() => seed = value); } }
+    public T Value {
+      protected get { return seed; }
+      set {
+        if (!ChangeAllowed || Equals(value)) return;
 
-    /// <summary>
-    /// Does the CustomAsset have permission to change it's values?
-    /// </summary>
-    // ReSharper disable once MemberCanBePrivate.Global
-    public bool ChangeAllowed { get { return (readWrite || persistent); } }
-
-    /// <summary>
-    /// Tells the event listeners that something in this value has changed. Designed to be used in setters.
-    /// It will also save the data on critical and call all listeners using `Changed`
-    /// </summary>
-    /// <code>public float aFloat { get { return Value.F; } set { Set(() => Value.F = value); } }</code>
-    /// <param name="action">Lambda called if custom asset is read/write</param>
-    /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    protected void Set(Action action) {
-      if (!ChangeAllowed) return;
-
-      action();
-      Changed();
-    }
-
-    protected void Set(Func<bool> action) {
-      if (!ChangeAllowed) return;
-
-      if (action()) Changed();
+        seed = value;
+        Changed();
+      }
     }
 
     /// <summary>
-    /// Set a field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// Set a field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
     /// </summary>
     /// <param name="field">ref myCustomAsset.aField</param>
     /// <param name="from">Value to set the field to if all checks pass</param>
     /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
-    
+    // ReSharper disable once MemberCanBePrivate.Global
     protected void Set<TF>(ref TF field, TF from) {
-      if (!ChangeAllowed || field.Equals(from)) return;
+      if (!ChangeAllowed || Equals(field, from)) return;
 
       field = from;
       Changed();
     }
+
+    /// <summary>
+    /// Set a field inside a CustomAsset compound object where comparison is not straightforward. It checks for read/write and that the field is different before triggering a change.
+    /// </summary>
+    /// <param name="field">ref myCustomAsset.aField</param>
+    /// <param name="from">Value to set the field to if all checks pass</param>
+    /// <param name="equals">Comparison operator. Returns true if the items are equal or close enough</param>
+    /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
+    // ReSharper disable once MemberCanBePrivate.Global
+    protected void Set<TF>(ref TF field, TF from, Func<TF, TF, bool> equals) {
+      if (!ChangeAllowed || equals(field, from)) return;
+
+      field = from;
+      Changed();
+    }
+
+    /// <summary>
+    /// Check two floating point numbers to be within rounding tolerance.
+    /// </summary>
+    protected static bool AlmostEqual(float a, float b) { return Math.Abs(a - b) < 1e-5; }
+
+    /// <summary>
+    /// Check two double floating point numbers to be within rounding tolerance.
+    /// </summary>
+    protected static bool AlmostEqual(double a, double b) { return Math.Abs(a - b) < 1e-5; }
 
     /// <summary>
     /// Set a float field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
@@ -66,53 +72,72 @@ namespace CustomAsset {
     /// <see cref="Set&lt;TF>"/>
     /// <param name="field">ref float myCustomAsset.aField to update</param>
     /// <param name="from">float to set the field to if all checks pass</param>
-    
-    protected void Set(ref float field, float from) { Set<float>(ref field, from); }
+    protected void Set(ref float field, float from) { Set(ref field, from, AlmostEqual); }
 
     /// <summary>
     /// Set a double field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <see cref="Set&lt;TF>"/>
     /// <param name="field">ref double myCustomAsset.aField to update</param>
     /// <param name="from">double to set the field to if all checks pass</param>
-    
-    protected void Set(ref double field, double from) { Set<double>(ref field, from); }
+    protected void Set(ref double field, double from) { Set(ref field, from, AlmostEqual); }
 
     /// <summary>
     /// Set a int field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <see cref="Set&lt;TF>"/>
     /// <param name="field">ref int myCustomAsset.aField to to update</param>
     /// <param name="from">int to set the field to if all checks pass</param>
-    
     protected void Set(ref int field, int from) { Set<int>(ref field, from); }
 
     /// <summary>
     /// Set a long field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <see cref="Set&lt;TF>"/>
     /// <param name="field">ref long myCustomAsset.aField to update</param>
     /// <param name="from">long to set the field to if all checks pass</param>
-    
     protected void Set(ref long field, long from) { Set<long>(ref field, from); }
 
     /// <summary>
     /// Set a bool field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <see cref="Set&lt;TF>"/>
     /// <param name="field">ref bool myCustomAsset.aField to update</param>
     /// <param name="from">bool to set the field to if all checks pass</param>
-    
     protected void Set(ref bool field, bool from) { Set<bool>(ref field, from); }
 
     /// <summary>
-    /// Set a float string inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// Set a float string inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
     /// </summary>
-    /// <see cref="Set&lt;TF>"/>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    
     protected void Set(ref string field, string from) { Set<string>(ref field, from); }
+
+    /// <summary>
+    /// Set a Vector2 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    protected void Set(ref Vector2 field, Vector2 from) { Set(ref field, from, (a, b) => a == b); }
+
+    /// <summary>
+    /// Set a Vector3 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    protected void Set(ref Vector3 field, Vector3 from) { Set(ref field, from, (a, b) => a == b); }
+
+    /// <summary>
+    /// Set a Vector4 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    protected void Set(ref Vector4 field, Vector4 from) { Set(ref field, from, (a, b) => a == b); }
+
+    /// <summary>
+    /// Set a Quaternion inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    protected void Set(ref Quaternion field, Quaternion from) {
+      Set(ref field, from, (a, b) => a == b);
+    }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -

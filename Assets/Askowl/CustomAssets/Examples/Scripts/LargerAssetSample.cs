@@ -11,19 +11,24 @@ public class LargerAssetSample : CustomAsset.OfType<CustomAssetsExample.LargerAs
   /// <summary>
   /// For safe access to a contents field
   /// </summary>
-  
-  public int AnInteger { get { return Value.I; } set { Set(() => Value.I = value); } }
+
+  public int AnInteger { get { return Value.I; } set { Set(ref Value.I, value); } }
 
   /// <summary>
   /// For safe access to a contents field
   /// </summary>
-  
-  public float AFloat { get { return Value.F; } set { Set(() => Value.F = value); } }
+
+  public float AFloat { get { return Value.F; } set { Set(ref Value.F, value); } }
 
   /// <summary>
   /// For safe access to a contents field
   /// </summary>
-  
-  public string AString { get { return Value.S; } set { Set(() => Value.S = value); } }
+
+  public string AString { get { return Value.S; } set { Set(ref Value.S, value); } }
+
+  public override bool Equals(object other) {
+    var another = (CustomAssetsExample.LargerAssetContents) other;
+    return (another.I == Value.I) && AlmostEqual(another.F, Value.F) && (another.S == Value.S);
+  }
 }
 #endif
