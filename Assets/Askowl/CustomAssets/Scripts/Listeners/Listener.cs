@@ -1,7 +1,6 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using System;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -12,20 +11,36 @@ namespace CustomAsset {
   /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
   [Serializable]
   public class Listener {
-    [SerializeField] private Base   baseAsset;
-    [SerializeField] private string ForMember;
+    #pragma warning disable 649
+    [SerializeField] private Base baseAsset;
+    #pragma warning restore 649
+    [SerializeField] private string forMember;
 
+    // ReSharper disable once MemberCanBePrivate.Global
+    /// <summary>
+    /// Must be implemented in containing class as it is called if the listener is triggered.
+    /// </summary>
     public Action<string> OnChange;
 
+    /// <summary>
+    /// Used to classes that have a listener can get back the Custom Asset that triggered it.
+    /// </summary>
     public Base BaseAsset { get { return baseAsset; } }
 
+    /// <summary>
+    /// Register an action so that if the custom asset member changes anyone can be told
+    /// </summary>
+    /// <param name="onChange">void OnChange(string) reference</param>
     public void Register(Action<string> onChange) {
-      ForMember = ForMember.Trim();
-      if (string.IsNullOrEmpty(ForMember)) ForMember = null;
+      forMember = forMember.Trim();
+      if (string.IsNullOrEmpty(forMember)) forMember = null;
       OnChange = onChange;
       baseAsset.Register(this);
     }
 
+    /// <summary>
+    /// Call to stop receiving change calls
+    /// </summary>
     public void Deregister() { baseAsset.Deregister(this); }
 
     /// <summary>
@@ -40,7 +55,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Member this event relates to</param>
     public void OnTriggered(string memberName) {
-      if ((ForMember == null) || (memberName == ForMember)) OnChange(memberName);
+      if ((forMember == null) || (memberName == forMember)) OnChange(memberName);
     }
   }
 }

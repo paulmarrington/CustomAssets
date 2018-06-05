@@ -15,8 +15,7 @@ namespace CustomAsset {
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Float")]
   public sealed class Float : OfType<float> {
-    public override bool Equals(object other) {
-      return (other != null) && AlmostEqual(Value, (float) other);
-    }
+    /// <inheritdoc />
+    public override bool Equals(float other) { return AlmostEqual(Value, other); }
   }
 }

@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR && CustomAssets
-using JetBrains.Annotations;
 using UnityEngine;
 
 /// <inheritdoc />
@@ -26,9 +25,18 @@ public class LargerAssetSample : CustomAsset.OfType<CustomAssetsExample.LargerAs
 
   public string AString { get { return Value.S; } set { Set(ref Value.S, value); } }
 
+  /// <inheritdoc />
   public override bool Equals(object other) {
+    if (!(other is CustomAssetsExample.LargerAssetContents)) return false;
+
     var another = (CustomAssetsExample.LargerAssetContents) other;
-    return (another.I == Value.I) && AlmostEqual(another.F, Value.F) && (another.S == Value.S);
+
+    return (another != null) &&
+           ((another.I == Value.I)          &&
+            AlmostEqual(another.F, Value.F) &&
+            (another.S == Value.S));
   }
+
+  public override int GetHashCode() { throw new System.NotImplementedException(); }
 }
 #endif

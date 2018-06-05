@@ -1,7 +1,5 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using JetBrains.Annotations;
-
 namespace CustomAsset {
   using UnityEngine;
 
@@ -42,7 +40,7 @@ namespace CustomAsset {
     ComponentListenerBase<T, String, string> where T : Object {
     /// <inheritdoc />
     protected override void OnChange(string memberName) {
-      Change((memberName == null) ? BaseAsset.ToString() : BaseAsset.ToStringForMember(memberName));
+      Change((memberName == null) ? Asset.ToString() : Asset.ToStringForMember(memberName));
     }
   }
 
@@ -53,19 +51,13 @@ namespace CustomAsset {
   /// <typeparam name="TC">Type of component we are modifying on demand</typeparam>
   /// <typeparam name="TA">Type of custom asset</typeparam>
   /// <typeparam name="TD">Type of data contained in the custom asset</typeparam>
-  public abstract class ComponentListenerBase<TC, TA, TD> : ListenerBehaviour
+  public abstract class ComponentListenerBase<TC, TA, TD> : ListenerComponent<TA>
     where TC : Object where TA : OfType<TD> {
     /// <summary>
     /// Component we are going to give the custom asset data to.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     protected TC Component;
-
-    /// <summary>
-    /// THe channel that holds the event of interest, as set as part of the asset.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    public TA CustomAsset { get { return BaseAsset as TA; } }
 
     /// <summary>
     /// Called with new value of the data within the custom asset
@@ -80,7 +72,7 @@ namespace CustomAsset {
     ///  </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     protected override void OnChange(string memberName) {
-      Change((memberName == null) ? (TD) CustomAsset : CustomAsset[memberName]);
+      Change((memberName == null) ? (TD) Asset : Asset[memberName]);
     }
 
     private void Awake() {

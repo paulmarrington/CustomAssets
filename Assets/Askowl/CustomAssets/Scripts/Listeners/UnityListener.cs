@@ -9,7 +9,7 @@ namespace CustomAsset {
   /// Fire a Unity event when a custom asset value changes
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#unity-event-listeners">More...</a></remarks>
-  public sealed class UnityListener : ListenerBehaviour {
+  public sealed class UnityListener : ListenerComponent<Base> {
     [SerializeField] private UnityEvent unityEvent;
 
     /// <inheritdoc />

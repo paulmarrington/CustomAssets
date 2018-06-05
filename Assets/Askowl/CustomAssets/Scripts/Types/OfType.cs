@@ -69,7 +69,6 @@ namespace CustomAsset {
     /// <summary>
     /// Set a float field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <see cref="Set&lt;TF>"/>
     /// <param name="field">ref float myCustomAsset.aField to update</param>
     /// <param name="from">float to set the field to if all checks pass</param>
     protected void Set(ref float field, float from) { Set(ref field, from, AlmostEqual); }
@@ -170,5 +169,26 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
     protected virtual void OnDisable() { Save(); }
+
+    /// <summary>
+    /// Implement in concrete class to compare data (Equals).
+    /// </summary>
+    /// <param name="other">The other data object to compare to</param>
+    /// <returns></returns>
+    public abstract bool Equals(T other);
+
+    /// <inheritdoc />
+    public override bool Equals(object other) { return (other is T) && Equals((T) other); }
+
+    /// <inheritdoc />
+    public override int GetHashCode() { return Value.GetHashCode(); }
+
+    // ReSharper disable once UnusedMember.Global
+    /// <summary>
+    /// Part of the group of Equals functions. Passes responsibility to the containing data
+    /// </summary>
+    /// <param name="other">Another reference to a custom asset of the same type</param>
+    /// <returns></returns>
+    protected bool Equals(OfType<T> other) { return Equals(other.Value); }
   }
 }

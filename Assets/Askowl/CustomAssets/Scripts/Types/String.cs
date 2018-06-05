@@ -9,5 +9,8 @@ namespace CustomAsset {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/String")]
-  public sealed class String : OfType<string> { }
+  public sealed class String : OfType<string> {
+    /// <inheritdoc />
+    public override bool Equals(string other) { return Value == other; }
+  }
 }

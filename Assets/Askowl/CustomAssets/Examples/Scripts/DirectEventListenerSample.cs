@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using String = CustomAsset.String;
 
 /// <inheritdoc />
 /// <summary>
@@ -15,7 +14,7 @@ using String = CustomAsset.String;
 //    textComponent.text = "Direct Event heard at " + DateTime.Now + " for " + memberName;
 //  }
 //}
-public sealed class DirectEventListenerSample : CustomAsset.ListenerBehaviour {
+public sealed class DirectEventListenerSample : CustomAsset.ListenerComponent {
   [SerializeField] private Text textComponent;
 
   /// <inheritdoc />

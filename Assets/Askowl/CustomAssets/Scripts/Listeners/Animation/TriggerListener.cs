@@ -9,7 +9,7 @@ namespace CustomAsset.Animation {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
   [RequireComponent(typeof(Animator))]
-  public sealed class TriggerListener : ListenerBehaviour {
+  public sealed class TriggerListener : ListenerComponent {
     [SerializeField] private string   parameterName;
     [SerializeField] private Animator animator;
 
