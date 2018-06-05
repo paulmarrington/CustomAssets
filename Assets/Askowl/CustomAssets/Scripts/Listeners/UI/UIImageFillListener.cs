@@ -14,6 +14,6 @@ namespace CustomAsset {
   // ReSharper disable once InconsistentNaming
   public sealed class UIImageFillListener : FloatListener<Image> {
     /// <inheritdoc />
-    protected override void Change(float value) { Component.fillAmount = value; }
+    protected override void Change(float value) { Target.fillAmount = value; }
   }
 }

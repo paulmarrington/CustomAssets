@@ -12,6 +12,6 @@ namespace CustomAsset {
   // ReSharper disable once InconsistentNaming
   public sealed class UICanvasGroupAlphaListener : FloatListener<CanvasGroup> {
     /// <inheritdoc />
-    protected override void Change(float value) { Component.alpha = value; }
+    protected override void Change(float value) { Target.alpha = value; }
   }
 }

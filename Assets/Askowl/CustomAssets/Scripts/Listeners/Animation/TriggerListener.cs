@@ -9,11 +9,10 @@ namespace CustomAsset.Animation {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
   [RequireComponent(typeof(Animator))]
-  public sealed class TriggerListener : ListenerComponent {
-    [SerializeField] private string   parameterName;
-    [SerializeField] private Animator animator;
+  public sealed class TriggerListener : TriggerListener<Animator> {
+    [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override void OnChange(string memberName) { animator.SetTrigger(parameterName); }
+    protected override void Change() { Target.SetTrigger(parameterName); }
   }
 }

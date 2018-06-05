@@ -11,6 +11,6 @@ namespace CustomAsset {
   [CreateAssetMenu(menuName = "Custom Assets/Integer")]
   public sealed class Integer : OfType<int> {
     /// <inheritdoc />
-    public override bool Equals(int other) { return Value == other; }
+    protected override bool Equals(int other) { return Value == other; }
   }
 }

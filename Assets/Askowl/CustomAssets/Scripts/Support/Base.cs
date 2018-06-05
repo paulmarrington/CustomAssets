@@ -3,7 +3,6 @@
  */
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
@@ -42,6 +41,20 @@ namespace CustomAsset {
 #endif
       return instance;
     }
+
+    /// <inheritdoc />
+    public override bool Equals(object other) { return false; }
+
+    // ReSharper disable once UnusedMember.Global
+    /// <summary>
+    /// Just to fulfill pedantic requirements
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    protected bool Equals(Base other) { return false; }
+
+    /// <inheritdoc />
+    public override int GetHashCode() { return base.GetHashCode(); }
 
 #if UNITY_EDITOR
     /// <summary>

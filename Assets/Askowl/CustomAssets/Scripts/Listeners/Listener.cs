@@ -12,7 +12,7 @@ namespace CustomAsset {
   [Serializable]
   public class Listener {
     #pragma warning disable 649
-    [SerializeField] private Base baseAsset;
+    [SerializeField] private Base assetToMonitor;
     #pragma warning restore 649
     [SerializeField] private string forMember;
 
@@ -25,7 +25,7 @@ namespace CustomAsset {
     /// <summary>
     /// Used to classes that have a listener can get back the Custom Asset that triggered it.
     /// </summary>
-    public Base BaseAsset { get { return baseAsset; } }
+    public Base AssetToMonitor { get { return assetToMonitor; } }
 
     /// <summary>
     /// Register an action so that if the custom asset member changes anyone can be told
@@ -35,13 +35,13 @@ namespace CustomAsset {
       forMember = forMember.Trim();
       if (string.IsNullOrEmpty(forMember)) forMember = null;
       OnChange = onChange;
-      baseAsset.Register(this);
+      assetToMonitor.Register(this);
     }
 
     /// <summary>
     /// Call to stop receiving change calls
     /// </summary>
-    public void Deregister() { baseAsset.Deregister(this); }
+    public void Deregister() { assetToMonitor.Deregister(this); }
 
     /// <summary>
     /// Called by the channel when an event occurs.

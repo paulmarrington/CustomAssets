@@ -26,17 +26,12 @@ public class LargerAssetSample : CustomAsset.OfType<CustomAssetsExample.LargerAs
   public string AString { get { return Value.S; } set { Set(ref Value.S, value); } }
 
   /// <inheritdoc />
-  public override bool Equals(object other) {
-    if (!(other is CustomAssetsExample.LargerAssetContents)) return false;
-
-    var another = (CustomAssetsExample.LargerAssetContents) other;
-
-    return (another != null) &&
-           ((another.I == Value.I)          &&
-            AlmostEqual(another.F, Value.F) &&
-            (another.S == Value.S));
+  protected override bool Equals(CustomAssetsExample.LargerAssetContents other) {
+    return (other != null) &&
+           ((other.I == Value.I) && AlmostEqual(other.F, Value.F) && (other.S == Value.S));
   }
 
+  /// <inheritdoc />
   public override int GetHashCode() { throw new System.NotImplementedException(); }
 }
 #endif

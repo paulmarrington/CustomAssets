@@ -16,6 +16,6 @@ namespace CustomAsset {
   [CreateAssetMenu(menuName = "Custom Assets/Float")]
   public sealed class Float : OfType<float> {
     /// <inheritdoc />
-    public override bool Equals(float other) { return AlmostEqual(Value, other); }
+    protected override bool Equals(float other) { return AlmostEqual(Value, other); }
   }
 }

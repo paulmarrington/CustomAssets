@@ -10,6 +10,6 @@ namespace CustomAsset {
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Boolean")]
   public sealed class Boolean : OfType<bool> {
-    public override bool Equals(bool other) { return Value == other; }
+    protected override bool Equals(bool other) { return Value == other; }
   }
 }

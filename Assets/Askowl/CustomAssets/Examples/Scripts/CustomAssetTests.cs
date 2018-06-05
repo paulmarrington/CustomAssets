@@ -302,7 +302,7 @@ public class CustomAssetTests : PlayModeTests {
 
   [UnityTest]
   public IEnumerator TestCompoundSetters() {
-    var largeAsset = Base.Instance<LargerAssetSample>();
+//    var largeAsset = Base.Instance<LargerAssetSample>();
     yield return null;
   }
 }

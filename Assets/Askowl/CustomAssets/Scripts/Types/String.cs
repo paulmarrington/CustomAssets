@@ -11,6 +11,6 @@ namespace CustomAsset {
   [CreateAssetMenu(menuName = "Custom Assets/String")]
   public sealed class String : OfType<string> {
     /// <inheritdoc />
-    public override bool Equals(string other) { return Value == other; }
+    protected override bool Equals(string other) { return Value == other; }
   }
 }

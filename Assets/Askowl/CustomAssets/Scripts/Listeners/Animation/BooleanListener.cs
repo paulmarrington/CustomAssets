@@ -10,10 +10,9 @@ namespace CustomAsset.Animation {
   /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
   [RequireComponent(typeof(Animator))]
   public sealed class BooleanListener : BooleanListener<Animator> {
-    [SerializeField] private string   parameterName;
-    [SerializeField] private Animator animator;
+    [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override void Change(bool value) { animator.SetBool(parameterName, value); }
+    protected override void Change(bool value) { Target.SetBool(parameterName, value); }
   }
 }

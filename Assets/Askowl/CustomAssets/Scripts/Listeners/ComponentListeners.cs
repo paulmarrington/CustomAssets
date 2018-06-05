@@ -40,8 +40,29 @@ namespace CustomAsset {
     ComponentListenerBase<T, String, string> where T : Object {
     /// <inheritdoc />
     protected override void OnChange(string memberName) {
-      Change((memberName == null) ? Asset.ToString() : Asset.ToStringForMember(memberName));
+      Change((memberName == null) ? Asset : Asset.ToStringForMember(memberName));
     }
+  }
+
+  /// <inheritdoc />
+  /// <summary>
+  /// Base class for listeners that do not hold data
+  /// </summary>
+  /// <remarks><a href="http://customassets.marrington.net#triggerlistener">More...</a></remarks>
+  /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
+  public abstract class TriggerListener<T> : ComponentListenerBase<T> where T : Object {
+    /// <summary>
+    /// Called with new value of the data within the custom asset
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
+    protected abstract void Change();
+
+    /// <inheritdoc />
+    ///  <summary>
+    /// On a change the listener needs a copy of the changed data to react to
+    ///  </summary>
+    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
+    protected override void OnChange(string _) { Change(); }
   }
 
   /// <inheritdoc />
@@ -51,13 +72,13 @@ namespace CustomAsset {
   /// <typeparam name="TC">Type of component we are modifying on demand</typeparam>
   /// <typeparam name="TA">Type of custom asset</typeparam>
   /// <typeparam name="TD">Type of data contained in the custom asset</typeparam>
-  public abstract class ComponentListenerBase<TC, TA, TD> : ListenerComponent<TA>
+  public abstract class ComponentListenerBase<TC, TA, TD> : ComponentListenerBase<TC>
     where TC : Object where TA : OfType<TD> {
     /// <summary>
-    /// Component we are going to give the custom asset data to.
+    /// Reference to the Asset we are listening to
     /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    protected TC Component;
+    // ReSharper disable once MemberCanBeProtected.Global
+    public TA Asset { get { return Listener.AssetToMonitor as TA; } }
 
     /// <summary>
     /// Called with new value of the data within the custom asset
@@ -74,10 +95,28 @@ namespace CustomAsset {
     protected override void OnChange(string memberName) {
       Change((memberName == null) ? (TD) Asset : Asset[memberName]);
     }
+  }
+
+  /// <inheritdoc />
+  /// <summary>
+  /// Internal Base class for component listeners that need to process the custom asset data.
+  /// </summary>
+  /// <typeparam name="TC">Type of component we are modifying on demand</typeparam>
+  public abstract class ComponentListenerBase<TC> : ListenerComponent
+    where TC : Object {
+    /// <summary>
+    /// Component we are going to give the custom asset data to.
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
+    [SerializeField, Tooltip("Optional")] protected TC Target;
 
     private void Awake() {
-      Component = GetComponent<TC>();
-      if (Component == null) Deregister();
+      if (Target == null) Target = GetComponent<TC>();
+
+      if (Target == null) {
+        Debug.LogErrorFormat("No component '{0}' on game object '{1}'", typeof(TC).Name, this);
+        Deregister();
+      }
     }
   }
 }

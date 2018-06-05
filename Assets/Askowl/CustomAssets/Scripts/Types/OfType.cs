@@ -3,7 +3,6 @@
 using System;
 
 namespace CustomAsset {
-  using JetBrains.Annotations;
   using UnityEngine;
 
   /// <inheritdoc />
@@ -64,6 +63,7 @@ namespace CustomAsset {
     /// <summary>
     /// Check two double floating point numbers to be within rounding tolerance.
     /// </summary>
+    // ReSharper disable once MemberCanBePrivate.Global
     protected static bool AlmostEqual(double a, double b) { return Math.Abs(a - b) < 1e-5; }
 
     /// <summary>
@@ -78,6 +78,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref double myCustomAsset.aField to update</param>
     /// <param name="from">double to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref double field, double from) { Set(ref field, from, AlmostEqual); }
 
     /// <summary>
@@ -92,6 +93,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref long myCustomAsset.aField to update</param>
     /// <param name="from">long to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref long field, long from) { Set<long>(ref field, from); }
 
     /// <summary>
@@ -99,6 +101,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref bool myCustomAsset.aField to update</param>
     /// <param name="from">bool to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref bool field, bool from) { Set<bool>(ref field, from); }
 
     /// <summary>
@@ -106,6 +109,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref string field, string from) { Set<string>(ref field, from); }
 
     /// <summary>
@@ -113,6 +117,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref Vector2 field, Vector2 from) { Set(ref field, from, (a, b) => a == b); }
 
     /// <summary>
@@ -120,6 +125,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref Vector3 field, Vector3 from) { Set(ref field, from, (a, b) => a == b); }
 
     /// <summary>
@@ -127,6 +133,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref Vector4 field, Vector4 from) { Set(ref field, from, (a, b) => a == b); }
 
     /// <summary>
@@ -134,6 +141,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
+    // ReSharper disable once UnusedMember.Global
     protected void Set(ref Quaternion field, Quaternion from) {
       Set(ref field, from, (a, b) => a == b);
     }
@@ -145,7 +153,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
     /// <param name="t">Instance of custom asset</param>
     /// <returns>Instance of the contained serializable object</returns>
-    public static implicit operator T([NotNull] OfType<T> t) { return t.seed; }
+    public static implicit operator T(OfType<T> t) { return t.seed; }
 
     /// <inheritdoc />
     /// <summary>
@@ -175,7 +183,7 @@ namespace CustomAsset {
     /// </summary>
     /// <param name="other">The other data object to compare to</param>
     /// <returns></returns>
-    public abstract bool Equals(T other);
+    protected abstract bool Equals(T other);
 
     /// <inheritdoc />
     public override bool Equals(object other) { return (other is T) && Equals((T) other); }
