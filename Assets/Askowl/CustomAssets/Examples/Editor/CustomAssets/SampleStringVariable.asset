@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: SampleStringVariable
   m_EditorClassIdentifier: 
   Description: 
-  value: 
+  seed: 
+  members: []
   readWrite: 1
   persistent: 0
-  critical: 0

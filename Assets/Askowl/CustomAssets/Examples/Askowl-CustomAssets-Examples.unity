@@ -3752,8 +3752,8 @@ MonoBehaviour:
   listener:
     assetToMonitor: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
     forMember: 
+  Target: {fileID: 1092706610}
   parameterName: Colour
-  animator: {fileID: 1092706610}
 --- !u!4 &1500507378
 Transform:
   m_ObjectHideFlags: 0

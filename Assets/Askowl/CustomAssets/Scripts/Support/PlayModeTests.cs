@@ -91,7 +91,7 @@ namespace CustomAsset {
     protected static void CheckPattern(string pattern, string against) {
       Regex           regex   = new Regex(pattern);
       MatchCollection matches = regex.Matches(against);
-      Assert.AreEqual(matches.Count, 1);
+      Assert.AreEqual(matches.Count, 1, against);
     }
   }
 }

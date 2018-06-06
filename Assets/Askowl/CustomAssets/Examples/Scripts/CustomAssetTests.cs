@@ -282,6 +282,9 @@ public class CustomAssetTests : PlayModeTests {
     }
   }
 
+  /// <summary>
+  /// Check that members get the same deal as individual custom assets
+  /// </summary>
   [UnityTest]
   public IEnumerator TestMembersAndPersistence() {
     yield return Setup();
@@ -291,6 +294,9 @@ public class CustomAssetTests : PlayModeTests {
     CheckPattern(@"^.* has 3 .* seed of 11\nOne = 22\nTwo = 11\nDynamic = 44$", results.text);
   }
 
+  /// <summary>
+  /// Does Base.Instance return the same named item each time?
+  /// </summary>
   [UnityTest]
   public IEnumerator TestInstance() {
     yield return Setup();
@@ -300,9 +306,19 @@ public class CustomAssetTests : PlayModeTests {
     CheckPattern(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 1234 .* 1234$", results.text);
   }
 
+  /// <summary>
+  /// Make sure that larger objects can be manipulated and tested for equality
+  /// </summary>
   [UnityTest]
   public IEnumerator TestCompoundSetters() {
-//    var largeAsset = Base.Instance<LargerAssetSample>();
+    var zero       = new CustomAssetsExample.LargerAssetContents {I = 0, F = 0, S = ""};
+    var largeAsset = Base.Instance<LargerAssetSample>();
+    largeAsset.Value = zero;
+    Assert.AreEqual(largeAsset, zero);
+
+    var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, F = 4.56f, S = "789"};
+    Assert.AreNotEqual(largeAsset, zero);
+    Assert.AreEqual(largeAsset, setTo);
     yield return null;
   }
 }

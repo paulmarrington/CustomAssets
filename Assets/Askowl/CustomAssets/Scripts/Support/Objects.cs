@@ -52,5 +52,23 @@ namespace CustomAsset {
 
       return results.ToArray();
     }
+
+    /// <summary>
+    /// Glue together the path to the provided game object in the hierarchy
+    /// </summary>
+    /// <param name="gameObject">Path from the root to here</param>
+    /// <returns>Path from the root separated by /</returns>
+    public static string Path(GameObject gameObject) {
+      List<string> path      = new List<string>();
+      Transform    transform = gameObject.transform;
+
+      while (transform != null) {
+        path.Add(transform.name);
+        transform = transform.parent;
+      }
+
+      path.Reverse();
+      return string.Join(separator: "/", value: path.ToArray());
+    }
   }
 }

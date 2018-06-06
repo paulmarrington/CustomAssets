@@ -40,7 +40,9 @@ namespace CustomAsset {
     ComponentListenerBase<T, String, string> where T : Object {
     /// <inheritdoc />
     protected override void OnChange(string memberName) {
-      Change((memberName == null) ? Asset : Asset.ToStringForMember(memberName));
+      Change((memberName == null)
+               ? Listener.AssetToMonitor.ToString()
+               : Listener.AssetToMonitor.ToStringForMember(memberName));
     }
   }
 
@@ -114,7 +116,7 @@ namespace CustomAsset {
       if (Target == null) Target = GetComponent<TC>();
 
       if (Target == null) {
-        Debug.LogErrorFormat("No component '{0}' on game object '{1}'", typeof(TC).Name, this);
+        Debug.LogErrorFormat("No target '{0}' on '{1}'", typeof(TC).Name, Objects.Path(gameObject));
         Deregister();
       }
     }

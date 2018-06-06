@@ -25,7 +25,7 @@ namespace CustomAsset {
       StartCoroutine(SetParentOnReturn());
     }
 
-    private void CreatePool([NotNull] GameObject master) {
+    private PoolQueue CreatePool(GameObject master) {
       var poolName = string.Format("{0} Pool", master.name);
 
       if (!Queues.ContainsKey(poolName)) {
@@ -35,7 +35,10 @@ namespace CustomAsset {
         GameObject poolRoot = new GameObject(poolName);
         poolRoot.transform.parent = transform;
         poolMonitor.PoolRoot      = poolRoot.transform;
+        return Queues[poolName];
       }
+
+      return null;
     }
 
     /// <summary>
@@ -50,14 +53,14 @@ namespace CustomAsset {
     /// <typeparam name="T">Type of component to pool. Must be in the pool to be used as a master to clone</typeparam>
     /// <returns>A cloned instance of T either reusing one returned to the pool or creating a new clone as needed</returns>
     /// <remarks><a href="http://customassets.marrington.net#acquire-gameobject-by-type">More...</a></remarks>
-    public static T Acquire<T>([CanBeNull] string    name          = null,
-                               Vector3               position      = default(Vector3),
-                               Quaternion            rotation      = default(Quaternion),
-                               [CanBeNull] Transform parent        = default(Transform),
-                               bool                  enable        = true,
-                               bool                  poolOnDisable = true)
+    public static T Acquire<T>(string     name,
+                               Vector3    position      = default(Vector3),
+                               Quaternion rotation      = default(Quaternion),
+                               Transform  parent        = default(Transform),
+                               bool       enable        = true,
+                               bool       poolOnDisable = true)
       where T : Component {
-      name = name ?? typeof(T).Name;
+      name = name;
       GameObject clone = Acquire(name, position, rotation, parent, enable, poolOnDisable);
       return (clone == null) ? null : clone.GetComponent<T>();
     }
@@ -73,12 +76,12 @@ namespace CustomAsset {
     /// <param name="poolOnDisable">Set to false if you want to be able to disable a clone without having it returned to the pool - defaults to true</param>
     /// <returns>A cloned instance of T eitherr reusing one returned to the pool or creating a new clone as needed</returns>
     /// <remarks><a href="http://customassets.marrington.net#acquire-gameobject-by-name">More...</a></remarks>
-    public static GameObject Acquire(string                name,
-                                     Vector3               position      = default(Vector3),
-                                     Quaternion            rotation      = default(Quaternion),
-                                     [CanBeNull] Transform parent        = null,
-                                     bool                  enable        = true,
-                                     bool                  poolOnDisable = true) {
+    public static GameObject Acquire(string     name,
+                                     Vector3    position      = default(Vector3),
+                                     Quaternion rotation      = default(Quaternion),
+                                     Transform  parent        = null,
+                                     bool       enable        = true,
+                                     bool       poolOnDisable = true) {
       PoolQueue pool = PoolFor(name);
       if (pool == null) return null;
 
@@ -143,15 +146,28 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#poolfor">More...</a></remarks>
     /// <param name="name">Name of GameObject under inspection</param>
     /// <returns>Reference to the `PoolQueue` or null if none exist for this name</returns>
-    [CanBeNull]
     public static PoolQueue PoolFor(string name) {
       string poolName = string.Format("{0} Pool", name);
-      return Queues.ContainsKey(poolName) ? Queues[poolName] : null;
+      if (Queues.ContainsKey(poolName)) return Queues[poolName];
+
+      GameObject gameObject = Resources.Load<GameObject>(name) ?? Objects.FindGameObject(name);
+
+      if (gameObject == null) {
+        Debug.LogErrorFormat("Cannot find Prefab or loaded GameObject named '{0}'", name);
+        return null;
+      }
+
+      var pool  = Components.Create<Pool>("Pool for " + name);
+      var queue = pool.CreatePool(gameObject);
+      // name may be a path to the prefab
+      if (!Queues.ContainsKey(name)) Queues[name] = queue;
+      return queue;
     }
 
-    [CanBeNull, UsedImplicitly]
-    private static PoolQueue PoolFor([NotNull] GameObject clone) {
-      return PoolFor(clone.GetComponent<PoolMonitor>().MasterName);
+    [UsedImplicitly]
+    public static PoolQueue PoolFor(GameObject gameObject) {
+      var monitor = gameObject.GetComponent<PoolMonitor>();
+      return (monitor != null) ? PoolFor(monitor.MasterName) : PoolFor(gameObject.name);
     }
 
     private sealed class PoolDict : Dictionary<string, PoolQueue> { }
