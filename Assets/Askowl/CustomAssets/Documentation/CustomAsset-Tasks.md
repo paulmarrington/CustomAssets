@@ -3,11 +3,11 @@
 
 ## Release 2018-06
 
-- [ ] Move Common to Askowl-Common
-- [ ] Move Pool to Askowl-Pool
+- [x] Move Common to Askowl-Common
+- [x] Move Pool to Askowl-Pool
 - [ ] Get tests all working
 
-## Future Work
+## Release 2018-??
 
 - [ ] Update documentation
   - [ ] Remove common code from documentation
