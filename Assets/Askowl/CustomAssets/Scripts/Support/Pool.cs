@@ -13,19 +13,28 @@ namespace CustomAsset {
   /// <remarks><a href="http://customassets.marrington.net#asset-pooling">More...</a></remarks>
   [HelpURL("http://customasset.marrington.net#asset-pooling")]
   public sealed class Pool : MonoBehaviour {
+    private bool isPoolContainer;
+
     private void OnEnable() {
-      DontDestroyOnLoad(target: gameObject);
-      Transform[] children = GetComponentsInChildren<Transform>();
+      if (gameObject.name.EndsWith("Pool") || (GetComponents<Component>().Length <= 2)) {
+        isPoolContainer = true;
+        // This is a list of predefined game objects to be pooled
+        DontDestroyOnLoad(target: gameObject);
+        Transform[] children = GetComponentsInChildren<Transform>();
 
-      // skip first as it is the Pool itself
-      for (int i = 1; i < children.Length; ++i) {
-        CreatePool(children[i].gameObject);
+        // skip first as it is the Pool itself
+        for (int i = 1; i < children.Length; ++i) {
+          CreatePoolQueue(children[i].gameObject);
+        }
+
+        StartCoroutine(SetParentOnReturn());
+      } else if (!Queues.ContainsKey(gameObject.name)) {
+        Destroy(this);
+        PoolFor(gameObject); // we are inside a game object that wants to be pooled
       }
-
-      StartCoroutine(SetParentOnReturn());
     }
 
-    private PoolQueue CreatePool(GameObject master) {
+    private PoolQueue CreatePoolQueue(GameObject master) {
       var poolName = string.Format("{0} Pool", master.name);
 
       if (!Queues.ContainsKey(poolName)) {
@@ -34,7 +43,7 @@ namespace CustomAsset {
         Queues[poolName]       = new PoolQueue {Master = master};
         GameObject poolRoot = new GameObject(poolName);
         poolRoot.transform.parent = transform;
-        poolMonitor.PoolRoot      = poolRoot.transform;
+        master.transform.parent   = poolMonitor.PoolRoot = poolRoot.transform;
         return Queues[poolName];
       }
 
@@ -60,7 +69,6 @@ namespace CustomAsset {
                                bool       enable        = true,
                                bool       poolOnDisable = true)
       where T : Component {
-      name = name;
       GameObject clone = Acquire(name, position, rotation, parent, enable, poolOnDisable);
       return (clone == null) ? null : clone.GetComponent<T>();
     }
@@ -146,24 +154,55 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#poolfor">More...</a></remarks>
     /// <param name="name">Name of GameObject under inspection</param>
     /// <returns>Reference to the `PoolQueue` or null if none exist for this name</returns>
-    public static PoolQueue PoolFor(string name) {
+    public static PoolQueue PoolFor(string name, Pool pool = null) {
       string poolName = string.Format("{0} Pool", name);
       if (Queues.ContainsKey(poolName)) return Queues[poolName];
 
-      GameObject gameObject = Resources.Load<GameObject>(name) ?? Objects.FindGameObject(name);
+      GameObject gameObject = Objects.FindGameObject(name);
 
       if (gameObject == null) {
-        Debug.LogErrorFormat("Cannot find Prefab or loaded GameObject named '{0}'", name);
-        return null;
+        gameObject = Resources.Load<GameObject>(name);
+
+        if (gameObject == null) {
+          Debug.LogErrorFormat("Cannot find Prefab or loaded GameObject named '{0}'", name);
+          return null;
+        }
+
+        gameObject = Instantiate(gameObject);
       }
 
-      var pool  = Components.Create<Pool>("Pool for " + name);
-      var queue = pool.CreatePool(gameObject);
+      var monitor = gameObject.GetComponent<PoolMonitor>();
+      if (monitor != null) return Queues[poolName] = Queues[monitor.MasterName];
+
+      var queue = (pool ? pool : FindPool()).CreatePoolQueue(gameObject);
       // name may be a path to the prefab
       if (!Queues.ContainsKey(name)) Queues[name] = queue;
       return queue;
     }
 
+    private static Pool FindPool() {
+      Pool pool       = null;
+      var  anyMonitor = FindObjectOfType<PoolMonitor>();
+
+      if (anyMonitor != null) pool = anyMonitor.GetComponentInParent<Pool>();
+
+      if (pool == null) {
+        var pools = FindObjectsOfType<Pool>();
+
+        for (int i = 0; (i < pools.Length) && (pool == null); i++) {
+          if (pools[i].isPoolContainer) pool = pools[i];
+        }
+      }
+
+      if (pool == null) pool = Components.Create<Pool>("Pool");
+      return pool;
+    }
+
+    /// <summary>
+    /// Create or retrieve the bool for a gameObject.
+    /// </summary>
+    /// <param name="gameObject">GameObject to add or inspect</param>
+    /// <returns>PoolQueue that holds objects of this type</returns>
     [UsedImplicitly]
     public static PoolQueue PoolFor(GameObject gameObject) {
       var monitor = gameObject.GetComponent<PoolMonitor>();
