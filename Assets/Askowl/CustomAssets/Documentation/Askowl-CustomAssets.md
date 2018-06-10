@@ -547,6 +547,9 @@ produces
 ***"***Life wasn't meant to be easy***"***     *George Bernard Shaw*
 
 ### Preview Custom Editor
+
+
+
 Unity custom editors provide additional functionality for the Inspector panel. `PreviewEditor&lt;T>` is a generic that adds a ***Preview*** button to the bottom of the Component.
 
 `AudioClipsEditor` is a custom class that plays a sound when pressing ***Preview***.
