@@ -121,11 +121,11 @@ public sealed class CustomAssetsExample : MonoBehaviour {
 
       if (!(currentFloat >= maxFloat)) continue;
 
-      currentFloat.Value = 0;
-
       textComponent.text +=
         "Float " + ((float) maxFloat) + " reached " + (++count) + " of 5 times\n";
     } while (count < 5);
+
+    currentFloat.Value = 0.499f;
   }
 
   /// <summary>

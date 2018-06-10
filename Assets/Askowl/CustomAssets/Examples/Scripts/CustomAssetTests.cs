@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Askowl;
 using CustomAsset;
 using NUnit.Framework;
 using UnityEngine;
@@ -228,34 +228,6 @@ public class CustomAssetTests : PlayModeTests {
     yield return null;
 
     Assert.AreEqual("False", ResultsButtonText);
-  }
-
-  /// <summary>
-  /// Create and return some pooled custom assets and game objects to see if they behave
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest, Timeout(10000)]
-  public IEnumerator TestPooling() {
-    yield return Setup();
-
-    yield return PushButton("Show Pooling at Work");
-
-    int                      length;
-    PoolPrefabScriptSample[] all;
-
-    do {
-      yield return null;
-
-      all    = Resources.FindObjectsOfTypeAll<PoolPrefabScriptSample>();
-      length = all.Length;
-    } while (length < 21);
-
-    do {
-      yield return null;
-
-      all    = Resources.FindObjectsOfTypeAll<PoolPrefabScriptSample>();
-      length = all.Count(one => !one.gameObject.activeSelf);
-    } while (length < 16);
   }
 
   /// <summary>

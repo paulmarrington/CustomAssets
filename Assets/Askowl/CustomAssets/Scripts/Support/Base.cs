@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using Askowl;
 using UnityEditor;
 using UnityEngine;
 
@@ -45,12 +46,12 @@ namespace CustomAsset {
     /// <inheritdoc />
     public override bool Equals(object other) { return false; }
 
-    // ReSharper disable once UnusedMember.Global
     /// <summary>
     /// Just to fulfill pedantic requirements
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
+    // ReSharper disable once UnusedParameter.Global
     protected bool Equals(Base other) { return false; }
 
     /// <inheritdoc />
