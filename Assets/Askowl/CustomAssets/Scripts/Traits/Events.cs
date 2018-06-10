@@ -1,29 +1,18 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace CustomAsset {
   public partial class Base {
     private readonly List<Listener> listeners = new List<Listener>();
 
-    protected bool Changed(string memberName = null) {
+    /// <summary>
+    /// Tell all watchers we have changed
+    /// </summary>
+    /// <param name="memberName">Member that changed or null for default</param>
+    protected void Changed(string memberName = null) {
       for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered(memberName);
-      return true;
     }
-
-    /// <summary>
-    /// Use in Unity inspector to trigger
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
-    public void Trigger() { Changed(null); }
-
-    /// <summary>
-    /// Use in Unity inspector to trigger for a specific member
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
-    /// <param name="memberName">Name of member must match that for the listener</param>
-    public void Trigger(string memberName) { Changed(memberName); }
 
     /// <summary>
     /// Add a listener to those who want to be informed when a custom asset changed. There are

@@ -71,7 +71,8 @@ namespace CustomAsset {
     /// <inheritdoc />
     public Base() { AssetsToUnload.Add(this); }
 
-    private static readonly List<Base> AssetsToUnload = new List<Base>();
+    private static readonly List<Base> AssetsToUnload =
+      new List<Base>();
 
     private static void UnloadResources(PlayModeStateChange playModeState) {
       if (playModeState != PlayModeStateChange.ExitingPlayMode) return;

@@ -19,7 +19,7 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Generic dictionary key</param>
-    
+
     public T this[string memberName] {
       get { return Contains(memberName) ? dictionary[memberName] : seedSaver; }
       set {
@@ -31,7 +31,6 @@ namespace CustomAsset {
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
-    
     public override string ToStringForMember(string memberName) {
       return this[memberName].ToString();
     }
@@ -40,13 +39,11 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Key to value that may or may not be in the set</param>
     /// <returns>True if the element supplied is in this set</returns>
-    
     public bool Contains(string memberName) { return dictionary.ContainsKey(memberName); }
 
     /// <summary>Remove an entry if it exists - and trigger a change event.</summary>
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Member to remove if it is in the list</param>
-    
     internal void Remove(string memberName) {
       if (!Contains(memberName)) return;
 
@@ -59,7 +56,6 @@ namespace CustomAsset {
     /// Clear members list for a clean slate
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
-    
     internal void Clear() {
       dictionary.Clear();
       members.Clear();
@@ -71,7 +67,7 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <returns>withMembers</returns>
-    
+
     public string[] MemberNames { get { return members.ToArray(); } }
 
     [Serializable, UsedImplicitly]
@@ -114,7 +110,6 @@ namespace CustomAsset {
     /// and custom asset is disabled or on every change if it is marked critical.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    
     internal void Save() {
       toPersist.CurrentValue = seed;
       toPersist.Members      = MemberNames;

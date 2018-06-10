@@ -14,5 +14,5 @@ MonoBehaviour:
   Description: 
   seed: 1
   members: []
-  readWrite: 0
+  readWrite: 1
   persistent: 0

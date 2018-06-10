@@ -1,6 +1,5 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -14,8 +13,17 @@ namespace CustomAsset {
     /// <summary>
     /// Does the CustomAsset have permission to change it's values?
     /// </summary>
-    // ReSharper disable once MemberCanBePrivate.Global
     public bool ChangeAllowed { get { return (readWrite || persistent); } }
+
+    protected bool AmChanging {
+      get {
+        if (!ChangeAllowed) {
+          Debug.LogErrorFormat("{0} / {1} is read-only so cannot be changed", name, typeof(T));
+        }
+
+        return ChangeAllowed;
+      }
+    }
 
     private string Key { get { return string.Format("{0}:{1}", name, typeof(T)); } }
 
