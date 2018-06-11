@@ -15,7 +15,7 @@ namespace CustomAsset {
     /// </summary>
     public bool ChangeAllowed { get { return (readWrite || persistent); } }
 
-    protected bool AmChanging {
+    private bool AmChanging {
       get {
         if (!ChangeAllowed) {
           Debug.LogErrorFormat("{0} / {1} is read-only so cannot be changed", name, typeof(T));

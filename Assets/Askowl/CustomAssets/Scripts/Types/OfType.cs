@@ -19,7 +19,7 @@ namespace CustomAsset {
     public T Value {
       protected get { return seed; }
       set {
-        if (!ChangeAllowed || Equals(value)) return;
+        if (Equals(value)|| !AmChanging) return;
 
         seed = value;
         Changed();
@@ -34,7 +34,7 @@ namespace CustomAsset {
     /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
     // ReSharper disable once MemberCanBePrivate.Global
     protected void Set<TF>(ref TF field, TF from) {
-      if (!ChangeAllowed || Equals(field, from)) return;
+      if (Equals(field, from)|| !AmChanging) return;
 
       field = from;
       Changed();
@@ -49,7 +49,7 @@ namespace CustomAsset {
     /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
     // ReSharper disable once MemberCanBePrivate.Global
     protected void Set<TF>(ref TF field, TF from, Func<TF, TF, bool> equals) {
-      if (!ChangeAllowed || equals(field, from)) return;
+      if (equals(field, from)|| !AmChanging) return;
 
       field = from;
       Changed();
