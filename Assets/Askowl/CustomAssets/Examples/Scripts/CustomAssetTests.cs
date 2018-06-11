@@ -43,7 +43,7 @@ public class CustomAssetTests : PlayModeTests {
   /// Make sure we can update the contents of custom assets in memory
   /// </summary>
   /// <returns></returns>
-  [UnityTest]
+  [UnityTest, Timeout(10000)]
   public IEnumerator UpdateCustomAssets() {
     yield return Setup();
 
@@ -53,9 +53,8 @@ public class CustomAssetTests : PlayModeTests {
     const int count = 0;
 
     while (Math.Abs(currentFloat) > 0.1f) {
-      yield return null;
-
       Assert.Less(count, 200);
+      yield return null;
     }
   }
 
@@ -289,6 +288,7 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual(largeAsset, zero);
 
     var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, F = 4.56f, S = "789"};
+    largeAsset.Value = setTo;
     Assert.AreNotEqual(largeAsset, zero);
     Assert.AreEqual(largeAsset, setTo);
     yield return null;
