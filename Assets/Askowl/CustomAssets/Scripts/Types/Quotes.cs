@@ -16,9 +16,8 @@ namespace CustomAsset {
   /// <remarks><a href="http://customassets.marrington.net#quotes">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Quotes")]
   public sealed class Quotes : StringSet {
-    [SerializeField, Header("External Asset"),
-     Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
-    private TextAsset textFile;
+    [SerializeField, Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
+    private TextAsset[] quoteFiles;
 
     /// <inheritdoc />
     protected override void OnEnable() {
@@ -34,7 +33,7 @@ namespace CustomAsset {
         Value[i] = RTF(Value[i]);
       }
 
-      if (textFile != null) {
+      foreach (var textFile in quoteFiles) {
         string[] quotes = textFile.text.Split('\n');
 
         for (int i = 0; i < quotes.Length; i++) {
@@ -49,7 +48,7 @@ namespace CustomAsset {
     /// <remarks><a href="http://customassets.marrington.net#rtf">More...</a></remarks>
     /// <param name="quote">Text for of quote</param>
     /// <returns>Unity RTF form of quote</returns>
-    
+
     // ReSharper disable once InconsistentNaming
     public static string RTF(string quote) {
       return Regex.Replace(input: quote, pattern: @"^(.*?)\s*\((.*)\)$", evaluator: m =>
