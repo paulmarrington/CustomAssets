@@ -189,7 +189,9 @@ namespace CustomAsset {
     public override bool Equals(object other) { return (other is T) && Equals((T) other); }
 
     /// <inheritdoc />
-    public override int GetHashCode() { return Value.GetHashCode(); }
+    public override int GetHashCode() {
+      return Equals(Value, default(T)) ? 0 : Value.GetHashCode();
+    }
 
     // ReSharper disable once UnusedMember.Global
     /// <summary>

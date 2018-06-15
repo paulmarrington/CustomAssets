@@ -19,6 +19,8 @@ namespace CustomAsset {
     [SerializeField, Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
     private TextAsset[] quoteFiles;
 
+    public static Quotes New { get { return CreateInstance<Quotes>(); } }
+
     /// <inheritdoc />
     protected override void OnEnable() {
       base.OnEnable();
@@ -33,13 +35,17 @@ namespace CustomAsset {
         Value[i] = RTF(Value[i]);
       }
 
-      foreach (var textFile in quoteFiles) {
-        string[] quotes = textFile.text.Split('\n');
+      foreach (var textFile in quoteFiles) Add(textFile);
+    }
 
-        for (int i = 0; i < quotes.Length; i++) {
-          if (!string.IsNullOrEmpty(quotes[i])) Value.Add(RTF(quotes[i]));
-        }
+    public Quotes Add(TextAsset textFile) {
+      string[] quotes = textFile.text.Split('\n');
+
+      for (int i = 0; i < quotes.Length; i++) {
+        if (!string.IsNullOrEmpty(quotes[i])) Value.Add(RTF(quotes[i]));
       }
+
+      return this;
     }
 
     /// <summary>
