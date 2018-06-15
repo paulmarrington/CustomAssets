@@ -86,6 +86,6 @@ namespace CustomAsset {
     }
 
     /// <inheritdoc />
-    protected override bool Equals(List<T> other) { return Value.Equals(other); }
+    protected override bool Equals(List<T> other) { return Equals(Value, other); }
   }
 }

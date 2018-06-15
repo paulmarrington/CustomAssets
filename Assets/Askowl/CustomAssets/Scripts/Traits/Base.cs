@@ -2,6 +2,7 @@
  * With thanks to Ryan Hipple -- https://github.com/roboryantron/Unite2017
  */
 
+using System;
 using System.Collections.Generic;
 using Askowl;
 using UnityEditor;
@@ -33,10 +34,12 @@ namespace CustomAsset {
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
     public static TI Instance<TI>(string name = null) where TI : Base {
       TI[] instances = Objects.Find<TI>(name);
-      if (instances.Length > 0) return instances[0];
+      return instances.Length > 0 ? instances[0] : New<TI>(name);
+    }
 
+    public static TI New<TI>(string name = null) where TI : Base {
       TI instance = CreateInstance<TI>();
-      instance.name = name ?? typeof(TI).Name;
+      instance.name = name ?? Guid.NewGuid().ToString();
 #if UNITY_EDITOR
       instance.unloadable = false;
 #endif

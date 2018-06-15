@@ -1,5 +1,6 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
@@ -19,7 +20,7 @@ namespace CustomAsset {
     [SerializeField, Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
     private TextAsset[] quoteFiles;
 
-    public static Quotes New { get { return CreateInstance<Quotes>(); } }
+    public static Quotes New { get { return New<Quotes>(); } }
 
     /// <inheritdoc />
     protected override void OnEnable() {
@@ -35,7 +36,9 @@ namespace CustomAsset {
         Value[i] = RTF(Value[i]);
       }
 
-      foreach (var textFile in quoteFiles) Add(textFile);
+      if (quoteFiles != null) {
+        foreach (var textFile in quoteFiles) Add(textFile);
+      }
     }
 
     public Quotes Add(TextAsset textFile) {
