@@ -1,6 +1,7 @@
 ﻿// With thanks to Ryan Hipple -- https://github.com/roboryantron/Unite2017
 
 using System;
+using System.Collections;
 
 namespace CustomAsset {
   using UnityEngine;
@@ -13,6 +14,9 @@ namespace CustomAsset {
   /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
   public abstract partial class OfType<T> : Base {
+    [SerializeField, Tooltip("Leave at 0 for no polling")]
+    private float updateIntervalInSeconds;
+
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
@@ -177,6 +181,21 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
     protected virtual void OnDisable() { Save(); }
+
+    /// <summary>
+    /// Coroutine that checks for changes to coordinates at set intervals. This will trigger an event for any who are listening.
+    /// </summary>
+    public IEnumerator StartPolling() {
+      if (updateIntervalInSeconds <= 0) yield break;
+
+      var interval = new WaitForSecondsRealtime(updateIntervalInSeconds);
+
+      while (true) {
+        if (!Equals(Value)) Changed();
+
+        yield return interval;
+      }
+    }
 
     /// <summary>
     /// Implement in concrete class to compare data (Equals).

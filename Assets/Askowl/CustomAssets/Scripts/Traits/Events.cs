@@ -1,6 +1,7 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CustomAsset {
   public partial class Base {
