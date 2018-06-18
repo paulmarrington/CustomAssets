@@ -13,8 +13,7 @@
 
 ## ~~Release 2018-06~~
 
-- [x] ~~Move Common to Askowl-Common~~
-- [x] ~~Move Pool to Askowl-Pool~~
-- [x] ~~Get tests all working~~
+- [x] Move Common to Askowl-Common
+- [x] Move Pool to Askowl-Pool
+- [x] Get tests all working
 
-## 
