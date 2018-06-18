@@ -11,7 +11,7 @@ namespace CustomAsset {
     /// Tell all watchers we have changed
     /// </summary>
     /// <param name="memberName">Member that changed or null for default</param>
-    protected void Changed(string memberName = null) {
+    protected virtual void Changed(string memberName = null) {
       for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered(memberName);
     }
 

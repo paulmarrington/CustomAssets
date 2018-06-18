@@ -183,6 +183,14 @@ namespace CustomAsset {
     protected virtual void OnDisable() { Save(); }
 
     /// <summary>
+    /// Start a coroutine to poll the gyroscope on the given MonoBehaviour.
+    /// </summary>
+    /// <param name="monoBehaviour">The MonoBehaviour that owns the polling coroutine</param>
+    public virtual void StartPolling(MonoBehaviour monoBehaviour) {
+      if (updateIntervalInSeconds > 0) monoBehaviour.StartCoroutine(StartPolling());
+    }
+
+    /// <summary>
     /// Coroutine that checks for changes to coordinates at set intervals. This will trigger an event for any who are listening.
     /// </summary>
     public IEnumerator StartPolling() {

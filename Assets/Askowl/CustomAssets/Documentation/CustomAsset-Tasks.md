@@ -3,6 +3,7 @@
 ## Release 2018-??
 
 - [ ] Update documentation
+  - [ ] separate functionality into different projects
   - [ ] Start(monobehaviour) and StartPolling
   - [ ] Remove common code from documentation
   - [ ] Remove pooling from documentation
