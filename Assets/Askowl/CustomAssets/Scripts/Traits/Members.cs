@@ -19,7 +19,6 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <param name="memberName">Generic dictionary key</param>
-
     public T this[string memberName] {
       get { return Contains(memberName) ? dictionary[memberName] : seedSaver; }
       set {
@@ -67,7 +66,6 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
     /// <returns>withMembers</returns>
-
     public string[] MemberNames { get { return members.ToArray(); } }
 
     [Serializable, UsedImplicitly]
