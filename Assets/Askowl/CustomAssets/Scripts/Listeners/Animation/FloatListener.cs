@@ -1,5 +1,7 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using CustomAsset.Mutable;
+
 namespace CustomAsset.Animation {
   using UnityEngine;
 
@@ -13,6 +15,14 @@ namespace CustomAsset.Animation {
     [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override void Change(float value) { Target.SetFloat(parameterName, value); }
+    protected override bool OnChange(float value) {
+      Target.SetFloat(parameterName, value);
+      return true;
+    }
+
+    /// <inheritdoc />
+    protected override bool Equals(float value) {
+      return Compare.AlmostEqual(Target.GetFloat(parameterName), value);
+    }
   }
 }

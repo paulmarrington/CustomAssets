@@ -1,6 +1,6 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   using UnityEngine;
   using UnityEngine.Events;
 
@@ -14,6 +14,9 @@ namespace CustomAsset {
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#unity-event-listeners">More...</a></remarks>
-    protected override void OnChange(string memberName) { unityEvent.Invoke(); }
+    protected override bool OnChange(object[] data) {
+      unityEvent.Invoke();
+      return true;
+    }
   }
 }

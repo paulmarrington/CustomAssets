@@ -2,7 +2,7 @@
 
 using Askowl;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   using UnityEngine;
 
   /// <inheritdoc />
@@ -39,34 +39,27 @@ namespace CustomAsset {
   /// <remarks><a href="http://customassets.marrington.net#stringlistener">More...</a></remarks>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
   public abstract class StringListener<T> :
-    ComponentListenerBase<T, String, string> where T : Object {
-    /// <inheritdoc />
-    protected override void OnChange(string memberName) {
-      Change((memberName == null)
-               ? Listener.AssetToMonitor.ToString()
-               : Listener.AssetToMonitor.ToStringForMember(memberName));
-    }
-  }
+    ComponentListenerBase<T, String, string> where T : Object { }
 
-  /// <inheritdoc />
   /// <summary>
-  /// Base class for listeners that do not hold data
+  /// Listener that triggers without complaint
   /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#triggerlistener">More...</a></remarks>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
   public abstract class TriggerListener<T> : ComponentListenerBase<T> where T : Object {
     /// <summary>
     /// Called with new value of the data within the custom asset
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    protected abstract void Change();
+    /// <param name="value">Reference to the changed value</param>
+    protected abstract bool OnChange();
 
     /// <inheritdoc />
     ///  <summary>
     /// On a change the listener needs a copy of the changed data to react to
     ///  </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    protected override void OnChange(string _) { Change(); }
+    /// <returns>True of all ok (either equals or no change error</returns>
+    protected override bool OnChange(object[] _) { return OnChange(); }
   }
 
   /// <inheritdoc />
@@ -89,16 +82,22 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     /// <param name="value">Reference to the changed value</param>
-    protected abstract void Change(TD value);
+    protected abstract bool OnChange(TD value);
 
     /// <inheritdoc />
     ///  <summary>
     /// On a change the listener needs a copy of the changed data to react to
     ///  </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    protected override void OnChange(string memberName) {
-      Change((memberName == null) ? (TD) Asset : Asset[memberName]);
-    }
+    /// <returns>True of all ok (either equals or no change error</returns>
+    protected override bool OnChange(object[] _) { return Equals(Asset) || OnChange(Asset); }
+
+    /// <summary>
+    /// We need to compare value from target against change to see if we need to change
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    protected abstract bool Equals(TD value);
   }
 
   /// <inheritdoc />

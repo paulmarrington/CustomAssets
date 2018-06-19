@@ -3,7 +3,7 @@
 using Decoupled;
 using UnityEngine;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   /// <inheritdoc />
   /// <summary>
   /// Drop into the same Game Object as a text component to update text content
@@ -14,6 +14,12 @@ namespace CustomAsset {
   // ReSharper disable once InconsistentNaming
   public sealed class UITextListener : StringListener<Textual> {
     /// <inheritdoc />
-    protected override void Change(string value) { Target.text = value; }
+    protected override bool OnChange(string value) {
+      Target.text = value;
+      return true;
+    }
+
+    /// <inheritdoc />
+    protected override bool Equals(string value) { return (Target.text == value); }
   }
 }

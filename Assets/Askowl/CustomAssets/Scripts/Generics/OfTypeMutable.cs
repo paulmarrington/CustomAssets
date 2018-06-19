@@ -65,17 +65,6 @@ namespace CustomAsset.Mutable {
 
     #region Comparators
     /// <summary>
-    /// Check two floating point numbers to be within rounding tolerance.
-    /// </summary>
-    protected static bool AlmostEqual(float a, float b) { return Math.Abs(a - b) < 1e-5; }
-
-    /// <summary>
-    /// Check two double floating point numbers to be within rounding tolerance.
-    /// </summary>
-    // ReSharper disable once MemberCanBePrivate.Global
-    protected static bool AlmostEqual(double a, double b) { return Math.Abs(a - b) < 1e-5; }
-
-    /// <summary>
     /// Implement in concrete class to compare data (Equals).
     /// </summary>
     /// <param name="other">The other data object to compare to</param>

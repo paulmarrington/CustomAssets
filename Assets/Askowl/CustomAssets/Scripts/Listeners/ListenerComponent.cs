@@ -24,6 +24,9 @@ namespace CustomAsset.Mutable {
   public abstract class ListenerComponent : MonoBehaviour {
     [SerializeField] private Listener listener;
 
+    /// <summary>
+    /// Retrieve a reference to the listener attached to this component
+    /// </summary>
     public Listener Listener { get { return listener; } }
 
     private void OnEnable()  { listener.Register(OnChange); }
@@ -39,7 +42,7 @@ namespace CustomAsset.Mutable {
     /// After we have ensured the change is for the expected member, tell interested parties.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
-    /// <param name="memberName"></param>
-    protected abstract void OnChange(string memberName);
+    /// <param name="data">Data of which first may be a target name</param>
+    protected abstract bool OnChange(object[] data);
   }
 }

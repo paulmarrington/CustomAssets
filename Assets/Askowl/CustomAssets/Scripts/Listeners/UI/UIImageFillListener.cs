@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   /// <inheritdoc />
   /// <summary>
   /// Drop into the same Game Object as an image component to update the fill amount
@@ -11,9 +11,16 @@ namespace CustomAsset {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#uiimagefilllistener">More...</a></remarks>
   [RequireComponent(typeof(Image))]
-  // ReSharper disable once InconsistentNaming
-  public sealed class UIImageFillListener : FloatListener<Image> {
+  public sealed class UiImageFillListener : FloatListener<Image> {
     /// <inheritdoc />
-    protected override void Change(float value) { Target.fillAmount = value; }
+    protected override bool OnChange(float value) {
+      Target.fillAmount = value;
+      return true;
+    }
+
+    /// <inheritdoc />
+    protected override bool Equals(float value) {
+      return Compare.AlmostEqual(Target.fillAmount, value);
+    }
   }
 }

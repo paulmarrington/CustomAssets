@@ -9,10 +9,17 @@ namespace CustomAsset.Animation {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
   [RequireComponent(typeof(Animator))]
-  public sealed class IntegerListener : IntegerListener<Animator> {
+  public sealed class IntegerListener : Mutable.IntegerListener<Animator> {
     [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override void Change(int value) { Target.SetInteger(parameterName, value); }
+    protected override bool OnChange(int value) {
+      Target.SetInteger(parameterName, value);
+      return true;
+    }
+
+    protected override bool Equals(int value) {
+      return (Target.GetInteger(parameterName) == value);
+    }
   }
 }

@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   /// <inheritdoc />
   /// <summary>
   /// Drop into the same Game Object as a canvas group component to update the transparency whenever the Float custom asset changes.
@@ -12,6 +12,12 @@ namespace CustomAsset {
   // ReSharper disable once InconsistentNaming
   public sealed class UICanvasGroupAlphaListener : FloatListener<CanvasGroup> {
     /// <inheritdoc />
-    protected override void Change(float value) { Target.alpha = value; }
+    protected override bool OnChange(float value) {
+      Target.alpha = value;
+      return true;
+    }
+
+    /// <inheritdoc />
+    protected override bool Equals(float value) { return Compare.AlmostEqual(Target.alpha, value); }
   }
 }
