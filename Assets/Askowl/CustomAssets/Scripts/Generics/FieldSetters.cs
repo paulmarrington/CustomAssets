@@ -1,10 +1,9 @@
 ﻿// With thanks to Ryan Hipple -- https://github.com/roboryantron/Unite2017
 
 using System;
+using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  using UnityEngine;
-
   /// <summary>
   /// Static helper class for setting fields in a compound object
   /// </summary>
@@ -21,6 +20,17 @@ namespace CustomAsset.Mutable {
     }
 
     /// <summary>
+    /// Set a field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref myCustomAsset.aField</param>
+    /// <param name="from">Value to set the field to if all checks pass</param>
+    /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
+    public static void Set<TF>(this Emitter emitter, ref TF field, TF from) {
+      if (Set(ref field, from)) emitter.Fire(emitter);
+    }
+
+    /// <summary>
     /// Set a field inside a CustomAsset compound object where comparison is not straightforward. It checks for read/write and that the field is different before triggering a change.
     /// </summary>
     /// <param name="field">ref myCustomAsset.aField</param>
@@ -32,6 +42,21 @@ namespace CustomAsset.Mutable {
 
       field = from;
       return true;
+    }
+
+    /// <summary>
+    /// Set a field inside a CustomAsset compound object where comparison is not straightforward. It checks for read/write and that the field is different before triggering a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref myCustomAsset.aField</param>
+    /// <param name="from">Value to set the field to if all checks pass</param>
+    /// <param name="equals">Comparison operator. Returns true if the items are equal or close enough</param>
+    /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
+    public static void Set<TF>(this Emitter       emitter,
+                               ref  TF            field,
+                               TF                 from,
+                               Func<TF, TF, bool> equals) {
+      if (Set(ref field, from, equals)) emitter.Fire(emitter);
     }
     #endregion
 
@@ -46,12 +71,32 @@ namespace CustomAsset.Mutable {
     }
 
     /// <summary>
+    /// Set a float field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref float myCustomAsset.aField to update</param>
+    /// <param name="from">float to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref float field, float from) {
+      emitter.Set(ref field, from, AlmostEqual);
+    }
+
+    /// <summary>
     /// Set a double field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
     /// <param name="field">ref double myCustomAsset.aField to update</param>
     /// <param name="from">double to set the field to if all checks pass</param>
     public static bool Set(ref double field, double from) {
       return Set(ref field, from, AlmostEqual);
+    }
+
+    /// <summary>
+    /// Set a double field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref double myCustomAsset.aField to update</param>
+    /// <param name="from">double to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref double field, double from) {
+      emitter.Set(ref field, from, AlmostEqual);
     }
 
     /// <summary>
@@ -62,11 +107,31 @@ namespace CustomAsset.Mutable {
     public static bool Set(ref int field, int from) { return Set<int>(ref field, from); }
 
     /// <summary>
+    /// Set a int field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref int myCustomAsset.aField to to update</param>
+    /// <param name="from">int to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref int field, int from) {
+      emitter.Set<int>(ref field, from);
+    }
+
+    /// <summary>
     /// Set a long field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
     /// <param name="field">ref long myCustomAsset.aField to update</param>
     /// <param name="from">long to set the field to if all checks pass</param>
     public static bool Set(ref long field, long from) { return Set<long>(ref field, from); }
+
+    /// <summary>
+    /// Set a long field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref long myCustomAsset.aField to update</param>
+    /// <param name="from">long to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref long field, long from) {
+      emitter.Set<long>(ref field, from);
+    }
 
     /// <summary>
     /// Set a bool field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
@@ -76,11 +141,31 @@ namespace CustomAsset.Mutable {
     public static bool Set(ref bool field, bool from) { return Set<bool>(ref field, from); }
 
     /// <summary>
+    /// Set a bool field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref bool myCustomAsset.aField to update</param>
+    /// <param name="from">bool to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref bool field, bool from) {
+      emitter.Set<bool>(ref field, from);
+    }
+
+    /// <summary>
     /// Set a float string inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
     public static bool Set(ref string field, string from) { return Set<string>(ref field, from); }
+
+    /// <summary>
+    /// Set a float string inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref string field, string from) {
+      emitter.Set<string>(ref field, from);
+    }
 
     /// <summary>
     /// Set a Vector2 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
@@ -89,6 +174,16 @@ namespace CustomAsset.Mutable {
     /// <param name="from">string to set the field to if all checks pass</param>
     public static bool Set(ref Vector2 field, Vector2 from) {
       return Set(ref field, from, (a, b) => a == b);
+    }
+
+    /// <summary>
+    /// Set a Vector2 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref Vector2 field, Vector2 from) {
+      emitter.Set(ref field, from, (a, b) => a == b);
     }
 
     /// <summary>
@@ -101,6 +196,16 @@ namespace CustomAsset.Mutable {
     }
 
     /// <summary>
+    /// Set a Vector3 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref Vector3 field, Vector3 from) {
+      emitter.Set(ref field, from, (a, b) => a == b);
+    }
+
+    /// <summary>
     /// Set a Vector4 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
@@ -110,12 +215,32 @@ namespace CustomAsset.Mutable {
     }
 
     /// <summary>
+    /// Set a Vector4 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref Vector4 field, Vector4 from) {
+      emitter.Set(ref field, from, (a, b) => a == b);
+    }
+
+    /// <summary>
     /// Set a Quaternion inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
     /// </summary>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
     public static bool Set(ref Quaternion field, Quaternion from) {
       return Set(ref field, from, (a, b) => a == b);
+    }
+
+    /// <summary>
+    /// Set a Quaternion inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
+    /// </summary>
+    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="field">ref string myCustomAsset.aField to update</param>
+    /// <param name="from">string to set the field to if all checks pass</param>
+    public static void Set(this Emitter emitter, ref Quaternion field, Quaternion from) {
+      emitter.Set(ref field, from, (a, b) => a == b);
     }
     #endregion
 

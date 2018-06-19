@@ -1,10 +1,9 @@
 ﻿// With thanks to Ryan Hipple -- https://github.com/roboryantron/Unite2017
 
 using Askowl;
+using UnityEngine;
 
 namespace CustomAsset.Constant {
-  using UnityEngine;
-
   /// <inheritdoc />
   /// <summary>
   /// Base class for a custom asset. Provides getters and setters for the contained value and
@@ -29,9 +28,9 @@ namespace CustomAsset.Constant {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    public static TI Instance<TI>(string name) where TI : ScriptableObject {
-      TI[] instances = Objects.Find<TI>(name);
-      return (instances.Length > 0) ? instances[0] : Resources.Load<TI>(name);
+    public static OfType<T> Instance(string name) {
+      OfType<T>[] instances = Objects.Find<OfType<T>>(name);
+      return (instances.Length > 0) ? instances[0] : Resources.Load<OfType<T>>(name);
     }
 
     /// <summary>

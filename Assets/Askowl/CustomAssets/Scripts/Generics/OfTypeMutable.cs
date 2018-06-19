@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Askowl;
 using UnityEditor;
 
 namespace CustomAsset.Mutable {
@@ -26,7 +27,10 @@ namespace CustomAsset.Mutable {
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
     public static OfType<T> Instance(string name) {
-      OfType<T> instance = CustomAsset.Constant.OfType<T>.Instance<OfType<T>>(name);
+      OfType<T>[] instances = Objects.Find<OfType<T>>(name);
+
+      OfType<T> instance =
+        (instances.Length > 0) ? instances[0] : Resources.Load<OfType<T>>(name);
 
       if (instance == null) return New(name);
 
