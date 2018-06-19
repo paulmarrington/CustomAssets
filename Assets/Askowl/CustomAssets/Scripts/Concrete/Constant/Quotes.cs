@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Askowl;
 using UnityEditor;
@@ -23,9 +22,8 @@ namespace CustomAsset.Support {
 
     /// <inheritdoc />
     protected override void BuildSelector() {
-      base.BuildSelector();
-      List<string[]> lists = new List<string[]>();
-      lists.Add(RTF(Selector.Choices));
+      base.BuildSelector(); // renews Choices
+      List<string[]> lists = new List<string[]> {Rtf(Selector.Choices)};
 
       if (quoteFiles != null) {
         foreach (var textFile in quoteFiles) lists.Add(Read(textFile));
@@ -37,13 +35,23 @@ namespace CustomAsset.Support {
       Selector.Choices = amalgum.ToArray();
     }
 
-    public string[] Read(TextAsset textFile) { return RTF(textFile.text.Split('\n')); }
+    /// <summary>
+    /// Read in some text from a file
+    /// </summary>
+    /// <param name="textFile">The TextAsset referencing a file in a Resources directory</param>
+    /// <returns>A list of strings - one for each line</returns>
+    public static string[] Read(TextAsset textFile) { return Rtf(textFile.text.Split('\n')); }
 
-    public static string[] RTF(string[] quotes) {
+    /// <summary>
+    /// Turn a list of strings into a list of formatted quotes
+    /// </summary>
+    /// <param name="quotes">Strings to format</param>
+    /// <returns>List of quotes</returns>
+    public static string[] Rtf(string[] quotes) {
       List<string> results = new List<string>();
 
       for (int i = 0; i < quotes.Length; i++) {
-        if (!string.IsNullOrEmpty(quotes[i])) results.Add(RTF(quotes[i]));
+        if (!string.IsNullOrEmpty(quotes[i])) results.Add(Rtf(quotes[i]));
       }
 
       return results.ToArray();
@@ -55,7 +63,7 @@ namespace CustomAsset.Support {
     /// <remarks><a href="http://customassets.marrington.net#rtf">More...</a></remarks>
     /// <param name="quote">Text for of quote</param>
     /// <returns>Unity RTF form of quote</returns>
-    public static string RTF(string quote) {
+    public static string Rtf(string quote) {
       return Regex.Replace(input: quote, pattern: @"^(.*?)\s*\((.*)\)$", evaluator: m =>
                              string.Format(
                                "<b>\"</b><i>{0}</i><b>\"</b>      <color=grey>{1}</color>",
@@ -65,7 +73,7 @@ namespace CustomAsset.Support {
 }
 
 namespace CustomAsset.Constant {
-  /// <inheritdoc />
+  /// <inheritdoc cref="Support.Quotes" />
   /// <summary>
   /// Custom Asset for picking one or a list of quotes - either kept in the asset or as a separate text file.
   /// Each quote is on a separate line in the form:
@@ -74,14 +82,15 @@ namespace CustomAsset.Constant {
   /// <remarks><a href="http://customassets.marrington.net#quotes">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Constant/Quotes")]
   public sealed class Quotes : OfType<Support.Quotes>, Pick<string> {
-    /// <inheritdoc />
+    /// <inheritdoc cref="Quotes()" />
     private void OnEnable() {
 #if UNITY_EDITOR
       if (!EditorApplication.isPlayingOrWillChangePlaymode) return;
 #endif
-      Value.BuildSelector();
+      Value.Reset();
     }
 
+    /// <inheritdoc />
     public string Pick() { return Value.Pick(); }
   }
 }

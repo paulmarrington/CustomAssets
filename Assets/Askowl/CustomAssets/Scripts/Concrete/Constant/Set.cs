@@ -49,6 +49,10 @@ namespace CustomAsset.Support {
       }
     }
 
+    /// <summary>
+    /// If the contents have changed we will need to rebuild the selector. This is normally
+    /// at the next Pick() call. It can be overridden by more complex Set types.
+    /// </summary>
     protected virtual void BuildSelector() {
       Selector = new Selector<T>(Elements.ToArray(), !Cycle, ExhaustiveBelow);
     }
@@ -58,6 +62,12 @@ namespace CustomAsset.Support {
       if (Selector == null) BuildSelector();
       return Selector.Pick();
     }
+
+    /// <summary>
+    /// If something has changed the underlying data we need to tell the Selector
+    /// that it is now out of date.
+    /// </summary>
+    public void Reset() { Selector = null; }
 
     /// <summary>
     /// Delector used to pick an element from the set

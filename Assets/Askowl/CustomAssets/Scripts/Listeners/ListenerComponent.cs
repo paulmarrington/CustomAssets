@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
 //  /// <inheritdoc cref="MonoBehaviour" />
 //  /// <summary>
 //  /// Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel.

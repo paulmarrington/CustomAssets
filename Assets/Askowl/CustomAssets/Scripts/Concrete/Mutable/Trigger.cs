@@ -5,13 +5,13 @@ using CustomAsset.Mutable;
 namespace CustomAsset {
   using UnityEngine;
 
-  /// <inheritdoc cref="IEmitter" />
+  /// <inheritdoc cref="HasEmitter" />
   /// <summary>
   /// Dynamic custom asset without any values. Use it to trigger and listen to events.
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#trigger">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Trigger")]
-  public class Trigger : ScriptableObject, IEmitter {
+  public class Trigger : ScriptableObject, HasEmitter {
     private Emitter emitter = new Emitter();
 
     /// <inheritdoc />

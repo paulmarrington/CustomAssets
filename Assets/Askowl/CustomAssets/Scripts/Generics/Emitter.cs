@@ -6,7 +6,7 @@ namespace CustomAsset.Mutable {
   /// <summary>
   /// Encapsulation emitting change information to multiple listeners
   /// </summary>
-  public interface IEmitter {
+  public interface HasEmitter {
     /// <summary>
     /// Read-only reference to the emitter so we can pass changes
     /// </summary>

@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   /// <inheritdoc cref="MonoBehaviour" />
   /// <summary>
   /// Common code for all event listeners. It registers and deregisters the listener with the channel.
@@ -12,52 +12,44 @@ namespace CustomAsset {
   [Serializable]
   public class Listener {
     #pragma warning disable 649
-    [SerializeField] private Base assetToMonitor;
-    #pragma warning restore 649
-    [SerializeField] private string forMember;
+    [SerializeField] private HasEmitter assetToMonitor;
+    [SerializeField] private string     forTarget;
 
     // ReSharper disable once MemberCanBePrivate.Global
     /// <summary>
     /// Must be implemented in containing class as it is called if the listener is triggered.
     /// </summary>
-    public Action<string> OnChange;
+    public Func<object[], bool> OnChange;
 
     /// <summary>
     /// Used to classes that have a listener can get back the Custom Asset that triggered it.
     /// </summary>
-    public Base AssetToMonitor { get { return assetToMonitor; } }
+    public HasEmitter AssetToMonitor { get { return assetToMonitor; } }
 
     /// <summary>
     /// Register an action so that if the custom asset member changes anyone can be told
     /// </summary>
     /// <param name="onChange">void OnChange(string) reference</param>
-    public void Register(Action<string> onChange) {
-      forMember = forMember.Trim();
-      if (string.IsNullOrEmpty(forMember)) forMember = null;
+    public void Register(Func<object[], bool> onChange) {
+      forTarget = forTarget.Trim();
+      if (string.IsNullOrEmpty(forTarget)) forTarget = null;
       OnChange = onChange;
-      assetToMonitor.Register(this);
+      assetToMonitor.Emitter.Register(this);
     }
 
     /// <summary>
     /// Call to stop receiving change calls
     /// </summary>
-    public void Deregister() { assetToMonitor.Deregister(this); }
+    public void Deregister() { assetToMonitor.Emitter.Deregister(this); }
 
     /// <summary>
     /// Called by the channel when an event occurs.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
-    public void OnTriggered() { OnChange(null); }
+    public bool OnTriggered(params object[] data) {
+      if ((forTarget != null) && ((data.Length == 0) || forTarget.Equals(data[0]))) return false;
 
-    /// <summary>
-    /// Called by the channel when an event occurs.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
-    /// <param name="memberName">Member this event relates to</param>
-    public void OnTriggered(string memberName) {
-      if ((forMember == null) || (memberName == forMember)) OnChange(memberName);
+      return OnChange(data);
     }
-
-    public void OnTriggered(params object[] data){}
   }
 }

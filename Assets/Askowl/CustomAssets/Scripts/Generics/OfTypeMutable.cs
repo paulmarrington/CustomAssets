@@ -14,7 +14,7 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
-  public class OfType<T> : Constant.OfType<T>, IEmitter {
+  public class OfType<T> : Constant.OfType<T>, HasEmitter {
     #region Construction
     /// <summary>
     /// If this is a project asset, then you will need to reference it somewhere.
@@ -59,7 +59,7 @@ namespace CustomAsset.Mutable {
     #region Listeners
     private Emitter emitter = new Emitter();
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="Emitter" />
     public Emitter Emitter { get { return emitter; } }
     #endregion
 

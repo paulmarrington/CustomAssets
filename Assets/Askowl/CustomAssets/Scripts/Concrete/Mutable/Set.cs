@@ -5,7 +5,7 @@
 using Askowl;
 
 namespace CustomAsset.Mutable {
-  /// <inheritdoc />
+  /// <inheritdoc cref="Pick" />
   /// <summary>
   /// Set of any serialised type as a custom asset.
   /// </summary>
@@ -34,7 +34,7 @@ namespace CustomAsset.Mutable {
     }
 
     private void Changed() {
-      Value.Selector = null;
+      Value.Reset();
       Emitter.Fire();
     }
 
