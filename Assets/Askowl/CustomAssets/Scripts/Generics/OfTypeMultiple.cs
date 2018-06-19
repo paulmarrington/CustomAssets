@@ -6,10 +6,14 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace CustomAsset {
-  public abstract partial class OfType<T> {
-    [SerializeField, Header("Value")] private T            seed;
-    [SerializeField]                  private List<string> members;
+namespace CustomAsset.Multiple {
+  /// <inheritdoc />
+  /// <summary>
+  /// Custom assets for more than one data source
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  public class OfType<T> : Mutable.OfType<T> {
+    [SerializeField] private List<string> members;
 
     private T                     seedSaver;
     private Dictionary<string, T> dictionary;
@@ -24,15 +28,12 @@ namespace CustomAsset {
       set {
         if (!Contains(memberName)) members.Add(memberName);
         dictionary[memberName] = value;
-        Changed(memberName);
+        Emitter.Fire(memberName);
       }
     }
 
-    /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
-    public override string ToStringForMember(string memberName) {
-      return this[memberName].ToString();
-    }
+    public string ToString(string memberName) { return this[memberName].ToString(); }
 
     /// <summary>See if a set contains a specific element.</summary>
     /// <remarks><a href="http://customassets.marrington.net#members">More...</a></remarks>
@@ -48,7 +49,7 @@ namespace CustomAsset {
 
       dictionary.Remove(memberName);
       members.Remove(memberName);
-      Changed(memberName);
+      Emitter.Fire(memberName);
     }
 
     /// <summary>
@@ -58,7 +59,7 @@ namespace CustomAsset {
     internal void Clear() {
       dictionary.Clear();
       members.Clear();
-      Changed();
+      Emitter.Fire();
     }
 
     /// <summary>
@@ -69,47 +70,47 @@ namespace CustomAsset {
     public string[] MemberNames { get { return members.ToArray(); } }
 
     [Serializable, UsedImplicitly]
-    // ReSharper disable MissingXmlDoc
-    public class ToPersist {
+    private class ToPersist {
       public T        CurrentValue;
       public string[] Members;
       public T[]      Values;
     }
-    // ReSharper restore MissingXmlDoc
 
     private readonly ToPersist toPersist = new ToPersist();
 
+    /// <inheritdoc />
     /// <summary>
     /// Load the last previously saved value from persistent storage. Called
     /// implicitly when persistent flag is set and custom asset is enabled.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    internal void Load() {
+    protected override void Load() {
       dictionary = new Dictionary<string, T>();
-      seedSaver  = seed;
+      seedSaver  = Value;
       ToPersist data = Loader<ToPersist>();
 
       if (members == null) members = new List<string>();
 
       if (data != default(ToPersist)) {
-        seed = data.CurrentValue;
+        Value = data.CurrentValue;
 
         if (data.Members != null) {
           members = data.Members.ToList();
           for (int i = 0; i < members.Count; i++) dictionary[members[i]] = data.Values[i];
         }
       } else {
-        for (int i = 0; i < members.Count; i++) dictionary[members[i]] = seed;
+        for (int i = 0; i < members.Count; i++) dictionary[members[i]] = Value;
       }
     }
 
+    /// <inheritdoc />
     /// <summary>
     /// Save current value to persistent storage. Called emplicitly when  when persistent flag is set
     /// and custom asset is disabled or on every change if it is marked critical.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    internal void Save() {
-      toPersist.CurrentValue = seed;
+    protected override void Save() {
+      toPersist.CurrentValue = Value;
       toPersist.Members      = MemberNames;
       toPersist.Values       = new T[members.Count];
 

@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   /// <inheritdoc />
   /// <summary>
   /// Custom Asset for picking one or a list of quotes - either kept in the asset or as a separate text file.
@@ -15,17 +15,13 @@ namespace CustomAsset {
   /// <code>Quote body (attribution)</code>
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#quotes">More...</a></remarks>
-  [CreateAssetMenu(menuName = "Custom Assets/Quotes")]
+  [CreateAssetMenu(menuName = "Custom Assets/Mutable/Quotes")]
   public sealed class Quotes : StringSet {
     [SerializeField, Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
     private TextAsset[] quoteFiles;
 
-    public static Quotes New { get { return New<Quotes>(); } }
-
     /// <inheritdoc />
-    protected override void OnEnable() {
-      base.OnEnable();
-
+    private void OnEnable() {
 #if UNITY_EDITOR
       if (!EditorApplication.isPlayingOrWillChangePlaymode) return;
 #endif

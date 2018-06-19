@@ -2,7 +2,7 @@
 
 using System;
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   using UnityEngine;
 
   /// <inheritdoc />
@@ -13,9 +13,6 @@ namespace CustomAsset {
   /// Register(this).
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
-  [CreateAssetMenu(menuName = "Custom Assets/Float")]
-  public sealed class Float : OfType<float> {
-    /// <inheritdoc />
-    protected override bool Equals(float other) { return AlmostEqual(Value, other); }
-  }
+  [CreateAssetMenu(menuName = "Custom Assets/Mutable/Float")]
+  public sealed class Float : OfType<float> { }
 }

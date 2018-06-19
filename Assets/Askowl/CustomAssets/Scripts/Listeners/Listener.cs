@@ -57,5 +57,7 @@ namespace CustomAsset {
     public void OnTriggered(string memberName) {
       if ((forMember == null) || (memberName == forMember)) OnChange(memberName);
     }
+
+    public void OnTriggered(params object[] data){}
   }
 }

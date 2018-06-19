@@ -1,6 +1,6 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-namespace CustomAsset {
+namespace CustomAsset.Mutable {
   using UnityEngine;
 
   /// <inheritdoc />
@@ -8,9 +8,6 @@ namespace CustomAsset {
   /// Boolean custom asset. Triggers event when changing from true to false or false to trye;
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
-  [CreateAssetMenu(menuName = "Custom Assets/Boolean")]
-  public sealed class Boolean : OfType<bool> {
-    /// <inheritdoc />
-    protected override bool Equals(bool other) { return Value == other; }
-  }
+  [CreateAssetMenu(menuName = "Custom Assets/Mutable/Boolean")]
+  public sealed class Boolean : OfType<bool> { }
 }

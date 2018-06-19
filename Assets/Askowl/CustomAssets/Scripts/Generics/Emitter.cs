@@ -1,18 +1,30 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace CustomAsset {
-  public partial class Base {
+namespace CustomAsset.Mutable {
+  /// <summary>
+  /// Encapsulation emitting change information to multiple listeners
+  /// </summary>
+  public interface IEmitter {
+    /// <summary>
+    /// Read-only reference to the emitter so we can pass changes
+    /// </summary>
+    // ReSharper disable once UnusedMemberInSuper.Global
+    Emitter Emitter { get; }
+  }
+
+  /// <summary>
+  /// Keep a list of interested parties for this custom asset
+  /// </summary>
+  public class Emitter {
     private readonly List<Listener> listeners = new List<Listener>();
 
     /// <summary>
     /// Tell all watchers we have changed
     /// </summary>
-    /// <param name="memberName">Member that changed or null for default</param>
-    protected virtual void Changed(string memberName = null) {
-      for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered(memberName);
+    public void Fire(params object[] data) {
+      for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered(data);
     }
 
     /// <summary>
@@ -22,7 +34,7 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
     /// <param name="listener">Listener to register. Must implement `OnTriggered`</param>
-    internal void Register(Listener listener) {
+    public void Register(Listener listener) {
       if (!listeners.Contains(listener)) listeners.Add(listener);
     }
 
@@ -32,7 +44,7 @@ namespace CustomAsset {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
     /// <param name="listener">Previously registered Listener. Acceptable to deregister twice, or attempt to deregister one never regisgered</param>
-    internal void Deregister(Listener listener) {
+    public void Deregister(Listener listener) {
       if (listeners.Contains(listener)) listeners.Remove(listener);
     }
   }
