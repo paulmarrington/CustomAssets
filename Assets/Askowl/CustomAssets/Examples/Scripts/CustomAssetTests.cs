@@ -69,7 +69,7 @@ public class CustomAssetTests : PlayModeTests {
     SetPickerSample picker = FindObject<SetPickerSample>("SampleSetPicker");
     AudioClip[]     clips  = new AudioClip[6];
 
-    for (int i = 0; i < clips.Length; i++) clips[i] = picker.Pick();
+    for (int i = 0; i < clips.Length; i++) clips[i] = picker.Value.Pick();
 
     for (int i = 0; i < 3; i++) Assert.AreEqual(clips[i], clips[i + 3]);
   }

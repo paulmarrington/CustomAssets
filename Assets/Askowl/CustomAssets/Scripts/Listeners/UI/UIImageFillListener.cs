@@ -1,5 +1,6 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using Askowl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#uiimagefilllistener">More...</a></remarks>
   [RequireComponent(typeof(Image))]
+  // ReSharper disable once InconsistentNaming
   public sealed class UIImageFillListener : FloatListener<Image> {
     /// <inheritdoc />
     protected override void OnChange(float value) { Target.fillAmount = value; }

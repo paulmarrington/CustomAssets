@@ -4,13 +4,13 @@ using System;
 using Askowl;
 using UnityEngine;
 
-namespace CustomAsset.Support {
+namespace CustomAsset.Constant {
   /// <inheritdoc />
   /// <summary>
   /// Support class for audio clip playing.
   /// </summary>
   [Serializable]
-  public sealed class AudioClips : Set<AudioClip> {
+  public sealed class AudioClipSet : Set<AudioClip> {
     [SerializeField, Header("Audio")]     private Range volume   = new Range(1, 1);
     [SerializeField, RangeBounds(0, 2)]   private Range pitch    = new Range(1, 2);
     [SerializeField, RangeBounds(0, 999)] private Range distance = new Range(1, 999);
@@ -37,19 +37,17 @@ namespace CustomAsset.Support {
       source.Play();
     }
   }
-}
 
-namespace CustomAsset.Constant {
   /// <inheritdoc />
   /// <summary>
   /// Create an asset to store a list of sounds and play one randomly or cyclicly.
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Constant/Audio Clips", fileName = "AudioClips")]
-  public sealed class AudioClips : OfType<CustomAsset.Support.AudioClips> {
+  public sealed class AudioClips : OfType<AudioClipSet> {
     /// <summary>
-    /// Audio Clip Player <see cref="CustomAsset.Support.AudioClips"/>
+    /// Audio Clip Player <see cref="AudioClipSet"/>
     /// </summary>
-    public CustomAsset.Support.AudioClips Picker { get { return Value; } }
+    public AudioClipSet Picker { get { return Value; } }
   }
 }

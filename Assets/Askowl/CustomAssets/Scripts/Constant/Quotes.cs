@@ -7,7 +7,7 @@ using Askowl;
 using UnityEditor;
 using UnityEngine;
 
-namespace CustomAsset.Support {
+namespace CustomAsset.Constant {
   /// <inheritdoc />
   /// <summary>
   /// Class for picking one or a list of quotes - either set in the inspector or in a separate text file.
@@ -16,7 +16,7 @@ namespace CustomAsset.Support {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#quotes">More...</a></remarks>
   [Serializable]
-  public sealed class Quotes : Set<string> {
+  public sealed class QuoteSet : Set<string> {
     [SerializeField, Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
     private TextAsset[] quoteFiles;
 
@@ -70,10 +70,8 @@ namespace CustomAsset.Support {
                                m.Groups[1].Value, m.Groups.Count > 1 ? m.Groups[2].Value : ""));
     }
   }
-}
 
-namespace CustomAsset.Constant {
-  /// <inheritdoc cref="Support.Quotes" />
+  /// <inheritdoc cref="QuoteSet" />
   /// <summary>
   /// Custom Asset for picking one or a list of quotes - either kept in the asset or as a separate text file.
   /// Each quote is on a separate line in the form:
@@ -81,7 +79,7 @@ namespace CustomAsset.Constant {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#quotes">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Constant/Quotes")]
-  public sealed class Quotes : OfType<Support.Quotes>, Pick<string> {
+  public sealed class Quotes : OfType<QuoteSet>, Pick<string> {
     /// <inheritdoc cref="Quotes()" />
     private void OnEnable() {
 #if UNITY_EDITOR
