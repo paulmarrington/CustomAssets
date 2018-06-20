@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener:
-    assetToMonitor: {fileID: 11400000, guid: 1f59e2f4f4a1a4cb9b12734904f20220, type: 2}
+    assetToMonitor: {fileID: 11400000, guid: 3378a8b8ba99d4b1a94246c61a5a11bd, type: 2}
   textComponent: {fileID: 255403010}
 --- !u!1 &35007293
 GameObject:
@@ -1152,7 +1152,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 301581634}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
@@ -1166,7 +1166,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 301581634}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
@@ -1180,7 +1180,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 301581634}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
@@ -1194,7 +1194,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 301581634}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
@@ -1672,12 +1672,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 146c42ac9bd1d413eb73e18dfe037e2d, type: 2}
-        m_MethodName: Play
-        m_Mode: 2
+      - m_Target: {fileID: 1151565817}
+        m_MethodName: PlayAudioClip
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 553503172}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2649,7 +2649,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
-        m_MethodName: Trigger
+        m_MethodName: Fire
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3606,7 +3606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener:
-    assetToMonitor: {fileID: 11400000, guid: a80565d65c89e4b24a2ce4894393c883, type: 2}
+    assetToMonitor: {fileID: 11400000, guid: a50966beb7b254156a5a426a3695cc54, type: 2}
   Target: {fileID: 1092706610}
   parameterName: Colour
 --- !u!4 &1500507378
@@ -4560,7 +4560,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 11400000, guid: 1f59e2f4f4a1a4cb9b12734904f20220, type: 2}
         m_MethodName: set_Value
         m_Mode: 0
         m_Arguments:

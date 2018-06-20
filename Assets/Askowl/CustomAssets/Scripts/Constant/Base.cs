@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Askowl;
+﻿using Askowl;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -25,7 +23,7 @@ namespace CustomAsset {
     /// Editor only description of what the asset is all about.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
-    [SerializeField, Multiline] private string description = " ";
+    [SerializeField, Multiline] private string description;
 #endif
     #endregion
   }

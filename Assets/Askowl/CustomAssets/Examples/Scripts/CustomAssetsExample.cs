@@ -108,6 +108,8 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   /// </summary>
   public void ShowQuote() { textComponent.text = quotes.Pick(); }
 
+  public void PlayAudioClip() { audioClips.Picker.Play(gameObject); }
+
   /// <summary>
   /// Press a button and a random sound fires
   /// </summary>

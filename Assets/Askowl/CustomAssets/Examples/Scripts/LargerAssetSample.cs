@@ -32,8 +32,5 @@ public class LargerAssetSample : OfType<CustomAssetsExample.LargerAssetContents>
     return (other != null) &&
            ((other.I == Value.I) && Compare.AlmostEqual(other.F, Value.F) && (other.S == Value.S));
   }
-
-  /// <inheritdoc />
-  public override int GetHashCode() { return Value.GetHashCode(); }
 }
 #endif

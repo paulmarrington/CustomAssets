@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6f55720d7b4f1388a40a3e776632e1, type: 3}
   m_Name: SampleStringVariable
   m_EditorClassIdentifier: 
-  description: ' '
-  value: 
+  description: 
+  value: sdaf
   persistent: 0
