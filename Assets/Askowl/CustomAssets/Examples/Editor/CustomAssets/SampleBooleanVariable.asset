@@ -8,11 +8,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 972e015a9b17841fc8ee4e0a450b4e01, type: 3}
+  m_Script: {fileID: 11500000, guid: f5b102b936fe4ce2b31fb33ac91c369f, type: 3}
   m_Name: SampleBooleanVariable
   m_EditorClassIdentifier: 
-  Description: 
-  seed: 1
-  members: []
-  readWrite: 1
+  description: ' '
+  value: 0
   persistent: 0

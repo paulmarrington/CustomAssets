@@ -40,7 +40,7 @@ namespace CustomAsset.Mutable {
     /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
     /// <param name="t">Instance of custom asset</param>
     /// <returns>Instance of the contained serializable object</returns>
-    public static implicit operator T(OfType<T> t) { return t.value; }
+    public static implicit operator T(OfType<T> t) { return (t == null) ? default(T) : t.value; }
 
     /// <inheritdoc />
     /// <summary>

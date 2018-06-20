@@ -1,2 +1,0 @@
-one of two lines in hints.txt
-two of two lines in hints.txt

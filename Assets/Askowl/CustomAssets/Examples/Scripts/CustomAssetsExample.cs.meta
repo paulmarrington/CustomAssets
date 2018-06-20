@@ -1,11 +1,20 @@
 fileFormatVersion: 2
 guid: 834e6221a374f4ff88e2e8be40d6ce20
-timeCreated: 1524029040
-licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - maxFloat: {instanceID: 0}
+  - currentFloat: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+  - integer: {fileID: 11400000, guid: 6e626fa2cf7984ebeb7f4663c64d8f4e, type: 2}
+  - str: {instanceID: 0}
+  - boolean: {instanceID: 0}
+  - textComponent: {instanceID: 0}
+  - largerSample: {fileID: 11400000, guid: 9152366bfe5ab4e4785b79d93c2a86fa, type: 2}
+  - persistent: {fileID: 11400000, guid: 6e626fa2cf7984ebeb7f4663c64d8f4e, type: 2}
+  - quotes: {instanceID: 0}
+  - integerSlider: {instanceID: 0}
+  - audioClips: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

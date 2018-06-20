@@ -8,11 +8,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22f206729bb7e417e9b12649707e941e, type: 3}
+  m_Script: {fileID: 11500000, guid: 97421054a468476aa7b69d35b6c33c1a, type: 3}
   m_Name: SampleFloatVariable
   m_EditorClassIdentifier: 
-  Description: 
-  seed: 0
-  members: []
-  readWrite: 1
+  description: ' '
+  value: 0
   persistent: 0

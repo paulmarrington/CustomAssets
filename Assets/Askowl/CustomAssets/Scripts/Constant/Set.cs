@@ -60,6 +60,7 @@ namespace CustomAsset.Support {
     /// <inheritdoc />
     public T Pick() {
       if (Selector == null) BuildSelector();
+
       return Selector.Pick();
     }
 

@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
-  m_ObjectHideFlags: 32
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -11,22 +11,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a717b4fad8de4f3ebd4f9cf20b1a693, type: 3}
   m_Name: SampleAudioClips
   m_EditorClassIdentifier: 
-  Description: 
-  seed:
-  - {fileID: 8300000, guid: 6f17090c9c229479bbbd98137f0e9fdc, type: 3}
-  - {fileID: 8300000, guid: a7c41028ebf0544feb298774a54b56d9, type: 3}
-  - {fileID: 8300000, guid: 44bb5b8ec7d4247b0ac430a4ae5065ed, type: 3}
-  members: []
-  readWrite: 0
-  persistent: 0
-  cycle: 0
-  exhaustiveBelow: 10
-  volume:
-    min: 1
-    max: 1
-  pitch:
-    min: 1
-    max: 1.3527033
-  distance:
-    min: 1
-    max: 999
+  description: ' '
+  value:
+    elements:
+    - {fileID: 8300000, guid: 6f17090c9c229479bbbd98137f0e9fdc, type: 3}
+    - {fileID: 8300000, guid: a7c41028ebf0544feb298774a54b56d9, type: 3}
+    - {fileID: 8300000, guid: 44bb5b8ec7d4247b0ac430a4ae5065ed, type: 3}
+    Cycle: 0
+    ExhaustiveBelow: 10
+    volume:
+      min: 0.56
+      max: 0.89251757
+    pitch:
+      min: 0.8346424
+      max: 1.22
+    distance:
+      min: 1
+      max: 338.23114

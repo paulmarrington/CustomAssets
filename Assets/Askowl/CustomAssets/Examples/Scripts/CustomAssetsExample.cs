@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using CustomAsset.Mutable;
+using Boolean = CustomAsset.Mutable.Boolean;
+using String = CustomAsset.Mutable.String;
 
 /// <inheritdoc />
 /// <summary>
@@ -13,19 +15,19 @@ using CustomAsset.Mutable;
 /// </summary>
 [RequireComponent(typeof(AudioSource))]
 public sealed class CustomAssetsExample : MonoBehaviour {
-  [SerializeField] private CustomAsset.Constant.Float   maxFloat;
-  [SerializeField] private Float                        currentFloat;
-  [SerializeField] private Integer                      integer;
-  [SerializeField] private CustomAsset.Constant.String  str;
-  [SerializeField] private CustomAsset.Constant.Boolean boolean;
-  [SerializeField] private Text                         textComponent;
-  [SerializeField] private LargerAssetSample            largerSample;
-  [SerializeField] private Integer                      persistent;
-  [SerializeField] private CustomAsset.Constant.Quotes  quotes;
-  [SerializeField] private Slider                       integerSlider;
+  [SerializeField] private CustomAsset.Constant.Float  maxFloat;
+  [SerializeField] private Float                       currentFloat;
+  [SerializeField] private Integer                     integer;
+  [SerializeField] private String                      str;
+  [SerializeField] private Boolean                     boolean;
+  [SerializeField] private Text                        textComponent;
+  [SerializeField] private LargerAssetSample           largerSample;
+  [SerializeField] private Integer                     persistent;
+  [SerializeField] private CustomAsset.Constant.Quotes quotes;
+  [SerializeField] private Slider                      integerSlider;
 
-  [SerializeField, UsedImplicitly] private AudioClips audioClips;
-  [SerializeField]                 private UnityEvent audioClipsEvent;
+  [SerializeField, UsedImplicitly] private CustomAsset.Constant.AudioClips audioClips;
+  [SerializeField]                 private UnityEvent                      audioClipsEvent;
 
   /// <summary>
   /// A CustomAsset need not be just a primative - as long as it is serializable.
