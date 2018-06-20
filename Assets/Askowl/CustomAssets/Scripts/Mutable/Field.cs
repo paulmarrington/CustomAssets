@@ -26,7 +26,7 @@ namespace CustomAsset.Mutable {
     /// <param name="field">ref myCustomAsset.aField</param>
     /// <param name="from">Value to set the field to if all checks pass</param>
     /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
-    public static void Set<TF>(this HasEmitter asset, ref TF field, TF from) {
+    public static void Set<TF>(this WithEmitter asset, ref TF field, TF from) {
       if (Set(ref field, from)) asset.Emitter.Fire();
     }
 
@@ -52,7 +52,7 @@ namespace CustomAsset.Mutable {
     /// <param name="from">Value to set the field to if all checks pass</param>
     /// <param name="equals">Comparison operator. Returns true if the items are equal or close enough</param>
     /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
-    public static void Set<TF>(this HasEmitter    asset,
+    public static void Set<TF>(this WithEmitter   asset,
                                ref  TF            field,
                                TF                 from,
                                Func<TF, TF, bool> equals) {
@@ -76,7 +76,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref float myCustomAsset.aField to update</param>
     /// <param name="from">float to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref float field, float from) {
+    public static void Set(this WithEmitter asset, ref float field, float from) {
       asset.Set(ref field, from, Compare.AlmostEqual);
     }
 
@@ -95,7 +95,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref double myCustomAsset.aField to update</param>
     /// <param name="from">double to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref double field, double from) {
+    public static void Set(this WithEmitter asset, ref double field, double from) {
       asset.Set(ref field, from, Compare.AlmostEqual);
     }
 
@@ -112,7 +112,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref int myCustomAsset.aField to to update</param>
     /// <param name="from">int to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref int field, int from) {
+    public static void Set(this WithEmitter asset, ref int field, int from) {
       asset.Set<int>(ref field, from);
     }
 
@@ -129,7 +129,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref long myCustomAsset.aField to update</param>
     /// <param name="from">long to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref long field, long from) {
+    public static void Set(this WithEmitter asset, ref long field, long from) {
       asset.Set<long>(ref field, from);
     }
 
@@ -146,7 +146,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref bool myCustomAsset.aField to update</param>
     /// <param name="from">bool to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref bool field, bool from) {
+    public static void Set(this WithEmitter asset, ref bool field, bool from) {
       asset.Set<bool>(ref field, from);
     }
 
@@ -163,7 +163,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref string field, string from) {
+    public static void Set(this WithEmitter asset, ref string field, string from) {
       asset.Set<string>(ref field, from);
     }
 
@@ -182,7 +182,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref Vector2 field, Vector2 from) {
+    public static void Set(this WithEmitter asset, ref Vector2 field, Vector2 from) {
       asset.Set(ref field, from, (a, b) => a == b);
     }
 
@@ -201,7 +201,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref Vector3 field, Vector3 from) {
+    public static void Set(this WithEmitter asset, ref Vector3 field, Vector3 from) {
       asset.Set(ref field, from, (a, b) => a == b);
     }
 
@@ -220,7 +220,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref Vector4 field, Vector4 from) {
+    public static void Set(this WithEmitter asset, ref Vector4 field, Vector4 from) {
       asset.Set(ref field, from, (a, b) => a == b);
     }
 
@@ -239,7 +239,7 @@ namespace CustomAsset.Mutable {
     /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this HasEmitter asset, ref Quaternion field, Quaternion from) {
+    public static void Set(this WithEmitter asset, ref Quaternion field, Quaternion from) {
       asset.Set(ref field, from, (a, b) => a == b);
     }
     #endregion

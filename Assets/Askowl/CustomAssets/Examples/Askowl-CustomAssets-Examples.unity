@@ -158,8 +158,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a796a56eea2a3497b8c3188769e5bbd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   textComponent: {fileID: 255403010}
 --- !u!1 &35007293
 GameObject:
@@ -1157,8 +1155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 301581642}
 --- !u!114 &301581639
 MonoBehaviour:
@@ -1171,8 +1167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 301581642}
 --- !u!114 &301581640
 MonoBehaviour:
@@ -1185,8 +1179,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 301581642}
 --- !u!114 &301581641
 MonoBehaviour:
@@ -1199,8 +1191,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2955f8e67fdd441efa82d15ebbf1c12a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 301581642}
 --- !u!114 &301581642
 MonoBehaviour:
@@ -1592,9 +1582,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4599d2e54354d94b7a9b27a444f0df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    assetToMonitor: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
-    forMember: 
   Target: {fileID: 0}
 --- !u!1 &553503167
 GameObject:
@@ -2484,8 +2471,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed6297f634a24b329a9092199e59b8ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 0}
 --- !u!225 &939210234
 CanvasGroup:
@@ -3606,8 +3591,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77a22e6d615c43b1adeeeb2980a7ca3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 1092706610}
   parameterName: Colour
 --- !u!4 &1500507378
@@ -3635,8 +3618,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff31899584b4e3b9bf2d43c02974206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 1092706610}
   parameterName: Floater
 --- !u!114 &1500507380
@@ -3650,8 +3631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8732606e00974369886fd6c70d3adac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 1092706610}
   parameterName: Bools
 --- !u!114 &1500507381
@@ -3665,8 +3644,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a517dd2fdc746adacf03378a41566e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   Target: {fileID: 1092706610}
   parameterName: Number
 --- !u!1 &1506979383
@@ -4879,8 +4856,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f7a5f106292b4c798aea3b9bc3ea57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener:
-    forTarget: 
   unityEvent:
     m_PersistentCalls:
       m_Calls:

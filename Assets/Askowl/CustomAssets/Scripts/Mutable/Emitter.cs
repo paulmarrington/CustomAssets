@@ -1,18 +1,18 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
 using System.Collections.Generic;
 
 namespace CustomAsset.Mutable {
-  /// <summary>
-  /// Encapsulation emitting change information to multiple listeners
-  /// </summary>
-  public interface HasEmitter {
-    /// <summary>
-    /// Read-only reference to the emitter so we can pass changes
-    /// </summary>
-    // ReSharper disable once UnusedMemberInSuper.Global
-    Emitter Emitter { get; }
-  }
+//  /// <summary>
+//  /// Encapsulation emitting change information to multiple listeners
+//  /// </summary>
+//  public interface HasEmitter {
+//    /// <summary>
+//    /// Read-only reference to the emitter so we can pass changes
+//    /// </summary>
+//    Emitter Emitter { get; }
+//  }
 
   /// <summary>
   /// Keep a list of interested parties for this custom asset

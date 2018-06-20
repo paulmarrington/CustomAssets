@@ -2,11 +2,20 @@
 
 using System;
 using System.Collections.Generic;
-using Askowl;
 using UnityEditor;
 
 namespace CustomAsset.Mutable {
   using UnityEngine;
+
+  /// <summary>
+  /// Typeless base class that has an emitter
+  /// </summary>
+  public class WithEmitter : Base {
+    /// <summary>
+    /// Emitter reference to tell others of data changes
+    /// </summary>
+    public readonly Emitter Emitter = new Emitter();
+  }
 
   /// <inheritdoc cref="Constant.OfType&lt;T>" />
   /// <summary>
@@ -15,7 +24,33 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
-  public class OfType<T> : Constant.OfType<T>, HasEmitter {
+  public class OfType<T> : WithEmitter {
+    #region Data
+    [SerializeField] private T value;
+
+    /// <summary>
+    /// For safe(ish) access to the contents field
+    /// </summary>
+    public virtual T Value { get { return value; } set { Set(value); } }
+
+    /// <summary>
+    /// All extraction by casting a custom object to the contained type. Same as getting the Value -
+    /// as in myCustomAsset.Value === (MyCustomAsset) myCustomAsset
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
+    /// <param name="t">Instance of custom asset</param>
+    /// <returns>Instance of the contained serializable object</returns>
+    public static implicit operator T(OfType<T> t) { return t.value; }
+
+    /// <inheritdoc />
+    /// <summary>
+    /// Pass string conversion responsibility  from the custom asset to the containing value.
+    /// </summary>
+    /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
+    /// <returns>String representation of the contents of the containing value</returns>
+    public override string ToString() { return value.ToString(); }
+    #endregion
+
     #region Construction
     /// <summary>
     /// If this is a project asset, then you will need to reference it somewhere.
@@ -26,15 +61,11 @@ namespace CustomAsset.Mutable {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    public new static OfType<T> Instance(string name) {
-      OfType<T>[] instances = Objects.Find<OfType<T>>(name);
+    public static OfType<T> Instance(string name) {
+      OfType<T> instance = Instance<OfType<T>>(name);
+      if (instance == null) return New(name); // don't unload created instance
 
-      OfType<T> instance =
-        (instances.Length > 0) ? instances[0] : Resources.Load<OfType<T>>(name);
-
-      if (instance == null) return New(name);
-
-      AssetToUnload(instance);
+      AssetToUnload(instance); // so unexpected data does not remain between editor plays
       return instance;
     }
 
@@ -64,17 +95,12 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
-    public void Set(T value) {
-      if (Equals(Value, value)) return;
+    public void Set(T toValue) {
+      if (Equals(Value, toValue)) return;
 
-      Value = value;
-      emitter.Fire();
+      value = toValue;
+      Emitter.Fire();
     }
-
-    private Emitter emitter = new Emitter();
-
-    /// <inheritdoc cref="Emitter" />
-    public Emitter Emitter { get { return emitter; } }
     #endregion
 
     #region Comparators

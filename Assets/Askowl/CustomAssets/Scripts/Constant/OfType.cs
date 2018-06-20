@@ -1,6 +1,5 @@
 ﻿// With thanks to Ryan Hipple -- https://github.com/roboryantron/Unite2017
 
-using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Constant {
@@ -11,13 +10,13 @@ namespace CustomAsset.Constant {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
-  public class OfType<T> : ScriptableObject {
+  public class OfType<T> : Base {
     [SerializeField] private T value;
 
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
-    public virtual T Value { get { return value; } protected set { this.value = value; } }
+    public virtual T Value { get { return value; } }
 
     /// <summary>
     /// If this is a project asset, then you will need to reference it somewhere.
@@ -28,10 +27,7 @@ namespace CustomAsset.Constant {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    public static OfType<T> Instance(string name) {
-      OfType<T>[] instances = Objects.Find<OfType<T>>(name);
-      return (instances.Length > 0) ? instances[0] : Resources.Load<OfType<T>>(name);
-    }
+    public static OfType<T> Instance(string name) { return Instance<OfType<T>>(name); }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -
@@ -49,15 +45,5 @@ namespace CustomAsset.Constant {
     /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
     /// <returns>String representation of the contents of the containing value</returns>
     public override string ToString() { return value.ToString(); }
-
-    #region EditorOnly
-#if UNITY_EDITOR
-    /// <summary>
-    /// Editor only description of what the asset is all about.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
-    [SerializeField, Multiline] private string description = " ";
-#endif
-    #endregion
   }
 }

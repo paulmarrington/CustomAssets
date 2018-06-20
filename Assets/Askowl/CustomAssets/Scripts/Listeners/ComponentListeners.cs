@@ -60,7 +60,6 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Reference to the Asset we are listening to
     /// </summary>
-    // ReSharper disable once MemberCanBeProtected.Global
     public TA Asset { get { return Listener.AssetToMonitor as TA; } }
 
     /// <summary>

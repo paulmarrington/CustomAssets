@@ -11,7 +11,7 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#uiimagefilllistener">More...</a></remarks>
   [RequireComponent(typeof(Image))]
-  public sealed class UiImageFillListener : FloatListener<Image> {
+  public sealed class UIImageFillListener : FloatListener<Image> {
     /// <inheritdoc />
     protected override void OnChange(float value) { Target.fillAmount = value; }
 

@@ -18,7 +18,7 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Reference to the Asset we are listening to
     /// </summary>
-    public HasEmitter Asset { get { return Value.AssetToMonitor; } }
+    public WithEmitter Asset { get { return Value.AssetToMonitor; } }
 
     /// <summary>
     /// After we have ensured the change is for the expected member, tell interested parties.

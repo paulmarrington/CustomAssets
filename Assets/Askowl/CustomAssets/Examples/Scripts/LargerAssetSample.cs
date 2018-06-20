@@ -33,6 +33,6 @@ public class LargerAssetSample : OfType<CustomAssetsExample.LargerAssetContents>
   }
 
   /// <inheritdoc />
-  public override int GetHashCode() { throw new System.NotImplementedException(); }
+  public override int GetHashCode() { return Value.GetHashCode(); }
 }
 #endif

@@ -12,7 +12,7 @@ namespace CustomAsset.Mutable {
   [Serializable]
   public class Listener {
     #pragma warning disable 649
-    [SerializeField] private HasEmitter assetToMonitor;
+    [SerializeField] private WithEmitter assetToMonitor;
 
     // ReSharper disable once MemberCanBePrivate.Global
     /// <summary>
@@ -23,7 +23,7 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Used to classes that have a listener can get back the Custom Asset that triggered it.
     /// </summary>
-    public HasEmitter AssetToMonitor { get { return assetToMonitor; } }
+    public WithEmitter AssetToMonitor { get { return assetToMonitor; } }
 
     /// <summary>
     /// Register an action so that if the custom asset member changes anyone can be told
