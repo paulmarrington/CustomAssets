@@ -13,13 +13,12 @@ namespace CustomAsset.Mutable {
   public class Listener {
     #pragma warning disable 649
     [SerializeField] private HasEmitter assetToMonitor;
-    [SerializeField] private string     forTarget;
 
     // ReSharper disable once MemberCanBePrivate.Global
     /// <summary>
     /// Must be implemented in containing class as it is called if the listener is triggered.
     /// </summary>
-    public Func<object[], bool> OnChange;
+    public Action OnTriggered;
 
     /// <summary>
     /// Used to classes that have a listener can get back the Custom Asset that triggered it.
@@ -29,11 +28,9 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Register an action so that if the custom asset member changes anyone can be told
     /// </summary>
-    /// <param name="onChange">void OnChange(string) reference</param>
-    public void Register(Func<object[], bool> onChange) {
-      forTarget = forTarget.Trim();
-      if (string.IsNullOrEmpty(forTarget)) forTarget = null;
-      OnChange = onChange;
+    /// <param name="onTriggered">void OnChange(string) reference</param>
+    public void Register(Action onTriggered) {
+      OnTriggered = onTriggered;
       assetToMonitor.Emitter.Register(this);
     }
 
@@ -41,15 +38,5 @@ namespace CustomAsset.Mutable {
     /// Call to stop receiving change calls
     /// </summary>
     public void Deregister() { assetToMonitor.Emitter.Deregister(this); }
-
-    /// <summary>
-    /// Called by the channel when an event occurs.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-sources">More...</a></remarks>
-    public bool OnTriggered(params object[] data) {
-      if ((forTarget != null) && ((data.Length == 0) || forTarget.Equals(data[0]))) return false;
-
-      return OnChange(data);
-    }
   }
 }

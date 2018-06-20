@@ -13,10 +13,7 @@ namespace CustomAsset.Mutable {
   [RequireComponent(typeof(Image))]
   public sealed class UiImageFillListener : FloatListener<Image> {
     /// <inheritdoc />
-    protected override bool OnChange(float value) {
-      Target.fillAmount = value;
-      return true;
-    }
+    protected override void OnChange(float value) { Target.fillAmount = value; }
 
     /// <inheritdoc />
     protected override bool Equals(float value) {

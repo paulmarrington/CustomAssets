@@ -9,5 +9,9 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Integer")]
-  public sealed class Integer : OfType<int> { }
+  public sealed class Integer : OfType<int> {
+    public new static Integer Instance(string name) {
+      return OfType<int>.Instance(name) as Integer;
+    }
+  }
 }

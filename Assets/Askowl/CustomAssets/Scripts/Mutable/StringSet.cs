@@ -9,5 +9,9 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#stringset">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/String Set")]
-  public class StringSet : Set<string> { }
+  public class StringSet : Set<string> {
+    public new static StringSet Instance(string name) {
+      return Set<string>.Instance(name) as StringSet;
+    }
+  }
 }

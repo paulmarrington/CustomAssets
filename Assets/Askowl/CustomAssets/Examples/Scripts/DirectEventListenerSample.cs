@@ -14,12 +14,12 @@ using UnityEngine.UI;
 //    textComponent.text = "Direct Event heard at " + DateTime.Now + " for " + memberName;
 //  }
 //}
-public sealed class DirectEventListenerSample : CustomAsset.ListenerComponent {
+public sealed class DirectEventListenerSample : CustomAsset.Mutable.ListenerComponent {
   [SerializeField] private Text textComponent;
 
   /// <inheritdoc />
-  protected override void OnChange(string memberName) {
-    textComponent.text = "Direct Event heard at " + DateTime.Now + " for " + memberName;
+  protected override void OnChange() {
+    textComponent.text = "Direct Event heard at " + DateTime.Now;
   }
 }
 #endif

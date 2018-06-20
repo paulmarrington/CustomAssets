@@ -9,5 +9,9 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/String")]
-  public sealed class String : OfType<string> { }
+  public sealed class String : OfType<string> {
+    public new static String Instance(string name) {
+      return OfType<string>.Instance(name) as String;
+    }
+  }
 }

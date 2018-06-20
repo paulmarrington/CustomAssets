@@ -1,6 +1,5 @@
 ﻿#if UNITY_EDITOR && CustomAssets
-using CustomAsset;
-using JetBrains.Annotations;
+using CustomAsset.Constant;
 using UnityEngine;
 
 /// <inheritdoc />
@@ -15,7 +14,7 @@ public sealed class SetPickerSample : Set<AudioClip> {
   /// from the list of audio clips. Whether it will be a random, cyclic or exhaustive choice
   /// will depend on settings within the asset.
   /// </summary>
-  
+
   public void Play() { AudioSource.PlayClipAtPoint(clip: Pick(), position: Vector3.zero); }
 }
 #endif

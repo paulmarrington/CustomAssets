@@ -12,10 +12,7 @@ namespace CustomAsset.Mutable {
   // ReSharper disable once InconsistentNaming
   public sealed class UICanvasGroupAlphaListener : FloatListener<CanvasGroup> {
     /// <inheritdoc />
-    protected override bool OnChange(float value) {
-      Target.alpha = value;
-      return true;
-    }
+    protected override void OnChange(float value) { Target.alpha = value; }
 
     /// <inheritdoc />
     protected override bool Equals(float value) { return Compare.AlmostEqual(Target.alpha, value); }

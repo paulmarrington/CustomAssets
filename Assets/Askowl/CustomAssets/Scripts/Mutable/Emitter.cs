@@ -23,8 +23,8 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Tell all watchers we have changed
     /// </summary>
-    public void Fire(params object[] data) {
-      for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered(data);
+    public void Fire() {
+      for (int i = listeners.Count - 1; i >= 0; i--) listeners[i].OnTriggered();
     }
 
     /// <summary>

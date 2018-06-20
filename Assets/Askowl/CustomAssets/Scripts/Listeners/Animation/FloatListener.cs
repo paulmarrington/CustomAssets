@@ -15,10 +15,7 @@ namespace CustomAsset.Animation {
     [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override bool OnChange(float value) {
-      Target.SetFloat(parameterName, value);
-      return true;
-    }
+    protected override void OnChange(float value) { Target.SetFloat(parameterName, value); }
 
     /// <inheritdoc />
     protected override bool Equals(float value) {

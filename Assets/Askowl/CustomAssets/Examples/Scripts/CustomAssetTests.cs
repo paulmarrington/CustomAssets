@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Askowl;
-using CustomAsset;
+using CustomAsset.Mutable;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -47,7 +47,7 @@ public class CustomAssetTests : PlayModeTests {
   public IEnumerator UpdateCustomAssets() {
     yield return Setup();
 
-    currentFloat.Value = 1;
+    currentFloat.Set(1);
     yield return PushButton("CustomAssetSet");
 
     const int count = 0;
@@ -85,7 +85,7 @@ public class CustomAssetTests : PlayModeTests {
     AudioClips  picker = FindObject<AudioClips>("SampleAudioClips");
     AudioClip[] clips  = new AudioClip[6];
 
-    for (int i = 0; i < clips.Length; i++) clips[i] = picker.Pick();
+    for (int i = 0; i < clips.Length; i++) clips[i] = picker.Picker.Pick();
 
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 10; j++) {
@@ -283,12 +283,12 @@ public class CustomAssetTests : PlayModeTests {
   [UnityTest]
   public IEnumerator TestCompoundSetters() {
     var zero       = new CustomAssetsExample.LargerAssetContents {I = 0, F = 0, S = ""};
-    var largeAsset = Base.Instance<LargerAssetSample>();
-    largeAsset.Value = zero;
+    var largeAsset = LargerAssetSample.Instance("LargerAssetSample");
+    largeAsset.Set(zero);
     Assert.AreEqual(largeAsset, zero);
 
     var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, F = 4.56f, S = "789"};
-    largeAsset.Value = setTo;
+    largeAsset.Set(setTo);
     Assert.AreNotEqual(largeAsset, zero);
     Assert.AreEqual(largeAsset, setTo);
     yield return null;

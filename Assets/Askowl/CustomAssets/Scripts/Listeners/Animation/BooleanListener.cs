@@ -13,10 +13,7 @@ namespace CustomAsset.Animation {
     [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override bool OnChange(bool value) {
-      Target.SetBool(parameterName, value);
-      return true;
-    }
+    protected override void OnChange(bool value) { Target.SetBool(parameterName, value); }
 
     /// <inheritdoc />
     protected override bool Equals(bool value) { return (Target.GetBool(parameterName) == value); }

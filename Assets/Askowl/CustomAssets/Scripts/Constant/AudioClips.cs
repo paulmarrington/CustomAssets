@@ -48,7 +48,7 @@ namespace CustomAsset.Constant {
   [CreateAssetMenu(menuName = "Custom Assets/Constant/Audio Clips", fileName = "AudioClips")]
   public sealed class AudioClips : OfType<CustomAsset.Support.AudioClips> {
     /// <summary>
-    /// Audio Clip Picker <see cref="CustomAsset.Support.AudioClips"/>
+    /// Audio Clip Player <see cref="CustomAsset.Support.AudioClips"/>
     /// </summary>
     public CustomAsset.Support.AudioClips Picker { get { return Value; } }
   }

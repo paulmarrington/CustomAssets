@@ -13,9 +13,6 @@ namespace CustomAsset.Animation {
     [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override bool OnChange() {
-      Target.SetTrigger(parameterName);
-      return true;
-    }
+    protected override void OnChange() { Target.SetTrigger(parameterName); }
   }
 }

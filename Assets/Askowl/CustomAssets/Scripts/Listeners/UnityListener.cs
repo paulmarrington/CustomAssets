@@ -14,9 +14,6 @@ namespace CustomAsset.Mutable {
 
     /// <inheritdoc />
     /// <remarks><a href="http://customassets.marrington.net#unity-event-listeners">More...</a></remarks>
-    protected override bool OnChange(object[] data) {
-      unityEvent.Invoke();
-      return true;
-    }
+    protected override void OnChange() { unityEvent.Invoke(); }
   }
 }

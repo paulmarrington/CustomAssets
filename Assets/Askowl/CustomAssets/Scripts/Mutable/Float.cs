@@ -14,5 +14,7 @@ namespace CustomAsset.Mutable {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Float")]
-  public sealed class Float : OfType<float> { }
+  public sealed class Float : OfType<float> {
+    public new static Float Instance(string name) { return OfType<float>.Instance(name) as Float; }
+  }
 }

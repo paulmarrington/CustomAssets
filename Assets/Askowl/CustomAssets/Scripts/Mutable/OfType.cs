@@ -26,7 +26,7 @@ namespace CustomAsset.Mutable {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    public static OfType<T> Instance(string name) {
+    public new static OfType<T> Instance(string name) {
       OfType<T>[] instances = Objects.Find<OfType<T>>(name);
 
       OfType<T> instance =
@@ -61,6 +61,16 @@ namespace CustomAsset.Mutable {
     #endregion
 
     #region Listeners
+    /// <summary>
+    /// For safe(ish) access to the contents field
+    /// </summary>
+    public void Set(T value) {
+      if (Equals(Value, value)) return;
+
+      Value = value;
+      emitter.Fire();
+    }
+
     private Emitter emitter = new Emitter();
 
     /// <inheritdoc cref="Emitter" />
@@ -73,7 +83,7 @@ namespace CustomAsset.Mutable {
     /// </summary>
     /// <param name="other">The other data object to compare to</param>
     /// <returns></returns>
-    protected bool Equals(T other) { return Equals(Value, other); }
+    protected virtual bool Equals(T other) { return Equals(Value, other); }
 
     /// <inheritdoc />
     public override int GetHashCode() {
@@ -97,14 +107,14 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Basic load for a persistent custom asset.
     /// </summary>
-    protected virtual void Load() {
+    public void Load() {
       if (persistent) Value = Loader<T>();
     }
 
     /// <summary>
     /// Basic save for a persistent custom asset.
     /// </summary>
-    protected virtual void Save() { Saver(data: Value); }
+    public void Save() { Saver(data: Value); }
 
     /// <summary>
     /// Load the last previously saved value from persistent storage.

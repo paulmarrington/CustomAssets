@@ -7,7 +7,7 @@ namespace CustomAsset.Mutable {
   /// <summary>
   /// Static helper class for setting fields in a compound object
   /// </summary>
-  public static class FieldSetters {
+  public static class Field {
     #region Generic Setters
     /// <summary>
     /// Set a field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
@@ -22,12 +22,12 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref myCustomAsset.aField</param>
     /// <param name="from">Value to set the field to if all checks pass</param>
     /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
-    public static void Set<TF>(this Emitter emitter, ref TF field, TF from) {
-      if (Set(ref field, from)) emitter.Fire(emitter);
+    public static void Set<TF>(this HasEmitter asset, ref TF field, TF from) {
+      if (Set(ref field, from)) asset.Emitter.Fire();
     }
 
     /// <summary>
@@ -47,16 +47,16 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a field inside a CustomAsset compound object where comparison is not straightforward. It checks for read/write and that the field is different before triggering a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref myCustomAsset.aField</param>
     /// <param name="from">Value to set the field to if all checks pass</param>
     /// <param name="equals">Comparison operator. Returns true if the items are equal or close enough</param>
     /// <typeparam name="TF">Anything that is a direct field in the CustomAsset</typeparam>
-    public static void Set<TF>(this Emitter       emitter,
+    public static void Set<TF>(this HasEmitter    asset,
                                ref  TF            field,
                                TF                 from,
                                Func<TF, TF, bool> equals) {
-      if (Set(ref field, from, equals)) emitter.Fire(emitter);
+      if (Set(ref field, from, equals)) asset.Emitter.Fire();
     }
     #endregion
 
@@ -67,17 +67,17 @@ namespace CustomAsset.Mutable {
     /// <param name="field">ref float myCustomAsset.aField to update</param>
     /// <param name="from">float to set the field to if all checks pass</param>
     public static bool Set(ref float field, float from) {
-      return Set(ref field, from, AlmostEqual);
+      return Set(ref field, from, Compare.AlmostEqual);
     }
 
     /// <summary>
     /// Set a float field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref float myCustomAsset.aField to update</param>
     /// <param name="from">float to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref float field, float from) {
-      emitter.Set(ref field, from, AlmostEqual);
+    public static void Set(this HasEmitter asset, ref float field, float from) {
+      asset.Set(ref field, from, Compare.AlmostEqual);
     }
 
     /// <summary>
@@ -86,17 +86,17 @@ namespace CustomAsset.Mutable {
     /// <param name="field">ref double myCustomAsset.aField to update</param>
     /// <param name="from">double to set the field to if all checks pass</param>
     public static bool Set(ref double field, double from) {
-      return Set(ref field, from, AlmostEqual);
+      return Set(ref field, from, Compare.AlmostEqual);
     }
 
     /// <summary>
     /// Set a double field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref double myCustomAsset.aField to update</param>
     /// <param name="from">double to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref double field, double from) {
-      emitter.Set(ref field, from, AlmostEqual);
+    public static void Set(this HasEmitter asset, ref double field, double from) {
+      asset.Set(ref field, from, Compare.AlmostEqual);
     }
 
     /// <summary>
@@ -109,11 +109,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a int field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref int myCustomAsset.aField to to update</param>
     /// <param name="from">int to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref int field, int from) {
-      emitter.Set<int>(ref field, from);
+    public static void Set(this HasEmitter asset, ref int field, int from) {
+      asset.Set<int>(ref field, from);
     }
 
     /// <summary>
@@ -126,11 +126,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a long field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref long myCustomAsset.aField to update</param>
     /// <param name="from">long to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref long field, long from) {
-      emitter.Set<long>(ref field, from);
+    public static void Set(this HasEmitter asset, ref long field, long from) {
+      asset.Set<long>(ref field, from);
     }
 
     /// <summary>
@@ -143,11 +143,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a bool field inside a CustomAsset compound object. It checks for read/write and that the field is different before triggerina a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref bool myCustomAsset.aField to update</param>
     /// <param name="from">bool to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref bool field, bool from) {
-      emitter.Set<bool>(ref field, from);
+    public static void Set(this HasEmitter asset, ref bool field, bool from) {
+      asset.Set<bool>(ref field, from);
     }
 
     /// <summary>
@@ -160,11 +160,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a float string inside a CustomAsset compound object. It checks for read/write and that the field is different before triggering a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref string field, string from) {
-      emitter.Set<string>(ref field, from);
+    public static void Set(this HasEmitter asset, ref string field, string from) {
+      asset.Set<string>(ref field, from);
     }
 
     /// <summary>
@@ -179,11 +179,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a Vector2 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref Vector2 field, Vector2 from) {
-      emitter.Set(ref field, from, (a, b) => a == b);
+    public static void Set(this HasEmitter asset, ref Vector2 field, Vector2 from) {
+      asset.Set(ref field, from, (a, b) => a == b);
     }
 
     /// <summary>
@@ -198,11 +198,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a Vector3 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref Vector3 field, Vector3 from) {
-      emitter.Set(ref field, from, (a, b) => a == b);
+    public static void Set(this HasEmitter asset, ref Vector3 field, Vector3 from) {
+      asset.Set(ref field, from, (a, b) => a == b);
     }
 
     /// <summary>
@@ -217,11 +217,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a Vector4 inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref Vector4 field, Vector4 from) {
-      emitter.Set(ref field, from, (a, b) => a == b);
+    public static void Set(this HasEmitter asset, ref Vector4 field, Vector4 from) {
+      asset.Set(ref field, from, (a, b) => a == b);
     }
 
     /// <summary>
@@ -236,25 +236,12 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Set a Quaternion inside a CustomAsset compound object. It checks for read/write and that the field is approximately different before triggering a change.
     /// </summary>
-    /// <param name="emitter">Reference to mutable custom asset in which to inject this method</param>
+    /// <param name="asset">Reference to mutable custom asset in which to inject this method</param>
     /// <param name="field">ref string myCustomAsset.aField to update</param>
     /// <param name="from">string to set the field to if all checks pass</param>
-    public static void Set(this Emitter emitter, ref Quaternion field, Quaternion from) {
-      emitter.Set(ref field, from, (a, b) => a == b);
+    public static void Set(this HasEmitter asset, ref Quaternion field, Quaternion from) {
+      asset.Set(ref field, from, (a, b) => a == b);
     }
-    #endregion
-
-    #region Comparators
-    /// <summary>
-    /// Check two floating point numbers to be within rounding tolerance.
-    /// </summary>
-    public static bool AlmostEqual(float a, float b) { return Math.Abs(a - b) < 1e-5; }
-
-    /// <summary>
-    /// Check two double floating point numbers to be within rounding tolerance.
-    /// </summary>
-    // ReSharper disable once MemberCanBePrivate.Global
-    public static bool AlmostEqual(double a, double b) { return Math.Abs(a - b) < 1e-5; }
     #endregion
   }
 }

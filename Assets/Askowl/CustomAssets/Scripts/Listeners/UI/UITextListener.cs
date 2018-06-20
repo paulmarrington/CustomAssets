@@ -14,10 +14,7 @@ namespace CustomAsset.Mutable {
   // ReSharper disable once InconsistentNaming
   public sealed class UITextListener : StringListener<Textual> {
     /// <inheritdoc />
-    protected override bool OnChange(string value) {
-      Target.text = value;
-      return true;
-    }
+    protected override void OnChange(string value) { Target.text = value; }
 
     /// <inheritdoc />
     protected override bool Equals(string value) { return (Target.text == value); }

@@ -42,7 +42,6 @@ namespace CustomAsset.Mutable {
     /// After we have ensured the change is for the expected member, tell interested parties.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
-    /// <param name="data">Data of which first may be a target name</param>
-    protected abstract bool OnChange(object[] data);
+    protected abstract void OnChange();
   }
 }

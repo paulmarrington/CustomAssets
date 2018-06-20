@@ -41,26 +41,12 @@ namespace CustomAsset.Mutable {
   public abstract class StringListener<T> :
     ComponentListenerBase<T, String, string> where T : Object { }
 
+  /// <inheritdoc />
   /// <summary>
   /// Listener that triggers without complaint
   /// </summary>
   /// <typeparam name="T">Type of component we are modifying on demand</typeparam>
-  public abstract class TriggerListener<T> : ComponentListenerBase<T> where T : Object {
-    /// <summary>
-    /// Called with new value of the data within the custom asset
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    /// <param name="value">Reference to the changed value</param>
-    protected abstract bool OnChange();
-
-    /// <inheritdoc />
-    ///  <summary>
-    /// On a change the listener needs a copy of the changed data to react to
-    ///  </summary>
-    /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
-    /// <returns>True of all ok (either equals or no change error</returns>
-    protected override bool OnChange(object[] _) { return OnChange(); }
-  }
+  public abstract class TriggerListener<T> : ComponentListenerBase<T> where T : Object { }
 
   /// <inheritdoc />
   /// <summary>
@@ -82,7 +68,7 @@ namespace CustomAsset.Mutable {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     /// <param name="value">Reference to the changed value</param>
-    protected abstract bool OnChange(TD value);
+    protected abstract void OnChange(TD value);
 
     /// <inheritdoc />
     ///  <summary>
@@ -90,7 +76,9 @@ namespace CustomAsset.Mutable {
     ///  </summary>
     /// <remarks><a href="http://customassets.marrington.net#generic-component-listeners">More...</a></remarks>
     /// <returns>True of all ok (either equals or no change error</returns>
-    protected override bool OnChange(object[] _) { return Equals(Asset) || OnChange(Asset); }
+    protected override void OnChange() {
+      if (!Equals(Asset)) OnChange(Asset);
+    }
 
     /// <summary>
     /// We need to compare value from target against change to see if we need to change
