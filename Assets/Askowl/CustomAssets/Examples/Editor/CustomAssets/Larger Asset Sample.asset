@@ -11,11 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87f550f951a194e81aaf274c4386129b, type: 3}
   m_Name: Larger Asset Sample
   m_EditorClassIdentifier: 
-  Description: ' '
-  seed:
+  description: 
+  value:
     I: 1
     F: 5.2
     S: three
-  members: []
-  readWrite: 1
   persistent: 0

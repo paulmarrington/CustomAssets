@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR && CustomAssets
-using Askowl;
 using UnityEngine;
 using CustomAsset.Mutable;
 
@@ -9,28 +8,23 @@ using CustomAsset.Mutable;
 /// </summary>
 [CreateAssetMenu(menuName = "Examples/LargerAssetSample")]
 public class LargerAssetSample : OfType<CustomAssetsExample.LargerAssetContents> {
-  /// <summary>
-  /// For safe access to a contents field
-  /// </summary>
+  /// <see cref="OfType{T}.Instance{T}"/>
+  public static LargerAssetSample Instance(string name) {
+    return Instance<LargerAssetSample>(name);
+  }
 
+  /// <see cref="OfType{T}.New{T}(string)"/>
+  public new static LargerAssetSample New(string name) { return New<LargerAssetSample>(name); }
+
+  /// <see cref="OfType{T}.New{T}()"/>
+  public static LargerAssetSample New() { return New<LargerAssetSample>(); }
+
+  // ReSharper disable MissingXmlDoc
   public int AnInteger { get { return Value.I; } set { this.Set(ref Value.I, value); } }
-
-  /// <summary>
-  /// For safe access to a contents field
-  /// </summary>
 
   public float AFloat { get { return Value.F; } set { this.Set(ref Value.F, value); } }
 
-  /// <summary>
-  /// For safe access to a contents field
-  /// </summary>
-
   public string AString { get { return Value.S; } set { this.Set(ref Value.S, value); } }
-
-  /// <inheritdoc />
-  protected override bool Equals(CustomAssetsExample.LargerAssetContents other) {
-    return (other != null) &&
-           ((other.I == Value.I) && Compare.AlmostEqual(other.F, Value.F) && (other.S == Value.S));
-  }
+  // ReSharper restore MissingXmlDoc
 }
 #endif

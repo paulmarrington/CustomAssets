@@ -10,9 +10,11 @@ namespace CustomAsset.Mutable {
   /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Audio Clips", fileName = "AudioClips")]
   public sealed class AudioClips : OfType<CustomAsset.Constant.AudioClipSet> {
-    public new static AudioClips Instance(string name) {
-      return OfType<CustomAsset.Constant.AudioClipSet>.Instance(name) as AudioClips;
-    }
+    /// <summary>
+    /// Retrieve an asset of AudioClips
+    /// </summary>
+    /// <param name="name">with this name</param>
+    public static AudioClips Instance(string name) { return Instance<AudioClips>(name); }
 
     /// <summary>
     /// Audio Clip Picker <see cref="CustomAsset.Constant.AudioClipSet"/>

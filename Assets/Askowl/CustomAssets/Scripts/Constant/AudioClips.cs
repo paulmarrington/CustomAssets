@@ -46,6 +46,12 @@ namespace CustomAsset.Constant {
   [CreateAssetMenu(menuName = "Custom Assets/Constant/Audio Clips", fileName = "AudioClips")]
   public sealed class AudioClips : OfType<AudioClipSet> {
     /// <summary>
+    /// Retrieve a reference to a named AudioClips asset
+    /// </summary>
+    /// <param name="name">Name of asset</param>
+    public new static AudioClips Instance(string name) { return Instance<AudioClips>(name); }
+
+    /// <summary>
     /// Audio Clip Player <see cref="AudioClipSet"/>
     /// </summary>
     public AudioClipSet Picker { get { return Value; } }

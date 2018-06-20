@@ -61,11 +61,29 @@ namespace CustomAsset.Mutable {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    public static OfType<T> Instance(string name) {
-      OfType<T> instance = Instance<OfType<T>>(name);
-      if (instance == null) return New(name); // don't unload created instance
-
+    public new static TC Instance<TC>(string name) where TC : Base {
+      TC instance = Base.Instance<TC>(name);
       AssetToUnload(instance); // so unexpected data does not remain between editor plays
+      return instance;
+    }
+
+    /// <summary>
+    /// Create a new instance of the asset with a random name (GUID based)
+    /// </summary>
+    /// <typeparam name="TC">Type of asset to create</typeparam>
+    public static TC New<TC>() where TC : Base {
+      var asset = New<TC>(Guid.NewGuid().ToString());
+      return asset;
+    }
+
+    /// <summary>
+    /// Create a new instance of the asset with a supplied name. Note you can get duplicate names.
+    /// </summary>
+    /// <typeparam name="TC">Type of asset to create</typeparam>
+    public static TC New<TC>(string name) where TC : Base {
+      TC instance = CreateInstance<TC>();
+      instance.name = name;
+      NewAsset(instance);
       return instance;
     }
 
@@ -104,25 +122,24 @@ namespace CustomAsset.Mutable {
     #endregion
 
     #region Comparators
-    /// <summary>
-    /// Implement in concrete class to compare data (Equals).
-    /// </summary>
-    /// <param name="other">The other data object to compare to</param>
-    /// <returns></returns>
-    protected virtual bool Equals(T other) { return Equals(Value, other); }
-
     /// <inheritdoc />
     public override int GetHashCode() {
       return Equals(Value, default(T)) ? 0 : Value.GetHashCode();
     }
 
-    // ReSharper disable once UnusedMember.Global
     /// <summary>
     /// Part of the group of Equals functions. Passes responsibility to the containing data
     /// </summary>
     /// <param name="other">Another reference to a custom asset of the same type</param>
     /// <returns></returns>
-    protected bool Equals(OfType<T> other) { return Equals(other.Value); }
+    public override bool Equals(object other) {
+      try {
+        var otherCustomAsset = other as OfType<T>;
+        return (otherCustomAsset != null) && Value.Equals(otherCustomAsset.Value);
+      } catch {
+        return false;
+      }
+    }
     #endregion
 
     #region Persistence
@@ -164,12 +181,21 @@ namespace CustomAsset.Mutable {
 
     #region EditorOnly
 #if UNITY_EDITOR
-    private static void AssetToUnload(ScriptableObject asset) { AssetsToUnload.Add(asset); }
+    private static void AssetToUnload(ScriptableObject asset) {
+      if (NewAssets.Contains(asset) || AssetsToUnload.Contains(asset)) return;
+
+      AssetsToUnload.Add(asset);
+    }
+
+    private static void NewAsset(ScriptableObject asset) { NewAssets.Add(asset); }
 
     static OfType() { EditorApplication.playModeStateChanged += UnloadResources; }
 
-    // ReSharper disable once StaticMemberInGenericType
+    // ReSharper disable StaticMemberInGenericType
     private static readonly List<ScriptableObject> AssetsToUnload = new List<ScriptableObject>();
+
+    private static readonly List<ScriptableObject> NewAssets = new List<ScriptableObject>();
+    // ReSharper restore StaticMemberInGenericType
 
     private static void UnloadResources(PlayModeStateChange playModeState) {
       if (playModeState != PlayModeStateChange.ExitingPlayMode) return;
@@ -180,7 +206,8 @@ namespace CustomAsset.Mutable {
     }
 #else
     private static void AssetToUnload(ScriptableObject asset){}
-    #endif
+    private static void NewAsset(ScriptableObject asset){}
+#endif
     #endregion
   }
 }

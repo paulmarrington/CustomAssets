@@ -1,7 +1,5 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using System;
-
 namespace CustomAsset.Mutable {
   using UnityEngine;
 
@@ -15,6 +13,13 @@ namespace CustomAsset.Mutable {
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Float")]
   public sealed class Float : OfType<float> {
-    public new static Float Instance(string name) { return OfType<float>.Instance(name) as Float; }
+    /// <see cref="OfType{T}.Instance{T}(string)"/>
+    public static Float Instance(string name) { return Instance<Float>(name); }
+
+    /// <see cref="OfType{T}.New{T}(string)"/>
+    public new static Float New(string name) { return New<Float>(name); }
+
+    /// <see cref="OfType{T}.New{T}()"/>
+    public static Float New() { return New<Float>(); }
   }
 }

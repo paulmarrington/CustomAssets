@@ -10,8 +10,6 @@ namespace CustomAsset.Mutable {
   /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Boolean")]
   public sealed class Boolean : OfType<bool> {
-    public new static Boolean Instance(string name) {
-      return OfType<bool>.Instance(name) as Boolean;
-    }
+    public static Boolean Instance(string name) { return Instance<Boolean>(name); }
   }
 }

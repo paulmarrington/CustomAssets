@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Name: SampleBooleanVariable
   m_EditorClassIdentifier: 
   description: ' '
-  value: 0
+  value: 1
   persistent: 0

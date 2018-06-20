@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR && CustomAssets
 using System;
 using System.Collections;
+using Askowl;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
@@ -41,6 +42,15 @@ public sealed class CustomAssetsExample : MonoBehaviour {
     public float  F;
     public string S;
 
+    public override string ToString() { return string.Format("I={0}, F={1}, S={2}", I, F, S); }
+
+    public override bool Equals(object other) {
+      var one = other as LargerAssetContents;
+
+      return (one != null) && ((one.I == I) && Compare.AlmostEqual(one.F, F) && (one.S == S));
+    }
+
+    public override int GetHashCode() { return ToString().GetHashCode(); }
     // ReSharper restore UnassignedField.Global
     // ReSharper restore MissingXmlDoc
   }
@@ -122,7 +132,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
     Float floatRef = Float.Instance("SampleFloatVariable");
     textComponent.text = "Find existing " + floatRef.name + " as " + currentFloat.name + "\n";
 
-    Float newFloat = Float.Instance("NewFloat");
+    Float newFloat = Float.New("NewFloat");
     newFloat.Set(1234);
     Float secondRef = Float.Instance("NewFloat");
 

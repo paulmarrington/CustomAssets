@@ -82,8 +82,9 @@ public class CustomAssetTests : PlayModeTests {
   public IEnumerator TestSetPickerExhaustive() {
     yield return Setup();
 
-    AudioClips  picker = FindObject<AudioClips>("SampleAudioClips");
-    AudioClip[] clips  = new AudioClip[6];
+    var picker = CustomAsset.Constant.AudioClips.Instance("SampleAudioClips");
+    Assert.IsNotNull(picker);
+    AudioClip[] clips = new AudioClip[6];
 
     for (int i = 0; i < clips.Length; i++) clips[i] = picker.Picker.Pick();
 
@@ -187,6 +188,8 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreNotEqual("The rain in spain", ResultsButtonText);
     InputField inputField = Component<InputField>("Canvas/String Asset/InputField");
     inputField.text = "The rain in spain";
+    yield return null;
+
     Assert.AreEqual("The rain in spain", ResultsButtonText);
   }
 
@@ -200,6 +203,9 @@ public class CustomAssetTests : PlayModeTests {
 
     Slider slider = Component<Slider>("Canvas/Integer Asset/Slider");
     slider.value = 6;
+    yield return null;
+
+    slider.value = 7;
     yield return null;
 
     int buttonValue = int.Parse(ResultsButtonText);
@@ -254,18 +260,6 @@ public class CustomAssetTests : PlayModeTests {
   }
 
   /// <summary>
-  /// Check that members get the same deal as individual custom assets
-  /// </summary>
-  [UnityTest]
-  public IEnumerator TestMembersAndPersistence() {
-    yield return Setup();
-
-    yield return PushButton("Asset with members");
-
-    CheckPattern(@"^.* has 3 .* seed of 11\nOne = 22\nTwo = 11\nDynamic = 44$", results.text);
-  }
-
-  /// <summary>
   /// Does Base.Instance return the same named item each time?
   /// </summary>
   [UnityTest]
@@ -283,14 +277,15 @@ public class CustomAssetTests : PlayModeTests {
   [UnityTest]
   public IEnumerator TestCompoundSetters() {
     var zero       = new CustomAssetsExample.LargerAssetContents {I = 0, F = 0, S = ""};
-    var largeAsset = LargerAssetSample.Instance("LargerAssetSample");
+    var largeAsset = LargerAssetSample.New("LargerAssetSample");
     largeAsset.Set(zero);
-    Assert.AreEqual(largeAsset, zero);
+
+    Assert.AreEqual(largeAsset.Value, zero);
 
     var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, F = 4.56f, S = "789"};
     largeAsset.Set(setTo);
-    Assert.AreNotEqual(largeAsset, zero);
-    Assert.AreEqual(largeAsset, setTo);
+    Assert.AreNotEqual(largeAsset.Value, zero);
+    Assert.AreEqual(largeAsset.Value, setTo);
     yield return null;
   }
 }

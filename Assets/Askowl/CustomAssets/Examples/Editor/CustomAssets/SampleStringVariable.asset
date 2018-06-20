@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Name: SampleStringVariable
   m_EditorClassIdentifier: 
   description: 
-  value: sdaf
+  value: 
   persistent: 0
