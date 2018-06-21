@@ -202,14 +202,12 @@ public class CustomAssetTests : PlayModeTests {
     yield return Setup();
 
     Slider slider = Component<Slider>("Canvas/Integer Asset/Slider");
+    slider.value = 5;
     slider.value = 6;
     yield return null;
 
-    slider.value = 7;
-    yield return null;
-
     int buttonValue = int.Parse(ResultsButtonText);
-    Assert.AreEqual(buttonValue, 6);
+    Assert.AreEqual(expected: 6, actual: buttonValue);
   }
 
   /// <summary>

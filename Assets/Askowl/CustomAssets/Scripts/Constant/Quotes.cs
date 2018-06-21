@@ -35,6 +35,8 @@ namespace CustomAsset.Constant {
       Selector.Choices = amalgum.ToArray();
     }
 
+    public new int Count { get { return Selector.Choices.Length; } }
+
     /// <summary>
     /// Read in some text from a file
     /// </summary>
@@ -90,5 +92,14 @@ namespace CustomAsset.Constant {
 
     /// <inheritdoc />
     public string Pick() { return Value.Pick(); }
+
+    /// <see cref="QuoteSet.Rtf(string)"/>
+    public static string Rtf(string quote) { return QuoteSet.Rtf(quote); }
+
+    /// <see cref="QuoteSet.Rtf(string[])"/>
+    public static string[] Rtf(string[] quotes) { return QuoteSet.Rtf(quotes); }
+
+    /// <see cref="Set{T}.Count"/>
+    public int Count { get { return Value.Count; } }
   }
 }
