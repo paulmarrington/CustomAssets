@@ -27,7 +27,7 @@ namespace CustomAsset.Constant {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    public static OfType<T> Instance(string name) { return Instance<OfType<T>>(name); }
+    protected static OfType<T> Instance(string name) { return Instance<OfType<T>>(name); }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -

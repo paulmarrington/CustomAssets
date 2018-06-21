@@ -31,7 +31,7 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
-    public virtual T Value { get { return value; } set { Set(value); } }
+    protected T Value { get { return value; } set { Set(value); } }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -
