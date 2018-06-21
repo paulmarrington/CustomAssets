@@ -23,7 +23,10 @@ namespace CustomAsset.Constant {
     /// <inheritdoc />
     protected override void BuildSelector() {
       base.BuildSelector(); // renews Choices
-      List<string[]> lists = new List<string[]> {Rtf(Selector.Choices)};
+
+      List<string[]> lists = new List<string[]>();
+
+      if (Selector.Choices.Length > 0) lists.Add(Rtf(Selector.Choices));
 
       if (quoteFiles != null) {
         foreach (var textFile in quoteFiles) lists.Add(Read(textFile));
