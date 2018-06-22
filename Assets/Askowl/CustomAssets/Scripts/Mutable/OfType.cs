@@ -41,22 +41,11 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
-    protected T Value {
-      get {
-        if (typeof(T).Name.StartsWith("Gyro"))
-          Debug.LogWarningFormat("**** OfType:46 {1} valueSet={0} to {2}", valueSet,
-                                 typeof(T).Name, valueSet ? value.GetType().Name : ""); //#DM#//
+    protected T Value { get { return valueSet ? value : Initialise(); } set { Set(value); } }
 
-        return valueSet ? value : Initialise();
-      }
-      set {
-        valueSet = true;
-
-        if (typeof(T).Name.StartsWith("Gyro"))
-          Debug.LogWarningFormat("**** OfType:51 {1} value={0}", value, typeof(T).Name); //#DM#//
-
-        Set(value);
-      }
+    protected T UnconditionalSet(T to) {
+      valueSet = true;
+      return value = to;
     }
 
     /// <summary>
@@ -64,12 +53,7 @@ namespace CustomAsset.Mutable {
     /// does not run until after all the OnEnables.
     /// </summary>
     /// <returns></returns>
-    public virtual T Initialise() {
-      if (typeof(T).Name.StartsWith("Gyro"))
-        Debug.LogWarningFormat("**** OfType:62 {1} value={0}", value, typeof(T).Name); //#DM#//
-
-      return value;
-    }
+    public virtual T Initialise() { return value; }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -
@@ -154,7 +138,8 @@ namespace CustomAsset.Mutable {
     public void Set(T toValue) {
       if (Equals(Value, toValue)) return;
 
-      value = toValue;
+      valueSet = true;
+      value    = toValue;
       Emitter.Fire();
     }
     #endregion
