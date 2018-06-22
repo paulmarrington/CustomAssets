@@ -1,4 +1,5 @@
-﻿using Askowl;
+﻿using System;
+using Askowl;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -26,5 +27,14 @@ namespace CustomAsset {
     [SerializeField, Multiline] private string description;
 #endif
     #endregion
+  }
+
+  public class ValueAttribute : PropertyAttribute {
+    public string label;
+  }
+
+  public class ValueNameAttribute : Attribute {
+    public string label;
+    public ValueNameAttribute(string label) { this.label = label; }
   }
 }

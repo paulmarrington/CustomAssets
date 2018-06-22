@@ -11,7 +11,7 @@ namespace CustomAsset.Constant {
   /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
   public class OfType<T> : Base {
-    [SerializeField] private T value;
+    [SerializeField, Value] private T value;
 
     /// <summary>
     /// For safe(ish) access to the contents field

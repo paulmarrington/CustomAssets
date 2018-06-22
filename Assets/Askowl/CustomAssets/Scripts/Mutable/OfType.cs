@@ -26,7 +26,7 @@ namespace CustomAsset.Mutable {
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
   public class OfType<T> : WithEmitter {
     #region Data
-    [SerializeField] private T value;
+    [SerializeField, Value] protected T value;
 
     /// <summary>
     /// For safe(ish) access to the contents field
