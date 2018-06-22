@@ -15,6 +15,14 @@ namespace CustomAsset.Mutable {
     /// Emitter reference to tell others of data changes
     /// </summary>
     public readonly Emitter Emitter = new Emitter();
+
+    /// <summary>
+    /// THe default is to fire the emitter at each polling interval.
+    /// Override Equals in T (Service) for services where you can tell if external data has changed
+    /// </summary>
+    public void Poll() {
+      if (!Equals(null)) Emitter.Fire();
+    }
   }
 
   /// <inheritdoc cref="Constant.OfType&lt;T>" />
@@ -26,7 +34,7 @@ namespace CustomAsset.Mutable {
   /// <typeparam name="T">Type of object this custom asset contains</typeparam>
   public class OfType<T> : WithEmitter {
     #region Data
-    [SerializeField, Value] protected T value;
+    [SerializeField, Value] private T value;
 
     /// <summary>
     /// For safe(ish) access to the contents field
