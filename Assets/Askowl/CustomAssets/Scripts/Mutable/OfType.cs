@@ -36,10 +36,40 @@ namespace CustomAsset.Mutable {
     #region Data
     [SerializeField, Value] private T value;
 
+    private bool valueSet;
+
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
-    protected T Value { get { return value; } set { Set(value); } }
+    protected T Value {
+      get {
+        if (typeof(T).Name.StartsWith("Gyro"))
+          Debug.LogWarningFormat("**** OfType:46 {1} valueSet={0} to {2}", valueSet,
+                                 typeof(T).Name, valueSet ? value.GetType().Name : ""); //#DM#//
+
+        return valueSet ? value : Initialise();
+      }
+      set {
+        valueSet = true;
+
+        if (typeof(T).Name.StartsWith("Gyro"))
+          Debug.LogWarningFormat("**** OfType:51 {1} value={0}", value, typeof(T).Name); //#DM#//
+
+        Set(value);
+      }
+    }
+
+    /// <summary>
+    /// Called the first time we want access to T. JIT initialisation helps since RuntimeInitializeOnLoadMethod
+    /// does not run until after all the OnEnables.
+    /// </summary>
+    /// <returns></returns>
+    public virtual T Initialise() {
+      if (typeof(T).Name.StartsWith("Gyro"))
+        Debug.LogWarningFormat("**** OfType:62 {1} value={0}", value, typeof(T).Name); //#DM#//
+
+      return value;
+    }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -
