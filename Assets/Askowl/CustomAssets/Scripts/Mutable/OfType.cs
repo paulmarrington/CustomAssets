@@ -43,11 +43,6 @@ namespace CustomAsset.Mutable {
     /// </summary>
     protected T Value { get { return valueSet ? value : Initialise(); } set { Set(value); } }
 
-    protected T UnconditionalSet(T to) {
-      valueSet = true;
-      return value = to;
-    }
-
     /// <summary>
     /// Called the first time we want access to T. JIT initialisation helps since RuntimeInitializeOnLoadMethod
     /// does not run until after all the OnEnables.
@@ -136,11 +131,10 @@ namespace CustomAsset.Mutable {
     /// For safe(ish) access to the contents field
     /// </summary>
     public void Set(T toValue) {
-      if (Equals(Value, toValue)) return;
-
+      bool equals = Equals(value, toValue);
       valueSet = true;
-      value    = toValue;
-      Emitter.Fire();
+      value    = toValue; // do the set anyway since we may be changing object
+      if (!equals) Emitter.Fire();
     }
     #endregion
 
@@ -158,7 +152,7 @@ namespace CustomAsset.Mutable {
     public override bool Equals(object other) {
       try {
         var otherCustomAsset = other as OfType<T>;
-        return (otherCustomAsset != null) && Value.Equals(otherCustomAsset.Value);
+        return Value.Equals((otherCustomAsset != null) ? otherCustomAsset.Value : default(T));
       } catch {
         return false;
       }
