@@ -78,7 +78,7 @@ namespace CustomAsset.Mutable {
     /// <code>Float lifetime = Float.Instance("Lifetime")</code>
     /// <param name="name"></param>
     /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    public new static TC Instance<TC>(string name) where TC : Base {
+    public new static TC Instance<TC>(string name = null) where TC : Base {
       TC instance = Base.Instance<TC>(name);
       AssetToUnload(instance); // so unexpected data does not remain between editor plays
       return instance;
