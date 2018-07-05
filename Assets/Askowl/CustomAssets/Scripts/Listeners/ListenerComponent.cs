@@ -29,7 +29,11 @@ namespace CustomAsset.Mutable {
     /// </summary>
     public Listener Listener { get { return listener; } }
 
-    private void OnEnable()  { listener.Register(OnChange); }
+    private void OnEnable() {
+      listener.Register(OnChange);
+//      OnChange();
+    }
+
     private void OnDisable() { Deregister(); }
 
     /// <summary>
