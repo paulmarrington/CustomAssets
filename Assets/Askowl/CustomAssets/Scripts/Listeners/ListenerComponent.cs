@@ -31,7 +31,7 @@ namespace CustomAsset.Mutable {
 
     private void OnEnable() {
       listener.Register(OnChange);
-//      OnChange();
+      OnChange();
     }
 
     private void OnDisable() { Deregister(); }
