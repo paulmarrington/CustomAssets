@@ -1,5 +1,8 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using Askowl;
+using CustomAsset.Mutable;
+
 namespace CustomAsset.Animation {
   using UnityEngine;
 
@@ -9,14 +12,15 @@ namespace CustomAsset.Animation {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
   [RequireComponent(typeof(Animator))]
-  public sealed class IntegerListener : Mutable.IntegerListener<Animator> {
+  public sealed class AnimatorFloatListener : FloatListener<Animator> {
     [SerializeField] private string parameterName;
 
     /// <inheritdoc />
-    protected override void OnChange(int value) { Target.SetInteger(parameterName, value); }
+    protected override void OnChange(float value) { Target.SetFloat(parameterName, value); }
 
-    protected override bool Equals(int value) {
-      return (Target.GetInteger(parameterName) == value);
+    /// <inheritdoc />
+    protected override bool Equals(float value) {
+      return Compare.AlmostEqual(Target.GetFloat(parameterName), value);
     }
   }
 }

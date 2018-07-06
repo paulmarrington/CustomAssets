@@ -14,6 +14,12 @@ namespace CustomAsset.Mutable {
     #pragma warning disable 649
     [SerializeField] private WithEmitter assetToMonitor;
 
+    public static Listener Instance(WithEmitter assetToMonitor, Action onTriggered) {
+      Listener listener = new Listener {assetToMonitor = assetToMonitor};
+      listener.Register(onTriggered);
+      return listener;
+    }
+
     // ReSharper disable once MemberCanBePrivate.Global
     /// <summary>
     /// Must be implemented in containing class as it is called if the listener is triggered.
@@ -33,6 +39,11 @@ namespace CustomAsset.Mutable {
       OnTriggered = onTriggered;
       assetToMonitor.Emitter.Register(this);
     }
+
+    /// <summary>
+    /// Register an action so that if the custom asset member changes anyone can be told
+    /// </summary>
+    public void Register() { assetToMonitor.Emitter.Register(this); }
 
     /// <summary>
     /// Call to stop receiving change calls

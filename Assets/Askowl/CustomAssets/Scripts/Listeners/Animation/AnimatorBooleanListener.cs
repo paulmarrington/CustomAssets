@@ -9,7 +9,7 @@ namespace CustomAsset.Animation {
   /// </summary>
   /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
   [RequireComponent(typeof(Animator))]
-  public sealed class BooleanListener : Mutable.BooleanListener<Animator> {
+  public sealed class AnimatorBooleanListener : Mutable.BooleanListener<Animator> {
     [SerializeField] private string parameterName;
 
     /// <inheritdoc />
