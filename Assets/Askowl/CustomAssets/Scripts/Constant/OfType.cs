@@ -16,7 +16,7 @@ namespace CustomAsset.Constant {
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
-    public virtual T Value { get { return value; } }
+    public T Value { get { return value; } }
 
     /// <summary>
     /// If this is a project asset, then you will need to reference it somewhere.

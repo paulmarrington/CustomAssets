@@ -18,23 +18,21 @@ namespace CustomAsset {
       return (instances.Length > 0) ? instances[0] : Resources.Load<T>(name);
     }
 
-    #region EditorOnly
-#if UNITY_EDITOR
     /// <summary>
     /// Editor only description of what the asset is all about.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
     [SerializeField, Multiline] private string description;
-#endif
-    #endregion
+
+    public string Description { get { return description; } }
   }
 
   public class ValueAttribute : PropertyAttribute {
-    public string label;
+    public string Label;
   }
 
   public class ValueNameAttribute : Attribute {
-    public string label;
-    public ValueNameAttribute(string label) { this.label = label; }
+    public readonly string Label;
+    public ValueNameAttribute(string label) { Label = label; }
   }
 }
