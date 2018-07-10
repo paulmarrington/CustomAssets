@@ -1,5 +1,4 @@
-﻿using System;
-using Askowl;
+﻿using Askowl;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -25,14 +24,5 @@ namespace CustomAsset {
     [SerializeField, Multiline] private string description;
 
     public string Description { get { return description; } }
-  }
-
-  public class ValueAttribute : PropertyAttribute {
-    public string Label;
-  }
-
-  public class ValueNameAttribute : Attribute {
-    public readonly string Label;
-    public ValueNameAttribute(string label) { Label = label; }
   }
 }

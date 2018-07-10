@@ -1,0 +1,11 @@
+{
+    "name": "CustomAssets",
+    "references": [
+        "Base",
+        "Decoupler"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
