@@ -60,10 +60,9 @@ namespace CustomAsset.Mutable {
     }
 
     /// <inheritdoc />
-    public override GyroService Initialise() {
+    public override void Initialise() {
       Device     = GyroService.Instance;
       settleTime = Time.realtimeSinceStartup;
-      return Device;
     }
   }
 }

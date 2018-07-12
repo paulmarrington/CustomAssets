@@ -16,7 +16,7 @@ namespace CustomAsset.Mutable {
     public bool Ready { get { return Device.DidUpdateThisFrame; } }
 
     /// <inheritdoc />
-    public override WebCamService Initialise() { return WebCamService.Instance; }
+    public override void Initialise() { Device = WebCamService.Instance; }
 
     public void Project(GameObject background) {
       rawImage         = background.GetComponent<RawImage>() ?? background.AddComponent<RawImage>();

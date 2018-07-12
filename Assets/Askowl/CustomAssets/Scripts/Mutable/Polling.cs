@@ -36,12 +36,11 @@ namespace CustomAsset.Mutable {
     }
 
     private IEnumerator StartPollingCoroutine() {
-      var interval = new WaitForSecondsRealtime(updateIntervalInSeconds);
       running = true;
 
       while (running) {
         foreach (var component in componentsToPoll) component.Poll();
-        yield return interval;
+        yield return new WaitForSecondsRealtime(updateIntervalInSeconds);
       }
     }
   }

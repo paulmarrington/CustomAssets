@@ -36,19 +36,25 @@ namespace CustomAsset.Mutable {
     #region Data
     [SerializeField, Value] private T value;
 
-    private bool valueSet;
+    private bool initialised;
 
     /// <summary>
     /// For safe(ish) access to the contents field
     /// </summary>
-    protected T Value { get { return valueSet ? value : Initialise(); } set { Set(value); } }
+    protected T Value { get { return initialised ? value : FirstAccess(); } set { Set(value); } }
+
+    private T FirstAccess() {
+      initialised = true;
+      Initialise();
+      return value;
+    }
 
     /// <summary>
     /// Called the first time we want access to T. JIT initialisation helps since RuntimeInitializeOnLoadMethod
     /// does not run until after all the OnEnables.
     /// </summary>
     /// <returns></returns>
-    public virtual T Initialise() { return value; }
+    public virtual void Initialise() { }
 
     /// <summary>
     /// All extraction by casting a custom object to the contained type. Same as getting the Value -
@@ -57,7 +63,7 @@ namespace CustomAsset.Mutable {
     /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
     /// <param name="t">Instance of custom asset</param>
     /// <returns>Instance of the contained serializable object</returns>
-    public static implicit operator T(OfType<T> t) { return (t == null) ? default(T) : t.value; }
+    public static implicit operator T(OfType<T> t) => (t == null) ? default(T) : t.value;
 
     /// <inheritdoc />
     /// <summary>
@@ -65,7 +71,7 @@ namespace CustomAsset.Mutable {
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
     /// <returns>String representation of the contents of the containing value</returns>
-    public override string ToString() { return value.ToString(); }
+    public override string ToString() => value.ToString();
     #endregion
 
     #region Construction
@@ -123,7 +129,10 @@ namespace CustomAsset.Mutable {
       Load();
     }
 
-    private void OnDisable() { Save(); }
+    private void OnDisable() {
+      initialised = false;
+      Save();
+    }
     #endregion
 
     #region Listeners
@@ -131,18 +140,16 @@ namespace CustomAsset.Mutable {
     /// For safe(ish) access to the contents field
     /// </summary>
     public void Set(T toValue) {
+      if (!initialised) FirstAccess();
       bool equals = Equals(value, toValue);
-      valueSet = true;
-      value    = toValue; // do the set anyway since we may be changing object
+      value = toValue; // do the set anyway since we may be changing object
       if (!equals) Emitter.Fire();
     }
     #endregion
 
     #region Comparators
     /// <inheritdoc />
-    public override int GetHashCode() {
-      return Equals(Value, default(T)) ? 0 : Value.GetHashCode();
-    }
+    public override int GetHashCode() => Equals(Value, default(T)) ? 0 : Value.GetHashCode();
 
     /// <summary>
     /// Part of the group of Equals functions. Passes responsibility to the containing data
@@ -162,7 +169,7 @@ namespace CustomAsset.Mutable {
     #region Persistence
     [SerializeField] private bool persistent;
 
-    private string Key { get { return string.Format("{0}:{1}", name, typeof(T)); } }
+    private string Key => $"{name}:{typeof(T)}";
 
     /// <summary>
     /// Basic load for a persistent custom asset.
@@ -174,26 +181,16 @@ namespace CustomAsset.Mutable {
     /// <summary>
     /// Basic save for a persistent custom asset.
     /// </summary>
-    public void Save() { Saver(data: Value); }
+    public void Save() {
+      if (persistent) PlayerPrefs.SetString(Key, JsonUtility.ToJson(Value));
+    }
 
     /// <summary>
     /// Load the last previously saved value from persistent storage.
     /// </summary>
     /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    protected TD Loader<TD>() {
-      return JsonUtility.FromJson<TD>(PlayerPrefs.GetString(Key, defaultValue: ""));
-    }
-
-    /// <summary>
-    /// Save data to persistent storage for the next run.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
-    /// <param name="data">data to save</param>
-    /// <typeparam name="TD">Class for save data</typeparam>
-    // ReSharper disable once MemberCanBePrivate.Global
-    protected void Saver<TD>(TD data) {
-      if (persistent) PlayerPrefs.SetString(Key, JsonUtility.ToJson(data));
-    }
+    protected TD Loader<TD>() =>
+      JsonUtility.FromJson<TD>(PlayerPrefs.GetString(Key, defaultValue: ""));
     #endregion
 
     #region EditorOnly

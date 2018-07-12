@@ -64,9 +64,9 @@ namespace CustomAsset.Mutable {
     }
 
     /// <inheritdoc />
-    public override CompassService Initialise() {
+    public override void Initialise() {
       settleTime = Time.realtimeSinceStartup + 1;
-      return Device = CompassService.Instance;
+      Device     = CompassService.Instance;
     }
   }
 }
