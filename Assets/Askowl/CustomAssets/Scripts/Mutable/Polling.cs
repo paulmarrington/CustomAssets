@@ -8,39 +8,21 @@ namespace CustomAsset.Mutable {
   /// Add more than one copy if you need different polling rates for different customa ssets.
   /// </summary>
   public sealed class Polling : MonoBehaviour {
-    [SerializeField] private float         updateIntervalInSeconds;
+    [SerializeField] private float         secondsDelayAtStart     = 5;
+    [SerializeField] private float         updateIntervalInSeconds = 1;
     [SerializeField] private WithEmitter[] componentsToPoll;
-
-    private bool running;
-
-    /// <summary>
-    /// View and control the running state of this component
-    /// </summary>
-    public bool Running {
-      get { return running; }
-      set {
-        if (value && !running) StartPolling();
-        running = value;
-      }
-    }
 
     private void Awake() { DontDestroyOnLoad(gameObject); }
 
-    private void OnEnable() { StartPolling(); }
+    private IEnumerator Start() {
+      yield return new WaitForSecondsRealtime(secondsDelayAtStart);
 
-    /// <summary>
-    /// Start a coroutine to poll a component on the given MonoBehaviour.
-    /// </summary>
-    private void StartPolling() {
-      if (updateIntervalInSeconds > 0) StartCoroutine(StartPollingCoroutine());
-    }
-
-    private IEnumerator StartPollingCoroutine() {
-      running = true;
-
-      while (running) {
-        foreach (var component in componentsToPoll) component.Poll();
+      while (true) {
         yield return new WaitForSecondsRealtime(updateIntervalInSeconds);
+
+        if (isActiveAndEnabled) {
+          foreach (var component in componentsToPoll) component.Poll();
+        }
       }
     }
   }
