@@ -1,0 +1,14 @@
+{
+    "name": "CustomAssetsEditor",
+    "references": [
+        "BaseEditor",
+        "CustomAssets",
+        "Base"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
