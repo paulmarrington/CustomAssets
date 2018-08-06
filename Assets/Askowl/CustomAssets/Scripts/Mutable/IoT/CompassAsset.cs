@@ -1,14 +1,15 @@
-﻿using System;
-using Decoupled;
+﻿using Decoupled;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
   /// <inheritdoc cref="Decoupled.GyroService" />
+  /// <remarks><a href="http://unitydoc.marrington.net/Mars#asset">More...</a></remarks>
   [CreateAssetMenu(menuName = "Custom Assets/Device/Compass"), ValueName("Device")]
   public class CompassAsset : OfType<CompassService> {
-    public static CompassAsset Instance { get { return Instance<CompassAsset>(); } }
+    /// Retrieve the singleton reference to the asset. Use Unity [SerializeField] by preference.
+    public static CompassAsset Instance => Instance<CompassAsset>();
 
-    /// <see cref="OfType{T}.Value"/>
+    /// Access to the underlying service. <see cref="OfType{T}.Value"/>
     public CompassService Device { get { return Value; } set { Value = value; } }
 
     private float                    settleTime;
@@ -18,28 +19,30 @@ namespace CustomAsset.Mutable {
     private float                    lastUpdateTime;
     private ExponentialMovingAverage ema;
 
+    /// Poll to see if the compass is ready and settled.
     public bool Ready {
       get {
         if (settled) return true;
         if (Time.realtimeSinceStartup < settleTime) return false;
 
-        ema        = new ExponentialMovingAverage(16);
+        ema        = new ExponentialMovingAverage(64);
         rotateFrom = rotateTo = Device.MagneticHeading;
 
         return (settled = true);
       }
     }
 
-    /*
-     * Jose Rodríguez-Rosa and Jorge Martín-Gutiérrez / Procedia Computer Science 25 (2013) 436 – 442
-     * page 439:
-     *
-     * Another more efficient method is the exponential moving average...
-     *
-     * This method requires fewer operations and gives much better results when filtering noise from
-     * compass sensor input data. This formula is computed in constant time. We empirically determined
-     * the value of parameter=0.2 as an optimal setting for this method.
-     */
+    /// <summary>Poll to build exponential moving average of the magnetic heading</summary>
+    /// <remarks>
+    /// Jose Rodríguez-Rosa and Jorge Martín-Gutiérrez / Procedia Computer Science 25 (2013) 436 – 442
+    /// <para/>
+    /// page 439:
+    /// Another more efficient method is the exponential moving average...
+    /// <para/>
+    /// This method requires fewer operations and gives much better results when filtering noise from
+    /// compass sensor input data. This formula is computed in constant time. We empirically determined
+    /// the value of parameter=0.2 as an optimal setting for this method.
+    /// </remarks>
     public void Calibrate() {
       // Use the exponential moving average to help smooth out compass variations
       rotateFrom     = rotateTo;
@@ -47,15 +50,19 @@ namespace CustomAsset.Mutable {
       lastUpdateTime = Time.realtimeSinceStartup;
     }
 
-    /*
-     * Jose Rodríguez-Rosa and Jorge Martín-Gutiérrez / Procedia Computer Science 25 (2013) 436 – 442
-     * page 439:
-     *
-     * The Sn value is the horizontal rotation (around the Y axis) in degrees. This value is converted
-     * to a quaternion and interpolated (using slerp as done before with the gyroscope stabilization method)
-     * with the previous value using the number of seconds since the last reading as interpolation step
-     * parameter (since this method is executed several times per second, this is a fractional value between 0 and 1).
-     */
+    /// <summary>
+    /// Use time and moving average to retrieve a smoothed guess at magnetic heading
+    /// </summary>
+    /// <remarks>
+    /// Jose Rodríguez-Rosa and Jorge Martín-Gutiérrez / Procedia Computer Science 25 (2013) 436 – 442
+    /// <para/>
+    /// page 439:
+    /// <para/>
+    /// The Sn value is the horizontal rotation (around the Y axis) in degrees. This value is converted
+    /// to a quaternion and interpolated (using slerp as done before with the gyroscope stabilization method)
+    /// with the previous value using the number of seconds since the last reading as interpolation step
+    /// parameter (since this method is executed several times per second, this is a fractional value between 0 and 1).
+    /// </remarks>
     public float MagneticHeading {
       get {
         float elapsedSeconds = Time.realtimeSinceStartup - lastUpdateTime;
