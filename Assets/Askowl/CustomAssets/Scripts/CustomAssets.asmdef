@@ -1,7 +1,7 @@
 {
     "name": "CustomAssets",
     "references": [
-        "Base",
+        "Able",
         "Decoupler"
     ],
     "optionalUnityReferences": [],

@@ -1,9 +1,8 @@
 {
     "name": "CustomAssetsEditor",
     "references": [
-        "BaseEditor",
         "CustomAssets",
-        "Base"
+        "Able"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [

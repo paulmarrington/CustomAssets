@@ -68,7 +68,7 @@ namespace CustomAsset.Mutable {
     public Tetrad Attitude {
       get {
         rotateTo.Set(Device.Attitude).RightToLeftHanded();
-        rotation.Slerp(rotateFrom, rotateTo, smoothing);
+        rotation.ALerp(rotateFrom, rotateTo, smoothing);
         rotateFrom.Set(rotateTo);
         return rotation;
       }
