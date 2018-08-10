@@ -18,9 +18,9 @@ namespace CustomAsset.Mutable {
     /// <see cref="OfType{T}.Value"/>
     public GyroService Device { get { return Value; } set { Value = value; } }
 
-    private float  settleTime;
-    private bool   settled;
-    private Tetrad rotateFrom = new Tetrad(), rotateTo = new Tetrad(), rotation = new Tetrad();
+    private float      settleTime;
+    private bool       settled;
+    private Quaternion rotateFrom, rotateTo, rotation;
 
     /// <summary>
     /// Poll at startup to see of the gyroscope is ready to use
@@ -31,7 +31,7 @@ namespace CustomAsset.Mutable {
 
         if (Device.Attitude == Quaternion.identity) return false;
 
-        rotateFrom.Set(Device.Attitude);
+        rotateFrom = Device.Attitude;
         settleTime = Time.realtimeSinceStartup - settleTime;
         return (settled = true);
       }
@@ -65,11 +65,11 @@ namespace CustomAsset.Mutable {
     /// on the other hand, Android it ́s very device dependent, but having the low-pass filter implemented as
     /// stated above, effectively fixes this problem on most devices.
     ///</remarks>
-    public Tetrad Attitude {
+    public Quaternion Attitude {
       get {
-        rotateTo.Set(Device.Attitude).RightToLeftHanded();
-        rotation.ALerp(rotateFrom, rotateTo, smoothing);
-        rotateFrom.Set(rotateTo);
+        rotateTo   = Device.Attitude.RightToLeftHanded();
+        rotation   = rotateFrom.ALerp(end: rotateTo, proportion: smoothing);
+        rotateFrom = rotateTo;
         return rotation;
       }
     }
