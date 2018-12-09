@@ -1,18 +1,13 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using System;
-using System.Collections.Generic;
+using Askowl;
 
 namespace CustomAsset.Mutable {
-//  /// <summary>
-//  /// Encapsulation emitting change information to multiple listeners
-//  /// </summary>
-//  public interface HasEmitter {
-//    /// <summary>
-//    /// Read-only reference to the emitter so we can pass changes
-//    /// </summary>
-//    Emitter Emitter { get; }
-//  }
+  /// <a href="">Encapsulation emitting change information to multiple listeners</a> //#TBD#//
+  public interface HasEmitter {
+    /// <a href="">Read-only reference to the emitter so we can pass changes</a> //#TBD#//
+    Emitter Emitter { get; }
+  }
 
   /// <summary>
   /// Keep a list of interested parties for this custom asset

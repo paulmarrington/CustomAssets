@@ -4,45 +4,33 @@ using System;
 using System.Collections.Generic;
 using Askowl;
 using UnityEditor;
+using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  using UnityEngine;
-
-  /// <summary>
-  /// Typeless base class that has an emitter
-  /// </summary>
+  /// <a href="">Typeless base class that has an emitter</a> //#TBD#//
   public class WithEmitter : Base {
-    /// <summary>
-    /// Emitter reference to tell others of data changes
-    /// </summary>
+    /// <a href="">Emitter reference to tell others of data changes</a> //#TBD#//
     public readonly Emitter Emitter = new Emitter();
 
-    /// <summary>
-    /// THe default is to fire the emitter at each polling interval.
-    /// Override Equals in T (Service) for services where you can tell if external data has changed
-    /// </summary>
+    /// <a href="">The default is to fire the emitter at each polling interval.  Override Equals in T (Service) for services where you can tell if external data has changed</a> //#TBD#//
     public void Poll() {
       if (!Equals(null)) Emitter.Fire();
     }
   }
 
-  /// <inheritdoc cref="Constant.OfType&lt;T>" />
-  /// <summary>
-  /// Base class for a custom asset. Provides getters and setters for the contained value and
-  /// templates for casting to the contained type and to convert it to a string.
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
-  /// <typeparam name="T">Type of object this custom asset contains</typeparam>
+  /// <a href="">Base class for a custom asset. Provides getters and setters for the contained value and templates for casting to the contained type and to convert it to a string</a> //#TBD#// <inheritdoc cref="Constant.OfType&lt;T>" />
   public class OfType<T> : WithEmitter {
     #region Data
-    [SerializeField, Value] private T value;
+
+    [SerializeField, Label] private T value;
 
     private bool initialised;
 
-    /// <summary>
-    /// For safe(ish) access to the contents field
-    /// </summary>
-    protected T Value { get { return initialised ? value : FirstAccess(); } set { Set(value); } }
+    /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
+    protected T Value {
+      get => initialised ? value : FirstAccess();
+      set => Set(value);
+    }
 
     private T FirstAccess() {
       initialised = true;
@@ -50,60 +38,30 @@ namespace CustomAsset.Mutable {
       return value;
     }
 
-    /// <summary>
-    /// Called the first time we want access to T. JIT initialisation helps since RuntimeInitializeOnLoadMethod
-    /// does not run until after all the OnEnables.
-    /// </summary>
-    /// <returns></returns>
+    /// <a href="">Called the first time we want access to T. JIT initialisation helps since RuntimeInitializeOnLoadMethod. Does not run until after all the OnEnables.</a> //#TBD#//
     public virtual void Initialise() { }
 
-    /// <summary>
-    /// All extraction by casting a custom object to the contained type. Same as getting the Value -
-    /// as in myCustomAsset.Value === (MyCustomAsset) myCustomAsset
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
-    /// <param name="t">Instance of custom asset</param>
-    /// <returns>Instance of the contained serializable object</returns>
-    public static implicit operator T(OfType<T> t) => (t == null) ? default(T) : t.value;
+    /// <a href="">All extraction by casting a custom object to the contained type. Same as getting the Value - as in myCustomAsset.Value === (MyCustomAsset) myCustomAsset</a> //#TBD#//
+    public static implicit operator T(OfType<T> t) => (t == null) ? default : t.value;
 
-    /// <inheritdoc />
-    /// <summary>
-    /// Pass string conversion responsibility  from the custom asset to the containing value.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
-    /// <returns>String representation of the contents of the containing value</returns>
+    /// <a href="">Pass string conversion responsibility from the custom asset to the containing value</a> //#TBD#// <inheritdoc />
     public override string ToString() => value.ToString();
+
     #endregion
 
     #region Construction
-    /// <summary>
-    /// If this is a project asset, then you will need to reference it somewhere.
-    /// Other classes can get a reference using `Instance()` or `Instance(string name)`.
-    /// Also useful for creating in-memory versions to share between hosts.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#instance">More...</a></remarks>
-    /// <code>Float lifetime = Float.Instance("Lifetime")</code>
-    /// <param name="name"></param>
-    /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
+
+    /// <a href="">If this is a project asset, then you will need to reference it somewhere. Other classes can get a reference using `Instance()` or `Instance(string name)`. Also useful for creating in-memory versions to share between hosts</a> //#TBD#//
     public new static TC Instance<TC>(string name = null) where TC : Base {
-      TC instance = Base.Instance<TC>(name);
+      var instance = Base.Instance<TC>(name);
       AssetToUnload(instance); // so unexpected data does not remain between editor plays
       return instance;
     }
 
-    /// <summary>
-    /// Create a new instance of the asset with a random name (GUID based)
-    /// </summary>
-    /// <typeparam name="TC">Type of asset to create</typeparam>
-    public static TC New<TC>() where TC : Base {
-      var asset = New<TC>(Guid.NewGuid().ToString());
-      return asset;
-    }
+    /// <a href="">Create a new instance of the asset with a random name (GUID based)</a> //#TBD#//
+    public static TC New<TC>() where TC : Base => New<TC>(Guid.NewGuid().ToString());
 
-    /// <summary>
-    /// Create a new instance of the asset with a supplied name. Note you can get duplicate names.
-    /// </summary>
-    /// <typeparam name="TC">Type of asset to create</typeparam>
+    /// <a href="">Create a new instance of the asset with a supplied name. Note you can get duplicate names</a> //#TBD#//
     public static TC New<TC>(string name) where TC : Base {
       TC instance = CreateInstance<TC>();
       instance.name = name;
@@ -111,20 +69,14 @@ namespace CustomAsset.Mutable {
       return instance;
     }
 
-    /// <summary>
-    /// Create a new instance dynamically.
-    /// </summary>
-    /// <param name="name"></param>
+    /// <a href="">Create a new instance dynamically</a> //#TBD#//
     public static OfType<T> New(string name = null) {
       OfType<T> instance = CreateInstance<OfType<T>>();
       instance.name = name ?? Guid.NewGuid().ToString();
       return instance;
     }
 
-    /// <summary>
-    /// Called when an asset is loaded and enabled. Used to ensure the custom asset does not leave memory prematurely and to load it if persistent
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
+    /// <a href="">Called when an asset is loaded and enabled. Used to ensure the custom asset does not leave memory prematurely and to load it if persistent</a> //#TBD#//
     protected virtual void OnEnable() {
       hideFlags = HideFlags.DontUnloadUnusedAsset;
       Load();
@@ -134,95 +86,92 @@ namespace CustomAsset.Mutable {
       initialised = false;
       Save();
     }
+
     #endregion
 
     #region Listeners
-    /// <summary>
-    /// For safe(ish) access to the contents field
-    /// </summary>
+
+    /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
     public void Set(T toValue) {
       if (!initialised) FirstAccess();
       bool equals = Equals(value, toValue);
       value = toValue; // do the set anyway since we may be changing object
       if (!equals) Emitter.Fire();
     }
+
     #endregion
 
     #region Comparators
-    /// <inheritdoc />
+
+    /// <a href=""></a> //#TBD#// <inheritdoc />
     public override int GetHashCode() => Equals(Value, default(T)) ? 0 : Value.GetHashCode();
 
-    /// <summary>
-    /// Part of the group of Equals functions. Passes responsibility to the containing data
-    /// </summary>
-    /// <param name="other">Another reference to a custom asset of the same type</param>
-    /// <returns></returns>
+    /// <a href="">Part of the group of Equals functions. Passes responsibility to the containing data</a> //#TBD#//
     public override bool Equals(object other) {
       try {
         var otherCustomAsset = other as OfType<T>;
-        return Value.Equals((otherCustomAsset != null) ? otherCustomAsset.Value : default(T));
-      } catch {
+        return Value.Equals((otherCustomAsset != null) ? otherCustomAsset.Value : default);
+      }
+      catch {
         return false;
       }
     }
+
     #endregion
 
     #region Persistence
+
     [SerializeField] private bool persistent;
 
     private string Key => $"{name}:{typeof(T)}";
 
-    /// <summary>
-    /// Basic load for a persistent custom asset.
-    /// </summary>
+    /// <a href="">Basic load for a persistent custom asset</a> //#TBD#//
     public void Load() {
       if (persistent) Value = Loader<T>();
     }
 
-    /// <summary>
-    /// Basic save for a persistent custom asset.
-    /// </summary>
+    /// <a href="">Basic save for a persistent custom asset</a> //#TBD#//
     public void Save() {
       if (persistent) PlayerPrefs.SetString(Key, JsonUtility.ToJson(Value));
     }
 
-    /// <summary>
-    /// Load the last previously saved value from persistent storage.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-asset-persistence">More...</a></remarks>
+    /// <a href="">Load the last previously saved value from persistent storage.</a> //#TBD#//
     protected TD Loader<TD>() =>
       JsonUtility.FromJson<TD>(PlayerPrefs.GetString(Key, defaultValue: ""));
+
     #endregion
 
     #region EditorOnly
-#if UNITY_EDITOR
-    private static void AssetToUnload(ScriptableObject asset) {
-      if (NewAssets.Contains(asset) || AssetsToUnload.Contains(asset)) return;
 
-      AssetsToUnload.Add(asset);
+    #if UNITY_EDITOR
+    private static void AssetToUnload(ScriptableObject asset) {
+      if (newAssets.Contains(asset) || assetsToUnload.Contains(asset)) return;
+
+      assetsToUnload.Add(asset);
     }
 
-    private static void NewAsset(ScriptableObject asset) { NewAssets.Add(asset); }
+    private static void NewAsset(ScriptableObject asset) {
+      newAssets.Add(asset);
+    }
 
-    static OfType() { EditorApplication.playModeStateChanged += UnloadResources; }
+    static OfType() => EditorApplication.playModeStateChanged += UnloadResources;
 
-    // ReSharper disable StaticMemberInGenericType
-    private static readonly List<ScriptableObject> AssetsToUnload = new List<ScriptableObject>();
+    private static readonly List<ScriptableObject> assetsToUnload = new List<ScriptableObject>();
 
-    private static readonly List<ScriptableObject> NewAssets = new List<ScriptableObject>();
-    // ReSharper restore StaticMemberInGenericType
+    private static readonly List<ScriptableObject> newAssets = new List<ScriptableObject>();
 
     private static void UnloadResources(PlayModeStateChange playModeState) {
       if (playModeState != PlayModeStateChange.ExitingPlayMode) return;
 
       EditorApplication.playModeStateChanged -= UnloadResources;
 
-      foreach (var asset in AssetsToUnload) Resources.UnloadAsset(asset);
+      foreach (var asset in assetsToUnload) Resources.UnloadAsset(asset);
     }
-#else
+    #else
     private static void AssetToUnload(ScriptableObject asset){}
     private static void NewAsset(ScriptableObject asset){}
 #endif
+
     #endregion
   }
 }

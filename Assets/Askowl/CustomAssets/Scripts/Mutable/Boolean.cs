@@ -1,15 +1,12 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-namespace CustomAsset.Mutable {
-  using UnityEngine;
+using UnityEngine;
 
-  /// <inheritdoc />
-  /// <summary>
-  /// Boolean custom asset. Triggers event when changing from true to false or false to trye;
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
+namespace CustomAsset.Mutable {
+  /// <a href="">Boolean custom asset. Triggers event when changing from true to false or false to true</a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Boolean")]
   public sealed class Boolean : OfType<bool> {
-    public static Boolean Instance(string name) { return Instance<Boolean>(name); }
+    /// <a href=""></a> //#TBD#//
+    public static Boolean Instance(string name) => Instance<Boolean>(name);
   }
 }

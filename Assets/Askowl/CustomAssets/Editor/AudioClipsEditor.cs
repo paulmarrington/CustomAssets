@@ -6,13 +6,10 @@ using UnityEditor;
 using UnityEngine;
 
 namespace CustomAsset {
-  /// <inheritdoc />
-  /// <summary>
-  /// Unity editor for AudioClip components. Adds a play button.
-  /// </summary>
+  /// <a href="">Unity editor for AudioClip components. Adds a play button</a> //#TBD#//
   [CustomEditor(typeof(AudioClips))]
   public class AudioClipsEditor : PreviewEditor<AudioSource> {
-    /// <inheritdoc />
-    protected override void Preview() { ((AudioClips) target).Picker.Play(Source); }
+    /// <a href=""></a> //#TBD#// <inheritdoc />
+    protected override void Preview() => ((AudioClips) target).Picker.Play(Source);
   }
 }

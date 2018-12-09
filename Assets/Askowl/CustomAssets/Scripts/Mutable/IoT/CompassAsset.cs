@@ -3,15 +3,17 @@ using Decoupled;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <inheritdoc cref="Decoupled.GyroService" />
-  /// <remarks><a href="http://unitydoc.marrington.net/Mars#asset">More...</a></remarks>
-  [CreateAssetMenu(menuName = "Custom Assets/Device/Compass"), ValueName("Device")]
+  /// <a href=""></a> //#TBD#// <inheritdoc cref="Decoupled.GyroService" />
+  [CreateAssetMenu(menuName = "Custom Assets/Device/Compass"), Labels("Device")]
   public class CompassAsset : OfType<CompassService> {
-    /// Retrieve the singleton reference to the asset. Use Unity [SerializeField] by preference.
+    /// <a href="">Retrieve the singleton reference to the asset. Use Unity [SerializeField] by preference</a> //#TBD#//
     public static CompassAsset Instance => Instance<CompassAsset>();
 
-    /// Access to the underlying service. <see cref="OfType{T}.Value"/>
-    public CompassService Device { get { return Value; } set { Value = value; } }
+    /// <a href="">Access to the underlying service. <see cref="OfType{T}.Value"/></a> //#TBD#//
+    public CompassService Device {
+      get => Value;
+      set => Value = value;
+    }
 
     private float                    settleTime;
     private bool                     settled;
@@ -44,6 +46,7 @@ namespace CustomAsset.Mutable {
     /// compass sensor input data. This formula is computed in constant time. We empirically determined
     /// the value of parameter=0.2 as an optimal setting for this method.
     /// </remarks>
+    /// <a href="">Poll to build exponential moving average of the magnetic heading</a> //#TBD#//
     public void Calibrate() {
       // Use the exponential moving average to help smooth out compass variations
       rotateFrom     = rotateTo;
@@ -64,6 +67,7 @@ namespace CustomAsset.Mutable {
     /// with the previous value using the number of seconds since the last reading as interpolation step
     /// parameter (since this method is executed several times per second, this is a fractional value between 0 and 1).
     /// </remarks>
+    /// <a href="">Use time and moving average to retrieve a smoothed guess at magnetic heading</a> //#TBD#//
     public float MagneticHeading {
       get {
         float elapsedSeconds = Time.realtimeSinceStartup - lastUpdateTime;
@@ -71,7 +75,7 @@ namespace CustomAsset.Mutable {
       }
     }
 
-    /// <inheritdoc />
+    /// <a href=""></a> //#TBD#// <inheritdoc />
     public override void Initialise() {
       settleTime = Time.realtimeSinceStartup + 1;
       Device     = CompassService.Instance;

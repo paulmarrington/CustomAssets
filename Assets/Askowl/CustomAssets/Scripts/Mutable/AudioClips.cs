@@ -1,24 +1,16 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using CustomAsset.Constant;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <inheritdoc />
-  /// <summary>
-  /// Create an asset to store a list of sounds and play one randomly or cyclicly.
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#audioclips">More...</a></remarks>
+  /// <a href="">Create an asset to store a list of sounds and play one randomly or cyclically</a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Audio Clips", fileName = "AudioClips")]
-  public sealed class AudioClips : OfType<CustomAsset.Constant.AudioClipSet> {
-    /// <summary>
-    /// Retrieve an asset of AudioClips
-    /// </summary>
-    /// <param name="name">with this name</param>
-    public static AudioClips Instance(string name) { return Instance<AudioClips>(name); }
+  public sealed class AudioClips : OfType<AudioClipSet> {
+    /// <a href="">Retrieve an asset of AudioClips</a> //#TBD#//
+    public static AudioClips Instance(string name) => Instance<AudioClips>(name);
 
-    /// <summary>
-    /// Audio Clip Picker <see cref="CustomAsset.Constant.AudioClipSet"/>
-    /// </summary>
-    public CustomAsset.Constant.AudioClipSet Picker { get { return Value; } }
+    /// <a href="">Audio Clip Picker <see cref="CustomAsset.Constant.AudioClipSet"/></a> //#TBD#//
+    public AudioClipSet Picker => Value;
   }
 }

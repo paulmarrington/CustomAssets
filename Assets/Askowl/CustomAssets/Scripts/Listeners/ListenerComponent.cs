@@ -3,7 +3,6 @@
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-//  /// <inheritdoc cref="MonoBehaviour" />
 //  /// <summary>
 //  /// Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel.
 //  /// </summary>
@@ -16,36 +15,24 @@ namespace CustomAsset.Mutable {
 //    public T Asset { get { return Listener.AssetToMonitor as T; } }
 //  }
 
-  /// <inheritdoc cref="MonoBehaviour" />
-  /// <summary>
-  /// Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel.
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
+  /// <a href="">Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel</a> //#TBD#// <inheritdoc cref="MonoBehaviour" />
   public abstract class ListenerComponent : MonoBehaviour {
     [SerializeField] private Listener listener;
 
-    /// <summary>
-    /// Retrieve a reference to the listener attached to this component
-    /// </summary>
-    public Listener Listener { get { return listener; } }
+    /// <a href="">Retrieve a reference to the listener attached to this component</a> //#TBD#//
+    public Listener Listener => listener;
 
     private void OnEnable() {
       listener.Register(OnChange);
       OnChange();
     }
 
-    private void OnDisable() { Deregister(); }
+    private void OnDisable() => Deregister();
 
-    /// <summary>
-    /// Stop listening to changes in the custom asset.
-    /// </summary>
-    // ReSharper disable once MemberCanBePrivate.Global
-    public void Deregister() { listener.Deregister(); }
+    /// <a href="">Stop listening to changes in the custom asset</a> //#TBD#//
+    public void Deregister() => listener.Deregister();
 
-    /// <summary>
-    /// After we have ensured the change is for the expected member, tell interested parties.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
+    /// <a href="">After we have ensured the change is for the expected member, tell interested parties</a> //#TBD#//
     protected abstract void OnChange();
   }
 }

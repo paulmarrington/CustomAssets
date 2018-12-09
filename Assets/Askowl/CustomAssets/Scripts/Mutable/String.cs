@@ -1,18 +1,19 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using Askowl;
+using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  using UnityEngine;
-
-  /// <inheritdoc />
-  /// <summary>
-  /// CustomAsset that contains a string. Events are triggered every time the string changes
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#primitive-custom-assets">More...</a></remarks>
-  [CreateAssetMenu(menuName = "Custom Assets/Mutable/String"), ValueName("Text")]
+  /// <a href="">CustomAsset that contains a string. Events are triggered every time the string changes</a> //#TBD#// <inheritdoc />
+  [CreateAssetMenu(menuName = "Custom Assets/Mutable/String"), Labels("Text")]
   public sealed class String : OfType<string> {
-    public        string Text                  { get { return Value; } set { Value = value; } }
-    public static String Instance(string name) { return Instance<String>(name); }
+    /// <a href=""></a> //#TBD#//
+    public string Text {
+      get => Value;
+      set => Value = value;
+    }
+
+    /// <a href=""></a> //#TBD#//
+    public static String Instance(string name) => Instance<String>(name);
   }
 }

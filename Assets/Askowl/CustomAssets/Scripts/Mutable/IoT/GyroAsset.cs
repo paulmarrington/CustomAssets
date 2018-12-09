@@ -3,28 +3,26 @@ using Decoupled;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <remarks><a href="http://unitydoc.marrington.net/Mars#asset-2">More...</a></remarks>
-  /// <inheritdoc cref="Decoupled.GyroService" />
-  [CreateAssetMenu(menuName = "Custom Assets/Device/Gyroscope"), ValueName("Device")]
+  /// <a href=""></a> //#TBD#// /// <inheritdoc cref="Decoupled.GyroService" />
+  [CreateAssetMenu(menuName = "Custom Assets/Device/Gyroscope"), Labels("Device")]
   public class GyroAsset : OfType<GyroService> {
     [SerializeField, Tooltip("Used in Slerp to reduce jitter")]
     private float smoothing = 0.2f;
 
-    /// <summary>
-    /// Retrieve service singleton. By preference use the inspector.
-    /// </summary>
+    /// <a href="">Retrieve service singleton. By preference use the inspector</a> //#TBD#//
     public static GyroAsset Instance => Instance<GyroAsset>();
 
-    /// <see cref="OfType{T}.Value"/>
-    public GyroService Device { get { return Value; } set { Value = value; } }
+    /// <a href=""></a> //#TBD#//
+    public GyroService Device {
+      get => Value;
+      set => Value = value;
+    }
 
     private float      settleTime;
     private bool       settled;
     private Quaternion rotateFrom, rotateTo, rotation;
 
-    /// <summary>
-    /// Poll at startup to see of the gyroscope is ready to use
-    /// </summary>
+    /// <a href="">Poll at startup to see of the gyroscope is ready to use</a> //#TBD#//
     public bool Ready {
       get {
         if (settled) return true;
@@ -37,9 +35,7 @@ namespace CustomAsset.Mutable {
       }
     }
 
-    /// <summary>
-    /// The number of seconds that the Gyroscope took to settle
-    /// </summary>
+    /// <a href="">The number of seconds that the Gyroscope took to settle</a> //#TBD#//
     public float SecondsSettlingTime => settleTime;
 
     /// <summary>
@@ -61,20 +57,21 @@ namespace CustomAsset.Mutable {
     /// while keeping enough responsiveness for a good user experience. The sampling rate used for this sensor
     /// was 15Hz (higher rates shortens device battery).
     /// <para/>
-    /// In our tests, we found gyroscope on Apple iPhone smartphone to be very stable and accurate over time;
+    /// In our tests, we found gyroscope on Apple iPhone smart-phone to be very stable and accurate over time;
     /// on the other hand, Android it ́s very device dependent, but having the low-pass filter implemented as
     /// stated above, effectively fixes this problem on most devices.
     ///</remarks>
+    /// <a href="">The smoothed orientation in space of the device as a Tetrad (Quaternion)</a> //#TBD#//
     public Quaternion Attitude {
       get {
-        rotateTo   = Device.Attitude.RightToLeftHanded();
-        rotation   = rotateFrom.ALerp(end: rotateTo, proportion: smoothing);
+        rotateTo   = Device.Attitude.RightToLeftHanded(Trig.ZAxis);
+        rotation   = Quaternion.Slerp(rotateFrom, rotateTo, smoothing);
         rotateFrom = rotateTo;
         return rotation;
       }
     }
 
-    /// <inheritdoc />
+    /// <a href=""></a> //#TBD#// /// <inheritdoc />
     public override void Initialise() {
       Device     = GyroService.Instance;
       settleTime = Time.realtimeSinceStartup;

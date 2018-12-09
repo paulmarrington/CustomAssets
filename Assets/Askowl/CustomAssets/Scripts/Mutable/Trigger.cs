@@ -2,28 +2,15 @@
 
 using System;
 using Askowl;
+using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  using UnityEngine;
-
-  /// <inheritdoc>
-  ///   <cref>HasEmitter</cref>
-  /// </inheritdoc>
-  /// <summary>
-  /// Dynamic custom asset without any values. Use it to trigger and listen to events.
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#trigger">More...</a></remarks>
+  /// <a href="">Dynamic custom asset without any values. Use it to trigger and listen to events</a> //#TBD#// <inheritdoc />
   [CreateAssetMenu(menuName = "Custom Assets/Trigger")]
   public class Trigger : WithEmitter {
-    /// <summary>
-    /// Retrieve a loaded instance of a named trigger
-    /// </summary>
-    /// <param name="name">Game-wide unique name</param>
-    /// <returns>The trigger</returns>
+    /// <a href="">Retrieve a loaded instance of a named trigger</a> //#TBD#//
     public static Trigger Instance(string name) {
-      Trigger[] instances = Objects.Find<Trigger>(name);
-
-      Trigger instance = (instances.Length > 0) ? instances[0] : Resources.Load<Trigger>(name);
+      Trigger instance = Objects.Find<Trigger>(name);
       if (instance != null) return instance;
 
       instance      = CreateInstance<Trigger>();
@@ -31,9 +18,7 @@ namespace CustomAsset.Mutable {
       return instance;
     }
 
-    /// <summary>
-    /// Call to fire off a Changed event, since we have no data to change...
-    /// </summary>
-    public void Fire() { Emitter.Fire(); }
+    /// <a href="">Call to fire off a Changed event, since we have no data to change...</a> //#TBD#//
+    public void Fire() => Emitter.Fire();
   }
 }

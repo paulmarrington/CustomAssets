@@ -3,27 +3,18 @@
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <inheritdoc cref="MonoBehaviour" />
-  /// <summary>
-  /// Common code for all event listeners. It registers and deregisters the listener with the channel.
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
+  /// <a href="">Common code for all event listeners. It registers and deregisters the listener with the channel</a> //#TBD#// <inheritdoc cref="MonoBehaviour" />
   public abstract class ListenerAsset : OfType<Listener> {
-    /// <inheritdoc />
-    protected override void OnEnable() { Value.Register(OnChange); }
+    /// <a href=""></a> //#TBD#// <inheritdoc />
+    protected override void OnEnable() => Value.Register(OnChange);
 
-    /// <inheritdoc cref="ListenerAsset()" />
-    protected void OnDisable() { Value.Deregister(); }
+    /// <a href=""></a> //#TBD#// <inheritdoc cref="ListenerAsset()" />
+    protected void OnDisable() => Value.Deregister();
 
-    /// <summary>
-    /// Reference to the Asset we are listening to
-    /// </summary>
-    public WithEmitter Asset { get { return Value.AssetToMonitor; } }
+    /// <a href="">Reference to the Asset we are listening to</a> //#TBD#//
+    public WithEmitter Asset => Value.AssetToMonitor;
 
-    /// <summary>
-    /// After we have ensured the change is for the expected member, tell interested parties.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
+    /// <a href="">After we have ensured the change is for the expected member, tell interested parties</a> //#TBD#//
     protected abstract void OnChange();
   }
 }
