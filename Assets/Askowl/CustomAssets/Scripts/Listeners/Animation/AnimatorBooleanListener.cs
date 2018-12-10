@@ -3,19 +3,14 @@
 namespace CustomAsset.Animation {
   using UnityEngine;
 
-  /// <inheritdoc />
-  /// <summary>
-  /// Fire an animation trigger event when a custom asset value changes
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#animation-listeners">More...</a></remarks>
-  [RequireComponent(typeof(Animator))]
-  public sealed class AnimatorBooleanListener : Mutable.BooleanListener<Animator> {
+  /// <a href="">Fire an animation trigger event when a custom asset value changes</a> //#TBD#// <inheritdoc />
+  [RequireComponent(typeof(Animator))] public sealed class AnimatorBooleanListener : Mutable.BooleanListener<Animator> {
     [SerializeField] private string parameterName;
 
-    /// <inheritdoc />
-    protected override void OnChange(bool value) { Target.SetBool(parameterName, value); }
+    /// <a href=""></a> //#TBD#// <inheritdoc />
+    protected override void OnChange(bool value) => Target.SetBool(parameterName, value);
 
-    /// <inheritdoc />
-    protected override bool Equals(bool value) { return (Target.GetBool(parameterName) == value); }
+    /// <a href=""></a> //#TBD#// <inheritdoc />
+    protected override bool Equals(bool value) => (Target.GetBool(parameterName) == value);
   }
 }

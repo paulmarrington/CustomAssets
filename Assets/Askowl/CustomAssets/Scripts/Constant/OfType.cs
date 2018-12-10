@@ -4,47 +4,20 @@ using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Constant {
-  /// <inheritdoc />
-  /// <summary>
-  /// Base class for a custom asset. Provides getters and setters for the contained value and
-  /// templates for casting to the contained type and to convert it to a string.
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#oftypet">More...</a></remarks>
-  /// <typeparam name="T">Type of object this custom asset contains</typeparam>
+  /// <a href="">Base class for a custom asset. Provides getters and setters for the contained value and templates for casting to the contained type and to convert it to a string.</a> //#TBD#//
   public class OfType<T> : Base {
-    [SerializeField, Value] private T value;
+    [SerializeField, Label] private T value;
 
-    /// <summary>
-    /// For safe(ish) access to the contents field
-    /// </summary>
-    public T Value { get { return value; } }
+    /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
+    public T Value => value;
 
-    /// <summary>
-    /// If this is a project asset, then you will need to reference it somewhere.
-    /// Other classes can get a reference using `Instance()` or `Instance(string name)`.
-    /// Also useful for creating in-memory versions to share between hosts.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#instance">More...</a></remarks>
-    /// <code>Float lifetime = Float.Instance("Lifetime")</code>
-    /// <param name="name"></param>
-    /// <returns>An instance of OfType&lt;T>, either retrieved or created</returns>
-    protected static OfType<T> Instance(string name) { return Instance<OfType<T>>(name); }
+    /// <a href="">If this is a project asset, then you will need to reference it somewhere. Other classes can get a reference using `Instance()` or `Instance(string name)`. Also useful for creating in-memory versions to share between hosts.</a> //#TBD#//
+    protected static OfType<T> Instance(string name) => Instance<OfType<T>>(name);
 
-    /// <summary>
-    /// All extraction by casting a custom object to the contained type. Same as getting the Value -
-    /// as in myCustomAsset.Value === (MyCustomAsset) myCustomAsset
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
-    /// <param name="t">Instance of custom asset</param>
-    /// <returns>Instance of the contained serializable object</returns>
-    public static implicit operator T(OfType<T> t) { return t.value; }
+    /// <a href="">All extraction by casting a custom object to the contained type. Same as getting the Value - as in myCustomAsset.Value === (MyCustomAsset) myCustomAsset</a> //#TBD#//
+    public static implicit operator T(OfType<T> t) => t.value;
 
-    /// <inheritdoc />
-    /// <summary>
-    /// Pass string conversion responsibility  from the custom asset to the containing value.
-    /// </summary>
-    /// <remarks><a href="http://customassets.marrington.net#accessing-custom-assets">More...</a></remarks>
-    /// <returns>String representation of the contents of the containing value</returns>
-    public override string ToString() { return value.ToString(); }
+    /// <a href="">Pass string conversion responsibility  from the custom asset to the containing value</a> //#TBD#// <inheritdoc />
+    public override string ToString() => value.ToString();
   }
 }

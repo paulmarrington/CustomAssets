@@ -1,20 +1,11 @@
 ﻿#if UNITY_EDITOR && CustomAssets
 using System;
+using CustomAsset.Mutable;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <inheritdoc />
-/// <summary>
-/// Sinple listener to react to a directly triggered event from a button press
-/// </summary>
-//public sealed class DirectEventListenerSample : CustomAsset.ListenerBehaviour {
-//  [SerializeField] private Text textComponent;
-//
-//  protected override void OnChange(string memberName) {
-//    textComponent.text = "Direct Event heard at " + DateTime.Now + " for " + memberName;
-//  }
-//}
-public sealed class DirectEventListenerSample : CustomAsset.Mutable.ListenerComponent {
+/// <a href="">Simple listener to react to a directly triggered event from a button press</a> //#TBD#// <inheritdoc />
+public sealed class DirectEventListenerSample : ListenerComponent {
   [SerializeField] private Text textComponent;
 
   /// <inheritdoc />

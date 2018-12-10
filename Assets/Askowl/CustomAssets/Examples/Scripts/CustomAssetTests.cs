@@ -2,17 +2,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Askowl;
 using CustomAsset.Mutable;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
+using AudioClips = CustomAsset.Constant.AudioClips;
 
-/// <inheritdoc />
-/// <summary>
-/// Unity Test Runner PlayMode tests
-/// </summary>
+/// <a href="">Unity Test Runner PlayMode tests</a> //#TBD#// <inheritdoc />
 public class CustomAssetTests : PlayModeTests {
   private Text  results;
   private Float currentFloat;
@@ -24,27 +23,19 @@ public class CustomAssetTests : PlayModeTests {
     currentFloat = FindObject<Float>("SampleFloatVariable");
   }
 
-  /// <summary>
-  /// Have the test scene open and press a button to display data in the results panel.
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator AccessCustomAssets() {
+  /// <a href="">Have the test scene open and press a button to display data in the results panel</a> //#TBD#//
+  [UnityTest] public IEnumerator AccessCustomAssets() {
     yield return Setup();
 
     yield return PushButton("CustomAssetGet");
 
-    CheckPattern(
-      @"^currentFloat asset is 0\ninteger asset is 0\nstr asset is\s*\nboolean asset is True\nlarger asset is 1 / 5.2 / three$",
-      results.text);
+    CheckPattern(new Regex(
+                   @"^currentFloat asset is 0\ninteger asset is 0\nstr asset is\s*\nboolean asset is True\nlarger asset is 1 / 5.2 / three$"),
+                 results.text);
   }
 
-  /// <summary>
-  /// Make sure we can update the contents of custom assets in memory
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest, Timeout(10000)]
-  public IEnumerator UpdateCustomAssets() {
+  /// <a href="">Make sure we can update the contents of custom assets in memory</a> //#TBD#//
+  [UnityTest, Timeout(10000)] public IEnumerator UpdateCustomAssets() {
     yield return Setup();
 
     currentFloat.Set(1);
@@ -58,12 +49,8 @@ public class CustomAssetTests : PlayModeTests {
     }
   }
 
-  /// <summary>
-  /// Check for picking elements from a set sequentially
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator TestSetPickerCyclic() {
+  /// <a href="">Check for picking elements from a set sequentially</a> //#TBD#//
+  [UnityTest] public IEnumerator TestSetPickerCyclic() {
     yield return Setup();
 
     SetPickerSample picker = FindObject<SetPickerSample>("SampleSetPicker");
@@ -74,15 +61,11 @@ public class CustomAssetTests : PlayModeTests {
     for (int i = 0; i < 3; i++) Assert.AreEqual(clips[i], clips[i + 3]);
   }
 
-  /// <summary>
-  /// Check for picking elements from a set randomly, but restricted to new ones until a cycle is exhausted
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator TestSetPickerExhaustive() {
+  /// <a href="">Check for picking elements from a set randomly, but restricted to new ones until a cycle is exhausted</a> //#TBD#//
+  [UnityTest] public IEnumerator TestSetPickerExhaustive() {
     yield return Setup();
 
-    var picker = CustomAsset.Constant.AudioClips.Instance("SampleAudioClips");
+    var picker = AudioClips.Instance("SampleAudioClips");
     Assert.IsNotNull(picker);
     AudioClip[] clips = new AudioClip[6];
 
@@ -104,12 +87,8 @@ public class CustomAssetTests : PlayModeTests {
     }
   }
 
-  /// <summary>
-  /// Check that we can transfer a CustomAsset change event to a UnityEvent
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest, Timeout(10000)]
-  public IEnumerator TestUnityEvent() {
+  /// <a href="">Check that we can transfer a CustomAsset change event to a UnityEvent</a> //#TBD#//
+  [UnityTest, Timeout(10000)] public IEnumerator TestUnityEvent() {
     yield return Setup();
 
     Trigger     trigger     = FindObject<Trigger>("SampleUnityEventTrigger");
@@ -120,12 +99,8 @@ public class CustomAssetTests : PlayModeTests {
     while (audioSource.isPlaying) yield return null;
   }
 
-  /// <summary>
-  /// React to a CustomAsset change event directly in a MonoBehaviour
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator TestDirectEvent() {
+  /// <a href="">React to a CustomAsset change event directly in a MonoBehaviour</a> //#TBD#//
+  [UnityTest] public IEnumerator TestDirectEvent() {
     yield return Setup();
 
     Trigger trigger = FindObject<Trigger>("SampleDirectEventTrigger");
@@ -133,15 +108,11 @@ public class CustomAssetTests : PlayModeTests {
     trigger.Fire();
     yield return null;
 
-    CheckPattern(@"^Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d", results.text);
+    CheckPattern(new Regex(@"^Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d"), results.text);
   }
 
-  /// <summary>
-  /// Have a CustomAsset.Trigger change event set of an animation
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest, Timeout(10000)]
-  public IEnumerator TestAnimationTriggerEvent() {
+  /// <a href="">Have a CustomAsset.Trigger change event set of an animation</a> //#TBD#//
+  [UnityTest, Timeout(10000)] public IEnumerator TestAnimationTriggerEvent() {
     yield return Setup();
 
     Trigger trigger = FindObject<Trigger>("SampleAnimatorTriggerEventTrigger");
@@ -160,12 +131,8 @@ public class CustomAssetTests : PlayModeTests {
     Assert.Less(elapsed, 10.0f);
   }
 
-  /// <summary>
-  /// Have a CustomAsset.Float change event change the colours on the results button.
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator TestFloatAsset() {
+  /// <a href="">Have a CustomAsset.Float change event change the colours on the results button</a> //#TBD#//
+  [UnityTest] public IEnumerator TestFloatAsset() {
     yield return Setup();
 
     Slider slider = Component<Slider>("Canvas/Float Asset/Slider");
@@ -173,16 +140,10 @@ public class CustomAssetTests : PlayModeTests {
     yield return CheckButtonAnimation();
   }
 
-  private string ResultsButtonText {
-    get { return Component<Text>("CustomAssetEventListeners/Canvas/Button/Text").text; }
-  }
+  private string ResultsButtonText => Component<Text>("CustomAssetEventListeners/Canvas/Button/Text").text;
 
-  /// <summary>
-  /// Have a CustomAsset.String change event change the contents of the results button
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator TestStringAsset() {
+  /// <a href="">Have a CustomAsset.String change event change the contents of the results button</a> //#TBD#//
+  [UnityTest] public IEnumerator TestStringAsset() {
     yield return Setup();
 
     Assert.AreNotEqual("The rain in spain", ResultsButtonText);
@@ -193,12 +154,8 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual("The rain in spain", ResultsButtonText);
   }
 
-  /// <summary>
-  /// Have a CustomAsset.Integer change event the contents of the results button
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator TestIntegerAsset() {
+  /// <a href="">Have a CustomAsset.Integer change event the contents of the results button</a> //#TBD#//
+  [UnityTest] public IEnumerator TestIntegerAsset() {
     yield return Setup();
 
     Slider slider = Component<Slider>("Canvas/Integer Asset/Slider");
@@ -210,12 +167,8 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual(expected: 6, actual: buttonValue);
   }
 
-  /// <summary>
-  /// Have a CustomAsset.Boolean change event the contents of the results button
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest]
-  public IEnumerator TestBooleanAsset() {
+  /// <a href="">Have a CustomAsset.Boolean change event the contents of the results button</a> //#TBD#//
+  [UnityTest] public IEnumerator TestBooleanAsset() {
     yield return Setup();
 
     Toggle toggle = Component<Toggle>("Canvas/Boolean Asset/Toggle");
@@ -233,12 +186,8 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual("False", ResultsButtonText);
   }
 
-  /// <summary>
-  /// Make sure quotes are retrieved as expected - exhaustive random
-  /// </summary>
-  /// <returns></returns>
-  [UnityTest, Timeout(10000)]
-  public IEnumerator TestQuotes() {
+  /// <a href="">Make sure quotes are retrieved as expected - exhaustive random</a> //#TBD#//
+  [UnityTest, Timeout(10000)] public IEnumerator TestQuotes() {
     yield return Setup();
 
     var quotes  = new Dictionary<string, int>();
@@ -257,33 +206,27 @@ public class CustomAssetTests : PlayModeTests {
     }
   }
 
-  /// <summary>
-  /// Does Base.Instance return the same named item each time?
-  /// </summary>
-  [UnityTest]
-  public IEnumerator TestInstance() {
+  /// <a href="">Does Base.Instance return the same named item each time?</a> //#TBD#//
+  [UnityTest] public IEnumerator TestInstance() {
     yield return Setup();
 
     yield return PushButton("Check Instance");
 
-    CheckPattern(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 1234 .* 1234$", results.text);
+    CheckPattern(new Regex(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 1234 .* 1234$"), results.text);
   }
 
-  /// <summary>
-  /// Make sure that larger objects can be manipulated and tested for equality
-  /// </summary>
-  [UnityTest]
-  public IEnumerator TestCompoundSetters() {
+  /// <a href="">Make sure that larger objects can be manipulated and tested for equality</a> //#TBD#//
+  [UnityTest] public IEnumerator TestCompoundSetters() {
     var zero       = new CustomAssetsExample.LargerAssetContents {I = 0, F = 0, S = ""};
     var largeAsset = LargerAssetSample.New("LargerAssetSample");
     largeAsset.Set(zero);
 
-    Assert.AreEqual(largeAsset.Value, zero);
+    Assert.AreEqual(largeAsset.Contents, zero);
 
     var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, F = 4.56f, S = "789"};
     largeAsset.Set(setTo);
-    Assert.AreNotEqual(largeAsset.Value, zero);
-    Assert.AreEqual(largeAsset.Value, setTo);
+    Assert.AreNotEqual(largeAsset.Contents, zero);
+    Assert.AreEqual(largeAsset.Contents, setTo);
     yield return null;
   }
 }

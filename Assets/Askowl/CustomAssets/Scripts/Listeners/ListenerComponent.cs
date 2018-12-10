@@ -3,17 +3,11 @@
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-//  /// <summary>
-//  /// Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel.
-//  /// </summary>
-//  /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
-//  public abstract class ListenerComponent<T> : ListenerComponent where T : Base {
-//    /// <summary>
-//    /// Reference to the Asset we are listening to
-//    /// </summary>
-//    // ReSharper disable once MemberCanBeProtected.Global
-//    public T Asset { get { return Listener.AssetToMonitor as T; } }
-//  }
+  /// <a href="">Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel</a> //#TBD#// <inheritdoc />
+  public abstract class ListenerComponent<T> : ListenerComponent where T : Base {
+    /// <a href="">Reference to the Asset we are listening to</a> //#TBD#//
+    public T Asset => Listener.AssetToMonitor as T;
+  }
 
   /// <a href="">Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel</a> //#TBD#// <inheritdoc cref="MonoBehaviour" />
   public abstract class ListenerComponent : MonoBehaviour {

@@ -4,12 +4,7 @@ using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <inheritdoc />
-  /// <summary>
-  /// Set or enum of strings - used to create custom asset
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#stringset">More...</a></remarks>
-//  [CreateAssetMenu(menuName = "Custom Assets/Mutable/String Set")]
-//  public class StringSet : Set<string> {
-//  }
+  /// <a href="">Set or enum of strings - used to create custom asset</a> //#TBD#// <inheritdoc />
+  [CreateAssetMenu(menuName = "Custom Assets/Mutable/String Set")]
+  public class StringSet : OfType<Set<string>> { }
 }

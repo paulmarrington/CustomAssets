@@ -5,11 +5,7 @@ using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <inheritdoc cref="MonoBehaviour" />
-  /// <summary>
-  /// Common code for all event listeners. It registers and deregisters the listener with the channel.
-  /// </summary>
-  /// <remarks><a href="http://customassets.marrington.net#custom-assets-as-event-listeners">More...</a></remarks>
+  /// <a href="">Common code for all event listeners. It registers and deregisters the listener with the channel</a> //#TBD#// <inheritdoc />
   [Serializable] public class Listener : IObserver {
     [SerializeField] private WithEmitter assetToMonitor;
 
@@ -19,6 +15,8 @@ namespace CustomAsset.Mutable {
       listener.Register(onTriggered);
       return listener;
     }
+
+    private Listener() { }
 
     /// <a href="">Must be implemented in containing class as it is called if the listener is triggered</a> //#TBD#//
     public Action OnTriggered;
