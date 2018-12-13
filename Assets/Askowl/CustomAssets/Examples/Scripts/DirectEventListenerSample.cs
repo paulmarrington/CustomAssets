@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 /// <a href="">Simple listener to react to a directly triggered event from a button press</a> //#TBD#// <inheritdoc />
 public sealed class DirectEventListenerSample : ListenerComponent {
-  [SerializeField] private Text textComponent;
+  [SerializeField] private Text textComponent = default;
 
   /// <inheritdoc />
   protected override void OnChange() {

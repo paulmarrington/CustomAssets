@@ -14,19 +14,19 @@ using String = CustomAsset.Mutable.String;
 /// <a href="">Show and update custom asset values to provide examples for their use</a> //#TBD#// <inheritdoc />
 [RequireComponent(typeof(AudioSource))]
 public sealed class CustomAssetsExample : MonoBehaviour {
-  [SerializeField] private Float                     maxFloat;
-  [SerializeField] private CustomAsset.Mutable.Float currentFloat;
-  [SerializeField] private Integer                   integer;
-  [SerializeField] private String                    str;
-  [SerializeField] private Boolean                   boolean;
-  [SerializeField] private Text                      textComponent;
-  [SerializeField] private LargerAssetSample         largerSample;
-  [SerializeField] private Integer                   persistent;
-  [SerializeField] private Quotes                    quotes;
-  [SerializeField] private Slider                    integerSlider;
+  [SerializeField] private Float                     maxFloat      = default;
+  [SerializeField] private CustomAsset.Mutable.Float currentFloat  = default;
+  [SerializeField] private Integer                   integer       = default;
+  [SerializeField] private String                    str           = default;
+  [SerializeField] private Boolean                   boolean       = default;
+  [SerializeField] private Text                      textComponent = default;
+  [SerializeField] private LargerAssetSample         largerSample  = default;
+  [SerializeField] private Integer                   persistent    = default;
+  [SerializeField] private Quotes                    quotes        = default;
+  [SerializeField] private Slider                    integerSlider = default;
 
-  [SerializeField, UsedImplicitly] private AudioClips audioClips;
-  [SerializeField]                 private UnityEvent audioClipsEvent;
+  [SerializeField, UsedImplicitly] private AudioClips audioClips      = default;
+  [SerializeField]                 private UnityEvent audioClipsEvent = default;
 
   /// <a href="">A CustomAsset need not be just a primitive - as long as it is serializable</a> //#TBD#//
   [Serializable] public class LargerAssetContents {

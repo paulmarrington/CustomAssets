@@ -5,7 +5,7 @@ namespace CustomAsset.Animation {
 
   /// <a href="">Fire an animation trigger event when a custom asset value changes</a> //#TBD#// <inheritdoc />
   [RequireComponent(typeof(Animator))] public sealed class AnimatorTriggerListener : Mutable.TriggerListener<Animator> {
-    [SerializeField] private string parameterName;
+    [SerializeField] private string parameterName = default;
 
     /// <a href=""></a> //#TBD#// <inheritdoc />
     protected override void OnChange() {

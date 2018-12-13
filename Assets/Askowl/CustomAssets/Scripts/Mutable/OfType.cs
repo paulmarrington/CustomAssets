@@ -27,7 +27,7 @@ namespace CustomAsset.Mutable {
     private bool initialised;
 
     /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
-    protected T Value {
+    public T Value {
       get => initialised ? value : FirstAccess();
       set => Set(value);
     }
@@ -95,7 +95,8 @@ namespace CustomAsset.Mutable {
     public void Set(T toValue) {
       if (!initialised) FirstAccess();
       bool equals = Equals(value, toValue);
-      value = toValue; // do the set anyway since we may be changing object
+      Log.Debug($"{value}, {toValue}: {equals}"); //#DM#//
+      value = toValue;                            // do the set anyway since we may be changing object
       if (!equals) Emitter.Fire();
     }
 
@@ -121,7 +122,7 @@ namespace CustomAsset.Mutable {
 
     #region Persistence
 
-    [SerializeField] private bool persistent;
+    [SerializeField] private bool persistent = default;
 
     private string Key => $"{name}:{typeof(T)}";
 

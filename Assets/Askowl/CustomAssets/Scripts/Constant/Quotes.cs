@@ -10,22 +10,21 @@ namespace CustomAsset.Constant {
   /// <a href="">Class for picking one or a list of quotes - either set in the inspector or in a separate text file. Each quote is on a separate line in the form:</a> //#TBD#// <inheritdoc />
   [Serializable] public sealed class QuoteSet : Set<string> {
     [SerializeField, Tooltip("Asset with one quote per line (with attribution in brackets at end)")]
-    private TextAsset[] quoteFiles;
+    private TextAsset[] quoteFiles = default;
 
     /// <a href=""></a> //#TBD#// <inheritdoc />
-    protected override Selector<string> BuildSelector() {
-      base.BuildSelector(); // renews Choices
-
+    protected override void BuildSelector() {
       Fifo<string> choices = new Fifo<string>();
-
-      if (Selector.Choices.Length > 0) Rtf(choices, Selector.Choices);
+      if (InitialSize > 0) {
+        base.BuildSelector(); // renews Choices
+        Rtf(choices, Selector.Choices);
+      }
 
       if (quoteFiles != null) {
         for (int i = 0; i < quoteFiles.Length; i++) Rtf(choices, quoteFiles[i].text.Split('\n'));
       }
 
       Selector.Choices = choices.ToArray();
-      return Selector;
     }
 
     /// <a href=""></a> //#TBD#//

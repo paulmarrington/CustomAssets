@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CustomAsset.Constant {
   /// <a href="">Base class for a custom asset. Provides getters and setters for the contained value and templates for casting to the contained type and to convert it to a string.</a> //#TBD#//
   public class OfType<T> : Base {
-    [SerializeField, Label] private T value;
+    [SerializeField, Label] private T value = default;
 
     /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
     public T Value => value;

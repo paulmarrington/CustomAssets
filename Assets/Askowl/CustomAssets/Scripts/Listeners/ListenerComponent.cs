@@ -11,14 +11,14 @@ namespace CustomAsset.Mutable {
 
   /// <a href="">Common code for all event listener MonoBehaviours. It registers and deregisters the listener with the channel</a> //#TBD#// <inheritdoc cref="MonoBehaviour" />
   public abstract class ListenerComponent : MonoBehaviour {
-    [SerializeField] private Listener listener;
+    [SerializeField] private Listener listener = default;
 
     /// <a href="">Retrieve a reference to the listener attached to this component</a> //#TBD#//
     public Listener Listener => listener;
 
     private void OnEnable() {
       listener.Register(OnChange);
-      OnChange();
+//      OnChange(); // Fires on enable - where is this needed?
     }
 
     private void OnDisable() => Deregister();

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 namespace CustomAsset.Mutable {
   /// <a href="">Fire a Unity event when a custom asset value changes</a> //#TBD#//
   public sealed class UnityListener : ListenerComponent {
-    [SerializeField] private UnityEvent unityEvent;
+    [SerializeField] private UnityEvent unityEvent = default;
 
     /// <a href=""></a> //#TBD#// <inheritdoc />
     protected override void OnChange() => unityEvent.Invoke();

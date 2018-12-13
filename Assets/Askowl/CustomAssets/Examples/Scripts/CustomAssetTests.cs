@@ -30,7 +30,7 @@ public class CustomAssetTests : PlayModeTests {
     yield return PushButton("CustomAssetGet");
 
     CheckPattern(new Regex(
-                   @"^currentFloat asset is 0\ninteger asset is 0\nstr asset is\s*\nboolean asset is True\nlarger asset is 1 / 5.2 / three$"),
+                   @"^currentFloat asset is \d+(\.\d+)?\ninteger asset is \d+\nstr asset is\s*.*\nboolean asset is (True|False)\nlarger asset is \d+ / \d+(\.\d+)? / three$"),
                  results.text);
   }
 
@@ -108,7 +108,7 @@ public class CustomAssetTests : PlayModeTests {
     trigger.Fire();
     yield return null;
 
-    CheckPattern(new Regex(@"^Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d"), results.text);
+    CheckPattern(new Regex(@"Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d"), results.text);
   }
 
   /// <a href="">Have a CustomAsset.Trigger change event set of an animation</a> //#TBD#//
@@ -148,9 +148,10 @@ public class CustomAssetTests : PlayModeTests {
 
     Assert.AreNotEqual("The rain in spain", ResultsButtonText);
     InputField inputField = Component<InputField>("Canvas/String Asset/InputField");
+    inputField.text = "";
+    yield return null;
     inputField.text = "The rain in spain";
     yield return null;
-
     Assert.AreEqual("The rain in spain", ResultsButtonText);
   }
 

@@ -6,7 +6,7 @@ namespace CustomAsset.Mutable {
   public sealed class Polling : MonoBehaviour {
     [SerializeField] private float         secondsDelayAtStart     = 5;
     [SerializeField] private float         updateIntervalInSeconds = 1;
-    [SerializeField] private WithEmitter[] componentsToPoll;
+    [SerializeField] private WithEmitter[] componentsToPoll = default;
 
     private void Awake() => DontDestroyOnLoad(gameObject);
 
