@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace CustomAsset.Mutable {
   /// <a href="">Drop into the same Game Object as an image component to update the fill amount whenever the Float custom asset changes</a> //#TBD#// <inheritdoc />
-  [RequireComponent(typeof(Image))] public sealed class UiImageFillListener : FloatListener<Image> {
+  public sealed class FloatDriver : FloatListener<Object> {
     /// <a href=""></a> //#TBD#// <inheritdoc />
     protected override void OnChange(float value) => Target.fillAmount = value;
 

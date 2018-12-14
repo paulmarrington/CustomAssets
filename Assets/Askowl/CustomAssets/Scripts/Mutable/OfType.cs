@@ -38,7 +38,7 @@ namespace CustomAsset.Mutable {
       return value;
     }
 
-    /// <a href="">Called the first time we want access to T. JIT initialisation helps since RuntimeInitializeOnLoadMethod. Does not run until after all the OnEnables.</a> //#TBD#//
+    /// <a href="">Called the first time we want access to T. JIT initialisation helps since RuntimeInitializeOnLoadMethod does not run until after all the OnEnables.</a> //#TBD#//
     public virtual void Initialise() { }
 
     /// <a href="">All extraction by casting a custom object to the contained type. Same as getting the Value - as in myCustomAsset.Value === (MyCustomAsset) myCustomAsset</a> //#TBD#//
@@ -94,10 +94,10 @@ namespace CustomAsset.Mutable {
     /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
     public void Set(T toValue) {
       if (!initialised) FirstAccess();
-      bool equals = Equals(value, toValue);
-      Log.Debug($"{value}, {toValue}: {equals}"); //#DM#//
-      value = toValue;                            // do the set anyway since we may be changing object
-      if (!equals) Emitter.Fire();
+//      bool equals = Equals(lastValue, toValue);
+      value = toValue; // do the set anyway since we may be changing object
+//      if (!equals) Emitter.Fire();
+      Emitter.Fire();
     }
 
     #endregion
@@ -126,19 +126,19 @@ namespace CustomAsset.Mutable {
 
     private string Key => $"{name}:{typeof(T)}";
 
+    [Serializable] private struct Wrap {
+      public T Data;
+    }
+
     /// <a href="">Basic load for a persistent custom asset</a> //#TBD#//
     public void Load() {
-      if (persistent) Value = Loader<T>();
+      if (persistent) Value = JsonUtility.FromJson<Wrap>(PlayerPrefs.GetString(Key, defaultValue: "")).Data;
     }
 
     /// <a href="">Basic save for a persistent custom asset</a> //#TBD#//
     public void Save() {
-      if (persistent) PlayerPrefs.SetString(Key, JsonUtility.ToJson(Value));
+      if (persistent) PlayerPrefs.SetString(Key, JsonUtility.ToJson(new Wrap {Data = Value}));
     }
-
-    /// <a href="">Load the last previously saved value from persistent storage.</a> //#TBD#//
-    protected TD Loader<TD>() =>
-      JsonUtility.FromJson<TD>(PlayerPrefs.GetString(Key, defaultValue: ""));
 
     #endregion
 
@@ -147,7 +147,6 @@ namespace CustomAsset.Mutable {
     #if UNITY_EDITOR
     private static void AssetToUnload(ScriptableObject asset) {
       if (newAssets.Contains(asset) || assetsToUnload.Contains(asset)) return;
-
       assetsToUnload.Add(asset);
     }
 
@@ -163,10 +162,8 @@ namespace CustomAsset.Mutable {
 
     private static void UnloadResources(PlayModeStateChange playModeState) {
       if (playModeState != PlayModeStateChange.ExitingPlayMode) return;
-
       EditorApplication.playModeStateChanged -= UnloadResources;
-
-      foreach (var asset in assetsToUnload) Resources.UnloadAsset(asset);
+      for (int i = assetsToUnload.Count - 1; i >= 0; i--) Resources.UnloadAsset(assetsToUnload[i]);
     }
     #else
     private static void AssetToUnload(ScriptableObject asset){}

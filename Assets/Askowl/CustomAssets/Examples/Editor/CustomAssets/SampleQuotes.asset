@@ -3,21 +3,20 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 32
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe7f5820b64514b2080fc22e130e8024, type: 3}
   m_Name: SampleQuotes
   m_EditorClassIdentifier: 
-  Description: 
-  seed:
-  - one of two from asset
-  - two of two from asset
-  members: []
-  readWrite: 0
-  persistent: 0
-  cycle: 0
-  exhaustiveBelow: 10
-  textFile: {fileID: 4900000, guid: a2a98966f21864319b2a45683fc3f0ad, type: 3}
+  description: 
+  value:
+    elements:
+    - This is a sample quote
+    cycle: 0
+    exhaustiveBelow: 0
+    quoteFiles:
+    - {fileID: 4900000, guid: 31abcf0db56084947bbf6019fd693814, type: 3}

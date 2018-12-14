@@ -62,9 +62,9 @@ public sealed class CustomAssetsExample : MonoBehaviour {
 
   /// <a href="">Make sure that a custom asset saved to persistent storage can be retrieved later</a> //#TBD#//
   public void CheckPersistence() {
-    persistent.Set(12);
+    persistent.Value = 12;
     persistent.Save();
-    persistent.Set(33);
+    persistent.Value = 33;
     persistent.Load();
     textComponent.text = "Persistent value - expecting 12, got " + persistent;
   }

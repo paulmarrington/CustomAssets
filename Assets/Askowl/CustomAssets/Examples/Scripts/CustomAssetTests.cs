@@ -108,7 +108,7 @@ public class CustomAssetTests : PlayModeTests {
     trigger.Fire();
     yield return null;
 
-    CheckPattern(new Regex(@"Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d"), results.text);
+    CheckPattern(new Regex(@"Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d?:\d\d:\d\d"), results.text);
   }
 
   /// <a href="">Have a CustomAsset.Trigger change event set of an animation</a> //#TBD#//
@@ -148,8 +148,8 @@ public class CustomAssetTests : PlayModeTests {
 
     Assert.AreNotEqual("The rain in spain", ResultsButtonText);
     InputField inputField = Component<InputField>("Canvas/String Asset/InputField");
-    inputField.text = "";
-    yield return null;
+//    inputField.text = " ";
+//    yield return null;
     inputField.text = "The rain in spain";
     yield return null;
     Assert.AreEqual("The rain in spain", ResultsButtonText);
@@ -191,20 +191,15 @@ public class CustomAssetTests : PlayModeTests {
   [UnityTest, Timeout(10000)] public IEnumerator TestQuotes() {
     yield return Setup();
 
-    var quotes  = new Dictionary<string, int>();
-    int repeats = 0;
-
+    var quotes = new Dictionary<string, int>();
     for (int i = 0; i < 20; i++) {
       yield return PushButton("Show Quote");
 
       if (!quotes.ContainsKey(results.text)) quotes[results.text] = 0;
-      repeats = (quotes[results.text] += 1);
+      quotes[results.text] += 1;
     }
 
-    // they should all be the same since we have 4 entries repeated 5 times
-    foreach (KeyValuePair<string, int> quote in quotes) {
-      Assert.AreEqual(repeats, quote.Value);
-    }
+    Assert.GreaterOrEqual(quotes.Count, 10);
   }
 
   /// <a href="">Does Base.Instance return the same named item each time?</a> //#TBD#//

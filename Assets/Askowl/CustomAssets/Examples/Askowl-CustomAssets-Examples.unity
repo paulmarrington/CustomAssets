@@ -2868,7 +2868,7 @@ MonoBehaviour:
   boolean: {fileID: 11400000, guid: b0fcec34644ba410fb3e78b802485769, type: 2}
   textComponent: {fileID: 255403010}
   largerSample: {fileID: 11400000, guid: 9152366bfe5ab4e4785b79d93c2a86fa, type: 2}
-  persistent: {fileID: 11400000, guid: 6e626fa2cf7984ebeb7f4663c64d8f4e, type: 2}
+  persistent: {fileID: 11400000, guid: 16c6f376a427248539eb101d9d341d94, type: 2}
   quotes: {fileID: 11400000, guid: 39fdecd0919e24b9ebfb0a0f8b2fbfb8, type: 2}
   integerSlider: {fileID: 232147617}
   audioClips: {fileID: 11400000, guid: 3074e3454bcd1455aa9a6b855e67fd83, type: 2}

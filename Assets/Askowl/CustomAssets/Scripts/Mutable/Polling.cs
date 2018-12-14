@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
@@ -6,20 +6,17 @@ namespace CustomAsset.Mutable {
   public sealed class Polling : MonoBehaviour {
     [SerializeField] private float         secondsDelayAtStart     = 5;
     [SerializeField] private float         updateIntervalInSeconds = 1;
-    [SerializeField] private WithEmitter[] componentsToPoll = default;
+    [SerializeField] private WithEmitter[] componentsToPoll        = default;
 
     private void Awake() => DontDestroyOnLoad(gameObject);
 
-    private IEnumerator Start() {
-      yield return new WaitForSecondsRealtime(secondsDelayAtStart);
-
-      while (true) {
-        yield return new WaitForSecondsRealtime(updateIntervalInSeconds);
-
-        if (isActiveAndEnabled) {
-          foreach (var component in componentsToPoll) component.Poll();
-        }
+    private void Start() {
+      void poll(Fiber fiber) {
+        if (!isActiveAndEnabled) return;
+        for (var i = 0; i < componentsToPoll.Length; i++) componentsToPoll[i].Poll();
       }
+
+      Fiber.Start.WaitFor(secondsDelayAtStart).Begin.Do(poll).WaitFor(updateIntervalInSeconds).Again.Finish();
     }
   }
 }
