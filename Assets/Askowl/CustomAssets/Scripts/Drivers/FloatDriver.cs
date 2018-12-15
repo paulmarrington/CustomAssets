@@ -1,16 +1,21 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using Askowl;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace CustomAsset.Mutable {
   /// <a href="">Drop into the same Game Object as an image component to update the fill amount whenever the Float custom asset changes</a> //#TBD#// <inheritdoc />
-  public sealed class FloatDriver : FloatListener<Object> {
-    /// <a href=""></a> //#TBD#// <inheritdoc />
-    protected override void OnChange(float value) => Target.fillAmount = value;
+  public class FloatDriver : ListenerComponent {
+    /// <a href=""></a> //#TBD#//
+    /// <a href="">Reference to the Asset we are listening to</a> //#TBD#//
+    public Float Asset => Listener.AssetToMonitor as Float;
 
-    /// <a href=""></a> //#TBD#// <inheritdoc />
-    protected override bool Equals(float value) => Compare.AlmostEqual(Target.fillAmount, value);
+    [Serializable] private class FloatUnityEvent : UnityEvent<float> { }
+
+    [SerializeField] private FloatUnityEvent componentValueToSet = default;
+
+    /// <a href="">On a change the listener needs a copy of the changed data to react to</a> //#TBD#//
+    protected override void OnChange() => componentValueToSet.Invoke(Asset.Value);
   }
 }

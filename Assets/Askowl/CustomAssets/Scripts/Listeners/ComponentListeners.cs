@@ -53,8 +53,7 @@ namespace CustomAsset.Mutable {
   }
 
   /// <a href="">Internal Base class for component listeners that need to process the custom asset data</a> //#TBD#//
-  public abstract class ComponentListenerBase<TC> : ListenerComponent
-    where TC : Object {
+  public abstract class ComponentListenerBase<TC> : ListenerComponent where TC : Object {
     /// <a href="">Component we are going to give the custom asset data to</a> //#TBD#//
     [SerializeField, Tooltip("Optional")] protected TC Target;
 
