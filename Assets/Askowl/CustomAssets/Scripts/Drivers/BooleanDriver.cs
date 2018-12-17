@@ -6,13 +6,13 @@ using UnityEngine.Events;
 
 namespace CustomAsset.Mutable {
   /// <a href=""></a> //#TBD#// <inheritdoc />
-  public class FloatDriver : ListenerComponent {
+  public class BooleanDriver : ListenerComponent {
     /// <a href="">Reference to the Asset we are listening to</a> //#TBD#//
-    public Float Asset => Listener.AssetToMonitor as Float;
+    public Boolean Asset => Listener.AssetToMonitor as Boolean;
 
-    [Serializable] private class FloatUnityEvent : UnityEvent<float> { }
+    [Serializable] private class BooleanUnityEvent : UnityEvent<bool> { }
 
-    [SerializeField] private FloatUnityEvent componentValueToSet = default;
+    [SerializeField] private BooleanUnityEvent componentValueToSet = default;
 
     /// <a href="">On a change the listener needs a copy of the changed data to react to</a> //#TBD#//
     protected override void OnChange() => componentValueToSet.Invoke(Asset.Value);

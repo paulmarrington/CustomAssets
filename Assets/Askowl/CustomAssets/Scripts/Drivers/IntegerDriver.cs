@@ -6,13 +6,13 @@ using UnityEngine.Events;
 
 namespace CustomAsset.Mutable {
   /// <a href=""></a> //#TBD#// <inheritdoc />
-  public class FloatDriver : ListenerComponent {
+  public class IntegerDriver : ListenerComponent {
     /// <a href="">Reference to the Asset we are listening to</a> //#TBD#//
-    public Float Asset => Listener.AssetToMonitor as Float;
+    public Integer Asset => Listener.AssetToMonitor as Integer;
 
-    [Serializable] private class FloatUnityEvent : UnityEvent<float> { }
+    [Serializable] private class IntegerUnityEvent : UnityEvent<int> { }
 
-    [SerializeField] private FloatUnityEvent componentValueToSet = default;
+    [SerializeField] private IntegerUnityEvent componentValueToSet = default;
 
     /// <a href="">On a change the listener needs a copy of the changed data to react to</a> //#TBD#//
     protected override void OnChange() => componentValueToSet.Invoke(Asset.Value);
