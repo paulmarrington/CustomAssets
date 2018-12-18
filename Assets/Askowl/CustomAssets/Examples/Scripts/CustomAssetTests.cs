@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Askowl;
 using CustomAsset.Mutable;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
@@ -16,8 +17,14 @@ public class CustomAssetTests : PlayModeTests {
   private Text  results;
   private Float currentFloat;
 
+  private static string scenePath = "Askowl-CustomAssets-Examples";
+
+  #if UNITY_EDITOR
+  [InitializeOnLoadMethod] private static void AddSceneToBuildSettings() => AddSceneToBuildSettings(scenePath);
+  #endif
+
   private IEnumerator Setup() {
-    yield return LoadScene("Askowl-CustomAssets-Examples");
+    yield return LoadScene(scenePath);
 
     results      = Component<Text>("Canvas/Results Panel/Text");
     currentFloat = FindObject<Float>("SampleFloatVariable");
@@ -224,6 +231,13 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreNotEqual(largeAsset.Contents, zero);
     Assert.AreEqual(largeAsset.Contents, setTo);
     yield return null;
+  }
+
+  [UnityTest] IEnumerator ChangeOverTime() {
+    yield return Setup();
+    var changeOverTimeAsset = FindObject<ChangeOverTime>("SampleChangeOverTime");
+
+    currentFloat.Value = 0;
   }
 }
 #endif

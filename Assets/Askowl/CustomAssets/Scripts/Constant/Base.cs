@@ -11,4 +11,7 @@ namespace CustomAsset {
     /// <a href="">Editor only description of what the asset is all about</a> //#TBD#//
     public string Description => description;
   }
+
+  /// <a href=""></a> //#TBD#//
+  public class Manager : Base { }
 }

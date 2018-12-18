@@ -19,6 +19,6 @@ namespace CustomAsset.Mutable {
     }
 
     /// <a href="">Call to fire off a Changed event, since we have no data to change...</a> //#TBD#//
-    public void Fire() => Emitter.Fire();
+    public virtual void Fire() => Emitter.Fire();
   }
 }

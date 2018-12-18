@@ -1563,8 +1563,8 @@ GameObject:
   m_Component:
   - component: {fileID: 476542424}
   - component: {fileID: 476542426}
-  - component: {fileID: 476542425}
   - component: {fileID: 476542428}
+  - component: {fileID: 476542425}
   m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
