@@ -2,7 +2,6 @@
 
 using System;
 using Askowl;
-using CustomAsset;
 using CustomAsset.Mutable;
 using UnityEngine;
 
@@ -10,42 +9,19 @@ using UnityEngine;
 
 // ReSharper disable MissingXmlDoc
 
-//- Once the asset is create it can be loaded and used by anyone as it has no external code dependencies.
+//- Once the asset is create it can be loaded and used by anyone as it has no external code dependencies. We are replacing the Health value from the previous video with one that does more
 [CreateAssetMenu(menuName = "Managers/Health")]
-public class HealthManager : Manager {
-  [SerializeField] private Float health;
-  [SerializeField] private Float maximumHealth;
-
-  private void OnEnable() {
-    void healthChange() {
-      var value = health.Value;
-      if (value < 0) {
-        health.Value = 0;
-      }
-      else if (value > maximumHealth) {
-        health.Value = maximumHealth;
-      }
-    }
-
-    health.Emitter.Subscribe(healthChange);
+public class Health : Float {
+  protected override void OnEnable() {
+    base.OnEnable();
+    Emitter.Subscribe(HealthChange);
   }
 
-  //- In this game healing takes time - quickly for a potion and slowly for a passive effect
-  public void HealPlayer(float healAmount, float overSeconds) {
-    var steps      = Math.Min((int) (10 * overSeconds), 1);
-    var stepTime   = overSeconds / steps;
-    var stepAmount = healAmount  / steps;
-
-    //- we heal in steps, not quitting on full health because player may also be taking damage
-    void heal(Fiber fiber) => health.Value = Math.Min(health.Value + stepAmount, maximumHealth.Value);
-
-    //- Fibers do not need to run from a MonoBehaviour
-    Fiber.Start.Begin.Do(heal).WaitFor(stepTime).Repeat(steps);
-  }
-
-  //- Poison is like heal in reverse. In the real world I would refactor to use common code. This one is a stub for later implementation
-  public void PoisonPlayer(float poisonAmount, float overSeconds) {
-    Log.Error("Not Implemented");
+  //- It turns out that a health manager is extremely simple. All we need do is make sure it stays within expected bounds
+  private void HealthChange() {
+    var value = Value;
+    if (value      < 0) Set(0);
+    else if (value > 1) Set(1);
   }
 }
 

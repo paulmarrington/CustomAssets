@@ -92,11 +92,9 @@ namespace CustomAsset.Mutable {
     #region Listeners
 
     /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
-    public void Set(T toValue) {
+    public virtual void Set(T toValue) {
       if (!initialised) FirstAccess();
-//      bool equals = Equals(lastValue, toValue);
-      value = toValue; // do the set anyway since we may be changing object
-//      if (!equals) Emitter.Fire();
+      value = toValue;
       Emitter.Fire();
     }
 

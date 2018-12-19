@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CustomAsset.Mutable {
   /// <a href="">Create an asset to store a list of sounds and play one randomly or cyclically</a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Audio Clips", fileName = "AudioClips")]
-  public sealed class AudioClips : OfType<AudioClipSet> {
+  public class AudioClips : OfType<AudioClipSet> {
     /// <a href="">Retrieve an asset of AudioClips</a> //#TBD#//
     public static AudioClips Instance(string name) => Instance<AudioClips>(name);
 

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 492b7a79efa2f4e8e973b06fc2f82866, type: 3}
   m_Name: SampleChangeOverTime
   m_EditorClassIdentifier: 
-  description: 
-  targetForChange: {fileID: 0}
-  amountToChange: 0
-  overSeconds: 1
+  description: 'It will change the float asset from 0 to 1
+
+    in 20 steps over 2 seconds.'
+  targetForChange: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+  amountToChange: 1
+  overSeconds: 2
   stepsPerSecond: 10
-  range:
-    min: 0
-    max: 1
+  resetOnStart: 1

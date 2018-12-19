@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CustomAsset.Mutable {
   /// <a href="">CustomAsset that contains a string. Events are triggered every time the string changes</a> //#TBD#// <inheritdoc />
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/String"), Labels("Text")]
-  public sealed class String : OfType<string> {
+  public class String : OfType<string> {
     /// <a href=""></a> //#TBD#//
     public string Text {
       get => Value;

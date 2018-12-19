@@ -48,12 +48,14 @@ public class CustomAssetTests : PlayModeTests {
     currentFloat.Set(1);
     yield return PushButton("CustomAssetSet");
 
-    const int count = 0;
+    int count = 0;
 
     while (Math.Abs(currentFloat) > 0.1f) {
-      Assert.Less(count, 200);
+      Assert.Less(count++, 200);
       yield return null;
     }
+
+    Assert.Greater(count, 10);
   }
 
   /// <a href="">Check for picking elements from a set sequentially</a> //#TBD#//
@@ -233,11 +235,21 @@ public class CustomAssetTests : PlayModeTests {
     yield return null;
   }
 
-  [UnityTest] IEnumerator ChangeOverTime() {
+  /// <a href=""></a> //#TBD#//
+  [UnityTest] public IEnumerator ChangeOverTime() {
     yield return Setup();
-    var changeOverTimeAsset = FindObject<ChangeOverTime>("SampleChangeOverTime");
 
-    currentFloat.Value = 0;
+    currentFloat.Set(0);
+    yield return PushButton("Change Over Time");
+
+    int count = 0;
+
+    while (Math.Abs(currentFloat) < 0.99f) {
+      Assert.Less(count++, 300);
+      yield return null;
+    }
+
+    Assert.Greater(count, 60);
   }
 }
 #endif

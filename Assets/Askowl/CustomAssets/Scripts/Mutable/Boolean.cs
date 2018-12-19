@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CustomAsset.Mutable {
   /// <a href="">Boolean custom asset. Triggers event when changing from true to false or false to true</a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Boolean")]
-  public sealed class Boolean : OfType<bool> {
+  public class Boolean : OfType<bool> {
     /// <a href=""></a> //#TBD#//
     public static Boolean Instance(string name) => Instance<Boolean>(name);
   }
