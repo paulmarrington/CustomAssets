@@ -12,11 +12,10 @@
 //- It is as simple as pie to hook in our custom asset [[On Value Change/+/Health custom asset/Float.Value]]
 //- Let's run it up and see if I have made any mistakes
 
-//- To finish up, let's write a quick Unity test that can be automated if you wish
+//- To finish up, let's write a quick Unity test that can be automated if you wish. It will be run in the Unity Test Runner and drives our visual test slider directly.
 
 #if UNITY_EDITOR && CustomAssets
 using System.Collections;
-using Askowl;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -25,7 +24,7 @@ using UnityEngine.UI;
 
 // ReSharper disable MissingXmlDoc
 
-namespace Tests {
+namespace Askowl.Transcripts {
   public class HealthBarTranscript : PlayModeTests {
     private static string scenePath = "Health";
 
@@ -35,7 +34,7 @@ namespace Tests {
     #endif
 
     //- We will only need a single method to test the integrity of the health function.
-    [UnityTest] public IEnumerator HeathTestsWithEnumeratorPasses() {
+    [UnityTest] public IEnumerator HeathBarTestsWithEnumeratorPasses() {
       yield return LoadScene(scenePath);
       //- We will need a reference to the slider for control and the foreground to check the results
       var slider     = Component<Slider>("Testing Slider");

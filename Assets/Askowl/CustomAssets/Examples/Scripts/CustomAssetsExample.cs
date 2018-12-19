@@ -14,7 +14,7 @@ using String = CustomAsset.Mutable.String;
 /// <a href="">Show and update custom asset values to provide examples for their use</a> //#TBD#// <inheritdoc />
 [RequireComponent(typeof(AudioSource))]
 public sealed class CustomAssetsExample : MonoBehaviour {
-  [SerializeField] private Float                     maxFloat      = default;
+  [SerializeField] private Float                     maxFloat = default;
   [SerializeField] private CustomAsset.Mutable.Float currentFloat  = default;
   [SerializeField] private Integer                   integer       = default;
   [SerializeField] private String                    str           = default;
@@ -53,12 +53,11 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   private int count;
 
   /// <a href="">Button action to display one of each CustomAsset under test</a> //#TBD#//
-  public void ShowCustomAssetValues() {
+  public void ShowCustomAssetValues() =>
     textComponent.text =
       $"currentFloat asset is {currentFloat}\ninteger asset is {integer}\n" +
       $"str asset is {str}\nboolean asset is {boolean}\n"                   +
       $"larger asset is {largerSample.AnInteger} / {largerSample.AFloat} / {largerSample.AString}";
-  }
 
   /// <a href="">Make sure that a custom asset saved to persistent storage can be retrieved later</a> //#TBD#//
   public void CheckPersistence() {

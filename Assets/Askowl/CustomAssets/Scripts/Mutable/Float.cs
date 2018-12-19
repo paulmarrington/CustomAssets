@@ -27,8 +27,6 @@ namespace CustomAsset.Mutable {
     public static Float New() => New<Float>();
 
     /// <a href=""></a> //#TBD#// <inheritdoc />
-    public override void Set(float toValue) {
-      base.Set(Math.Min(Math.Max(range.Min, toValue), range.Max));
-    }
+    public override void Set(float toValue) => base.Set(Math.Min(Math.Max(range.Min, toValue), range.Max));
   }
 }

@@ -17,15 +17,12 @@ namespace CustomAsset.Mutable {
     private Fiber change;
 
     /// <a href=""></a> //#TBD#//
-    public void Start() => Fire();
-
-    /// <a href=""></a> //#TBD#// <inheritdoc />
-    public override void Fire() {
+    public void Start(float changeAmount = 0, float seconds = 0) {
       base.Fire();
       if (resetOnStart) targetForChange.Value = targetForChange.Minimum;
-      var steps                               = Math.Max((int) (stepsPerSecond * overSeconds), 1);
-      var stepTime                            = overSeconds    / steps;
-      var stepAmount                          = amountToChange / steps;
+      var steps                               = Math.Max((int) (stepsPerSecond * seconds), 1);
+      var stepTime                            = seconds      / steps;
+      var stepAmount                          = changeAmount / steps;
 
       //- we heal in steps, not quitting on full health because player may also be taking damage
       void step(Fiber fiber) => targetForChange.Set(targetForChange + stepAmount);
@@ -35,6 +32,9 @@ namespace CustomAsset.Mutable {
       //- Fibers do not need to run from a MonoBehaviour
       change = Fiber.Start.Begin.Do(step).WaitFor(stepTime).Repeat(steps).Do(finish);
     }
+
+    /// <a href=""></a> //#TBD#// <inheritdoc />
+    public override void Fire() => Start(amountToChange, overSeconds);
 
     /// <a href=""></a> //#TBD#//
     public void Abort() => change?.Exit();

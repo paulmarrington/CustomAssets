@@ -5,7 +5,7 @@ using UnityEngine.TestTools;
 
 //- Testing a manager custom asset is simplified as it does not need any Unity features. It is game logic completely divorced from the visual.
 
-namespace Tests {
+namespace Askowl.Transcripts {
   public class HealthManagerTestTranscript {
     [UnityTest] public void HeathManager() { }
   }
