@@ -1,4 +1,4 @@
-# [Custom Assets](http://www.askowl.net/unity-customassets)
+# [Custom Assets](http://www.askowl.net/unity-custom-assets)
 
 * Table of Contents
 {:toc}
@@ -14,14 +14,14 @@ After you create a custom asset in the project, any reference in components is t
 * show health percentages on a status page
 * trigger death animation on reaching zero
 * be reduced by damage (hit, poison, fall)
-* be increased by time, potions, medkits.
+* be increased by time, potions, med-kits.
 * be reviewed by other actions (such as no jumping on low health)
 In this example a CustomAsset.Float project resource does the job while markedly reducing the amount of code and support compared to a singleton.
 
-See how easy it is to create in [this](https://www.youtube.com/watch?v=) short xx minute video including testing framework. Use the same techniques for stamina, mana, progress and the many other measures used in games. Then branch out to more uses.
+See how easy it is to create [here](#health-bar) e in [this](https://www.youtube. com/watch?v=) short  video including testing framework. Use the same techniques for stamina, mana, progress and the many other measures used in games. Then branch out to more uses.
 
 ### Game Managers
-The traditional approach of using a MonoBehaviour as a manager creates a system that is difficult to test in isolation. [Here](https://www.youtube.com/watch?v=) we have a video on creating the framework for a health manager using custom assets.
+The traditional approach of using a MonoBehaviour as a manager creates a system that is difficult to test in isolation. [Here](https://www.youtube .com/watch?v=) we have a video on creating the framework for a health manager using custom assets. Go [here](#health-manager) if you prefer to read.
 
 ### Persistent Storage
 
@@ -151,7 +151,7 @@ public sealed class CustomAssetsExample: MonoBehaviour {
   // ...
 }
 ```
-<img src="SampleCustomAsset.png" width="50%">
+<img src="SampleCustomAsset.png" width="50%" alt="sample custom asset for float">
 
 Custom assets aid decoupling. Many components can operate without directly knowing each other.
 
@@ -181,7 +181,7 @@ Custom Assets are ScriptableObjects serialised and written to disk as an asset i
 ```YAML
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
+--- !u!114 & 11400000
 MonoBehaviour:
   m_ObjectHideFlags: 32
   m_PrefabParentObject: {fileID: 0}
@@ -319,9 +319,9 @@ Fortunately, the Unity framework has a solution to that problem. It is called `U
 ```
 will display in the inspector as follows.
 
-<img src="AudioClips1.png" width="50%">
+<img src="AudioClips1.png" width="50%" alt="Audio Clips CustomAsset">
 
-<img src="AudioClips2.png" width="50%">
+<img src="AudioClips2.png" width="50%" alt="Choose audio clip from a list">
 
 The reference to `AudioClips` is optional. It is only there so that we can change the fields in the editor without going to the asset.
 
@@ -360,41 +360,41 @@ Don't believe me? Create a game object inside a canvas and add a slider componen
 
 ***Step 1***: Create a Float custom asset from the Unity editor main or context menu.
 
-<img src="Slider-6-Create-Custom-Asset.png" width="50%">
+<img src="Slider-6-Create-Custom-Asset.png" width="50%" alt="Menu to create a custom asset">
 
 ***Step 2***: Select the custom asset and add any initial data.
 
-<img src="Float-CustomAsset-Editing.png" width="25%">
+<img src="Float-CustomAsset-Editing.png" width="75%" alt="Inspector view of CustomAsset.Float">
 
 ***Step 3***: Create a new GameObject in the Unity Hierarchy window. Make sure it is inside a Canvas GameObject.
 
-<img src="Slider-1-Hierarchy.png" width="25%">
+<img src="Slider-1-Hierarchy.png" width="25%" alt="Creating a slider">
 
 ***Step 4***: Go to the inspector for the game object *Slider* and add a slider component.
 
-<img src="Slider-3-Component1.png" width="50%">
+<img src="Slider-3-Component1.png" width="75%" alt="UI Slider Component Inspector View">
 
 ***Step 5***: Add an *On Value Change* field and drag the Float custom asset into the associated field. Use the function drop-down to select ***Float: Value***.
 
-<img src="Slider-4-Component2.png" width="50%">
+<img src="Slider-4-Component2.png" width="75%" alt="Setting a slider to update a custom asset">
 
 ***Step 6***: Lock the inspector on the Float custom asset and run the scene. Drag the slider and watch the value change in the inspector.
 
-<img src="Slider-2-Screen.png" width="25%">
+<img src="Slider-2-Screen.png" width="25%" alt="How the slider looks on the unity application window">
 
-For extra points, we can create a codeless health display bar.
+For extra points, we can create a code-less health display bar.
 
 ***Step 7***: Create a UI Button GameObject in a Canvas and change the image type to *Filled*. Note that moving the *Fill Amount* slider causes the button to change background proportionately.
 
-<img src="Slider-7-Image-to-Fill.png" width="50%">
+<img src="Slider-7-Image-to-Fill.png" width="75%" alt="Setting up an image to be filled driven by a Float custom asset">
 
 ***Step 8***: Press the *Add Component* Button then search for and add the *FloatDriver* component. Set the custom asset to the one created above and the component value setter to *Image.FillAmount*.
 
-<img src="Slider-8-Listener.png" width="50%">
+<img src="Slider-8-Listener.png" width="75%" alt="Adding a CustomAsset.Float driver">
 
 ***Step 9***: Run the application and move the slider created above. The button fills and empties accordingly.
 
-<img src="Slider-9-Image-Filling.png" width="25%">
+<img src="Slider-9-Image-Filling.png" width="25%" alt="How the fill looks for this sample at 0.75">
 
 For components, like Animator, with named values Used *NamedFloatDriver* and it's siblings.
 
@@ -427,15 +427,15 @@ Even the minimalistic code above is unnecessary for many CustomAsset application
 #### Drivers
 A driver is a MonoBehaviour that is designed to listen for custom asset changes and interact with other components of a game object directly. If you are passing information, the method must be in the ***Dynamic Data*** section.
 
-<img src="Image-FillAmount-Driver.png" width="50%">
+<img src="Image-FillAmount-Driver.png" width="75%" alt="Sample CustomAsset.FloatDriver">
 
 Triggers are the exception and can use methods from ***Static Parameters***.
 
-<img src="Audio-Play-Driver.png" width="50%">
+<img src="Audio-Play-Driver.png" width="75%" alt="Sample CustomAsset.TriggerDriver">
 
 All primitive data drivers have a matching version that starts with Named. These are to drive components like ***Animator*** that require a parameter name as well as the value. Since ***Animator*** does not expose it's internals to the Inspector, we need to resort to a connector.
 
-<img src="Animator-Driver.png" width="50%">
+<img src="Animator-Driver.png" width="75%" alt="Sample CustomAsset.NamedFloatDriver">
 
 This package provides drivers for all primitive data type, but it is trivial to add new ones.
 ``` c#
@@ -534,15 +534,88 @@ produces
 ### Health Bar
 * First, create a test scene (menu Assets/Create/Scene)
 * Create a CustomAsset to store the health (menu Assets/Create/Custom Assets/Mutable/Float)
-<img src="Health-CustomAsset.png" width="50%">
+
+<img src="Health-CustomAsset.png" width="75%" alt="Float custom asset to represent player health">
+
 * Create a canvas (menu GameObject/UI/Canvas)
 * Create an empty child GameObject and call it ***HealthBar***
   * Set it to a reasonable size
-<img src="HealthBar.png" width="50%">
+
+<img src="HealthBar.png" width="75%" alt="Inspector view of HealthBar game object transform">
+
 * Create an image child (menu GameObject/UI/Image) and call it ***Background***
   * Set colour to red
   * Set position and size to 0
   * Set X and Y anchors to Min 0, Max 1
   * Change X pivot to 0
-<img src="Health-Background.png" width="50%">
+
+<img src="Health-Background.png" width="75%" alt="Inspector view of health-bar background">
+
 * Duplicate the Background, rename Foreground and change to green
+* The foreground is the only active component. We are going to reduce the scale so that the background shows through. Since transforms don't expose their data, we use a connector. (Drag connector into Inspector)
+*  And we need a float driver to change the scale when our health custom asset changes (drag Float-Driver into the inspector)
+* This is where we hook them up (drop health asset into driver and set component to ScaleX)
+
+<img src="Health-Foreground.png" width="75%" alt="Inspector view of health-bar foreground">
+
+* We created the health scene for two reasons - so that we can tweak our health bar before adding it to our project and so we can add manual and automatic testing. We need to add a component to drive the health bar. Fortunately the Unity UI has a slider that works a treat. (Bounds//context//UI//Slider)
+
+<img src="Health-Slider.png" width="75%" alt="Inspector view of health-bar test slider">
+
+* It is as simple as pie to hook in our custom asset (On Value Change/+/Health custom asset/Float.Value)
+* Run the scene and drag the slider to make the health bar change
+
+<img src="Health-Demo.png" width="75%" alt="Running demo of health-bar">
+
+### Health Manager
+In this context a manager is logic (code) with a single concern (a data item). If that concern is not directly visual or player interactive then it is best served with a custom asset. By limiting I/O to some extremely simple and stupid MonoBehaviours we can test almost all of the game components in isolation or in groups as needed.
+
+To allow effective testing of custom asset managers they should not be coupled with each other or the Unity framework. Everything is accomplished with custom assets and observers.
+
+Following the single responsibility principle, each manager should be small and focused. In this case the health manager manages the permanent improvements to health over time.
+
+* A manager needs code because it holds game logic
+
+``` c#
+  //- Custom assets must be created to physical files in the project.
+  //- We could have more than one.
+  [CreateAssetMenu(menuName = "Managers/Health"), Serializable]
+  public class HealthManagerTranscript : Manager {
+    //- The field we are managing
+    [SerializeField] private Float health = default;
+    //- Health will slowly increase over time.
+    //- A permanent game ability could change this value
+    [SerializeField] private Float trickleChargePerSecond = default;
+
+    protected override void Initialise() {
+      base.Initialise();
+      //- We can just update health every second.
+      //- Float corrects for health over the maximum
+      void trickleCharge(Fiber fiber) =>
+        health.Value += trickleChargePerSecond;
+      //- Fibers are efficient, only waking once a second to update health value
+      Fiber.Start.Begin.WaitFor(seconds: 1.0f).Do(trickleCharge).Again.Finish();
+    }
+  }
+
+```
+
+* Create a new ***Float*** custom asset and call it ***TrickleChargePerSecond***.
+
+<img src="Health-TrickleChargePerSecond.png" width="75%" alt="">
+
+* Create a health manager with the menu or context menu ***Assets // Create // Manager // Health***. Fill custom asset references with ***Health*** and ***TrickleChargePerSecond*** custom asset references.
+
+<img src="Health-Manager.png" width="75%" alt="A health manager ready for deployment">
+
+* Managers are so decoupled that we need to tell our game that they exist. Create  game object from the ***GameObject/Create Managers*** menu and drag a reference to your manager into it. This only need be done in your opening scene.
+
+<img src="Health-Managers-GameObject.png" width="75%" alt="">
+
+* All other health changes can be made using `CustomAsset.ChangeOverTime` instances.
+
+<img src="Health-SmallPotion.png" width="75%" alt="">
+
+
+<img src="Health-PoisonArrow.png" width="75%" alt="">
+

@@ -7,10 +7,7 @@ namespace CustomAsset.Mutable {
   [CreateAssetMenu(menuName = "Custom Assets/Device/GPS"), Labels("Device")]
   public class GpsAsset : OfType<GpsService> {
     /// <a href="">Access to the underlying service. <see cref="OfType{T}.Value"/></a> //#TBD#//
-    public GpsService Device {
-      get => Value;
-      set => Value = value;
-    }
+    public GpsService Device { get => Value; set => Value = value; }
 
     /// <a href="">Poll to see if GPS is ready to use - take care, it may be still settling</a> //#TBD#//
     public bool Ready => Device.Running;
@@ -29,6 +26,6 @@ namespace CustomAsset.Mutable {
       Geodetic.Coords(here.Latitude, here.Longitude);
 
     /// <a href=""></a> //#TBD#// <inheritdoc />
-    public override void Initialise() => Device = GpsService.Instance;
+    protected override void Initialise() => Device = GpsService.Instance;
   }
 }

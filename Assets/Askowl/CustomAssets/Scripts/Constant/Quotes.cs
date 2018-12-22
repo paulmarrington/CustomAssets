@@ -38,17 +38,18 @@ namespace CustomAsset.Constant {
     }
 
     /// <a href="">Turn a string into a quote. Any text at the end of the string that is in brackets becomes an attribution in grey</a> //#TBD#//
-    public static string Rtf(string quote) {
-      return Regex.Replace(input: quote, pattern: @"^(.*?)\s*\((.*)\)$", evaluator: m =>
-                             $"<b>\"</b><i>{m.Groups[1].Value}</i><b>\"</b>      <color=grey>{(m.Groups.Count > 1 ? m.Groups[2].Value : "")}</color>");
-    }
+    public static string Rtf(string quote) =>
+      Regex.Replace(
+        input: quote, pattern: @"^(.*?)\s*\((.*)\)$", evaluator: m =>
+          $"<b>\"</b><i>{m.Groups[1].Value}</i><b>\"</b>      <color=grey>{(m.Groups.Count > 1 ? m.Groups[2].Value : "")}</color>");
   }
 
   /// <a href="">Custom Asset for picking one or a list of quotes - either kept in the asset or as a separate text file. Each quote is on a separate line in the form: <code>Quote body (attribution)</code></a> //#TBD#// <inheritdoc cref="QuoteSet" />
   [CreateAssetMenu(menuName = "Custom Assets/Constant/Quotes")]
-  public sealed class Quotes : OfType<QuoteSet>, Pick<string> {
+  public class Quotes : OfType<QuoteSet>, Pick<string> {
     /// <a href=""></a> //#TBD#// <inheritdoc cref="Quotes()" />
-    private void OnEnable() {
+    protected override void OnEnable() {
+      base.OnEnable();
       #if UNITY_EDITOR
       if (!EditorApplication.isPlayingOrWillChangePlaymode) return;
       #endif

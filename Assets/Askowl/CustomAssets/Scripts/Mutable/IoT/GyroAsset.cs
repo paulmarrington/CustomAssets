@@ -13,10 +13,7 @@ namespace CustomAsset.Mutable {
     public static GyroAsset Instance => Instance<GyroAsset>();
 
     /// <a href=""></a> //#TBD#//
-    public GyroService Device {
-      get => Value;
-      set => Value = value;
-    }
+    public GyroService Device { get => Value; set => Value = value; }
 
     private float      settleTime;
     private bool       settled;
@@ -72,7 +69,7 @@ namespace CustomAsset.Mutable {
     }
 
     /// <a href=""></a> //#TBD#// /// <inheritdoc />
-    public override void Initialise() {
+    protected override void Initialise() {
       Device     = GyroService.Instance;
       settleTime = Time.realtimeSinceStartup;
     }

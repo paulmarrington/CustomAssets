@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97421054a468476aa7b69d35b6c33c1a, type: 3}
-  m_Name: Health
+  m_Name: TrickleChargePerSecond
   m_EditorClassIdentifier: 
   description: 
-  value: 1
+  value: 0.001
   persistent: 0
   range:
     min: 0

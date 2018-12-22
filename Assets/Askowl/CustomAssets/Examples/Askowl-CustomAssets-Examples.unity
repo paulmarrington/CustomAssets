@@ -375,7 +375,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+      - m_Target: {fileID: 11400000, guid: 96e8a50ab1cb44b258dd91a5015c8bbd, type: 2}
         m_MethodName: set_Value
         m_Mode: 0
         m_Arguments:
@@ -1232,7 +1232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener:
-    assetToMonitor: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+    assetToMonitor: {fileID: 11400000, guid: 96e8a50ab1cb44b258dd91a5015c8bbd, type: 2}
   componentValueToSet:
     m_PersistentCalls:
       m_Calls:
@@ -1639,7 +1639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener:
-    assetToMonitor: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+    assetToMonitor: {fileID: 11400000, guid: 96e8a50ab1cb44b258dd91a5015c8bbd, type: 2}
   componentValueToSet:
     m_PersistentCalls:
       m_Calls:
@@ -1992,7 +1992,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.01, y: 0.5}
   m_AnchorMax: {x: 0.49, y: 0.5}
-  m_AnchoredPosition: {x: 1175.8, y: 204.16}
+  m_AnchoredPosition: {x: 1128, y: 201.16005}
   m_SizeDelta: {x: 0, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &651314091
@@ -2376,7 +2376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.01, y: 0.5}
   m_AnchorMax: {x: 0.49, y: 0.5}
-  m_AnchoredPosition: {x: 1175.8, y: 369.65}
+  m_AnchoredPosition: {x: 1124.5, y: 369.65}
   m_SizeDelta: {x: 0, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &840109459
@@ -2593,7 +2593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener:
-    assetToMonitor: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+    assetToMonitor: {fileID: 11400000, guid: 96e8a50ab1cb44b258dd91a5015c8bbd, type: 2}
   componentValueToSet:
     m_PersistentCalls:
       m_Calls:
@@ -3130,7 +3130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener:
-    assetToMonitor: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+    assetToMonitor: {fileID: 11400000, guid: 96e8a50ab1cb44b258dd91a5015c8bbd, type: 2}
   parameterName: Floater
   componentValueToSet:
     m_PersistentCalls:
@@ -3209,7 +3209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxFloat: {fileID: 11400000, guid: 14fb215893f734f3c9634f358ecbc591, type: 2}
-  currentFloat: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+  currentFloat: {fileID: 11400000, guid: 96e8a50ab1cb44b258dd91a5015c8bbd, type: 2}
   integer: {fileID: 11400000, guid: 6e626fa2cf7984ebeb7f4663c64d8f4e, type: 2}
   str: {fileID: 11400000, guid: 1f59e2f4f4a1a4cb9b12734904f20220, type: 2}
   boolean: {fileID: 11400000, guid: b0fcec34644ba410fb3e78b802485769, type: 2}
@@ -5860,7 +5860,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.01, y: 0.5}
   m_AnchorMax: {x: 0.49, y: 0.5}
-  m_AnchoredPosition: {x: 1175.8, y: 286}
+  m_AnchoredPosition: {x: 1128, y: 283}
   m_SizeDelta: {x: 0, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2099315378

@@ -15,7 +15,7 @@ MonoBehaviour:
   description: 'It will change the float asset from 0 to 1
 
     in 20 steps over 2 seconds.'
-  targetForChange: {fileID: 11400000, guid: 3d61a71eb1fb546dbb667920dd729004, type: 2}
+  targetForChange: {fileID: 11400000, guid: 96e8a50ab1cb44b258dd91a5015c8bbd, type: 2}
   amountToChange: 1
   overSeconds: 2
   stepsPerSecond: 10

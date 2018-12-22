@@ -8,8 +8,7 @@ namespace CustomAsset.Mutable {
   /// <a href="">Float CustomAsset contains a float value which can be connected directly to OnValueChange callbacks in UI slider and scrollbar components. Connect it to event listeners to interact with components such as Animation, Text or Unity. Or add listeners to your own classes with Register(this)</a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Float")]
   public class Float : OfType<float> {
-    [SerializeField, RangeBounds(min: -1000, max: 1000)]
-    private Range range = new Range(0, 1);
+    [SerializeField] private Range range = new Range(0, 1);
 
     /// <a href=""></a> //#TBD#//
     public float Minimum => range.Min;

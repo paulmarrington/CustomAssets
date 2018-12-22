@@ -13,18 +13,13 @@ namespace CustomAsset.Mutable {
     private bool              ready;
 
     /// <a href=""></a> //#TBD#//
-    public WebCamService Device {
-      get => Value;
-      private set => Value = value;
-    }
+    public WebCamService Device { get => Value; private set => Value = value; }
 
     /// <a href="">The camera can be considered ready when it has done the first update</a> //#TBD#//
     public bool Ready => ready || (ready = Device.DidUpdateThisFrame);
 
     /// <a href=""></a> //#TBD#// <inheritdoc />
-    public override void Initialise() {
-      Device = WebCamService.Instance;
-    }
+    protected override void Initialise() { Device = WebCamService.Instance; }
 
     /// <a href="">Given a canvas, project the camera image on it</a> //#TBD#//
     public void Project(GameObject background) {

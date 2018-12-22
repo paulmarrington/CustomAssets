@@ -14,7 +14,7 @@ using String = CustomAsset.Mutable.String;
 /// <a href="">Show and update custom asset values to provide examples for their use</a> //#TBD#// <inheritdoc />
 [RequireComponent(typeof(AudioSource))]
 public sealed class CustomAssetsExample : MonoBehaviour {
-  [SerializeField] private Float                     maxFloat = default;
+  [SerializeField] private Float                     maxFloat      = default;
   [SerializeField] private CustomAsset.Mutable.Float currentFloat  = default;
   [SerializeField] private Integer                   integer       = default;
   [SerializeField] private String                    str           = default;
@@ -69,7 +69,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   }
 
   /// <a href="">Since the component to monitor is a float we need a conversion to CustomAsset.Integer</a> //#TBD#//
-  public void UpdateIntegerAsset() => integer.Set((int) (integerSlider.value));
+  public void UpdateIntegerAsset() => integer.Value = (int) integerSlider.value;
 
   /// <a href="">Button action to test the updating of a CustomAsset</a> //#TBD#//
   public void UpdateCustomFloat() => StartCoroutine(UpdateCustomFloatCoroutine());
@@ -77,15 +77,15 @@ public sealed class CustomAssetsExample : MonoBehaviour {
   private IEnumerator UpdateCustomFloatCoroutine() {
     textComponent.text = "";
     count              = 0;
+    currentFloat.Value = 0.4f;
 
     do {
       yield return new WaitForSeconds(0.1f);
 
-      currentFloat.Set(currentFloat + 1);
+      currentFloat.Value += 0.1f;
 
       if (currentFloat >= maxFloat) {
-        textComponent.text +=
-          "Float " + ((float) maxFloat) + " reached " + (++count) + " of 5 times\n";
+        textComponent.text += "Float " + ((float) maxFloat) + " reached " + (++count) + " of 5 times\n";
 
         currentFloat.Set(0);
       }
@@ -109,7 +109,7 @@ public sealed class CustomAssetsExample : MonoBehaviour {
     textComponent.text = "Find existing " + floatRef.name + " as " + currentFloat.name + "\n";
 
     CustomAsset.Mutable.Float newFloat = CustomAsset.Mutable.Float.New("NewFloat");
-    newFloat.Set(1234);
+    newFloat.Set(0.1234f);
     CustomAsset.Mutable.Float secondRef = CustomAsset.Mutable.Float.Instance("NewFloat");
 
     textComponent.text += "Created " + ((float) newFloat) + " same as " + ((float) secondRef);

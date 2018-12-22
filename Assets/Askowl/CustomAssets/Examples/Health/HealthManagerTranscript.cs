@@ -1,5 +1,7 @@
 ﻿//- A game manager is a custom asset that provides the game logic for a single concern - in this case health.
 
+using System;
+using CustomAsset;
 using CustomAsset.Mutable;
 using UnityEngine;
 
@@ -7,21 +9,25 @@ using UnityEngine;
 
 // ReSharper disable MissingXmlDoc
 
-//- Once the asset is create it can be loaded and used by anyone as it has no external code dependencies. We are replacing the Health value from the previous video with one that does more
+//- Once the asset is create it can be loaded and used by anyone as it has no external code dependencies.
 namespace Askowl.Transcripts {
-  [CreateAssetMenu(menuName = "Managers/Health")]
-  //- This custom asset replaces the generic Float version of health from the previous video
-  public class Health : Float {
-    //- Health will slowly increase over time
-    [SerializeField] private float trickleChargePerSecond;
+  //- Custom assets must be created to physical files in the project. We could have more than one.
+  [CreateAssetMenu(menuName = "Managers/Health"), Serializable]
+  public class HealthManagerTranscript : Manager {
+    //- The field we are managing
+    [SerializeField] private Float health = default;
+    //- Health will slowly increase over time. A permanent ability could change this value
+    [SerializeField] private Float trickleChargePerSecond = default;
 
-    protected override void OnEnable() {
-      base.OnEnable();
+    //- We use Initialise rather than OnEnable because we can't create a GameObject for Fibers in OnEnable. Initialise is called by a Managers MonoBehaviour or by PlayModeTests.AssetLoad during testing.
+    protected override void Initialise() {
+      base.Initialise();
       //- We can just update health every second. Float corrects for health over the maximum
-      void trickleCharge(Fiber fiber) => Set(Value + trickleChargePerSecond);
+      void trickleCharge(Fiber fiber) => health.Value += trickleChargePerSecond;
       //- Fibers are efficient, only taking up time once a second to update health value
-      Fiber.Start.Begin.WaitFor(seconds: 1).Do(trickleCharge).Again.Finish();
+      Fiber.Start.Begin.WaitFor(seconds: 1.0f).Do(trickleCharge).Again.Finish();
     }
+    //- Consider using the ChangeOverTime custom asset for updating health with potions or med-packs. Perhaps a large potion recharges to a higher value but more slowly.
   }
 }
 

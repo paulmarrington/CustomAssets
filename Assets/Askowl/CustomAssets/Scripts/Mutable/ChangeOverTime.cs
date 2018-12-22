@@ -17,7 +17,7 @@ namespace CustomAsset.Mutable {
     private Fiber change;
 
     /// <a href=""></a> //#TBD#//
-    public void Start(float changeAmount = 0, float seconds = 0) {
+    public void Fire(float changeAmount, float seconds) {
       base.Fire();
       if (resetOnStart) targetForChange.Value = targetForChange.Minimum;
       var steps                               = Math.Max((int) (stepsPerSecond * seconds), 1);
@@ -34,7 +34,7 @@ namespace CustomAsset.Mutable {
     }
 
     /// <a href=""></a> //#TBD#// <inheritdoc />
-    public override void Fire() => Start(amountToChange, overSeconds);
+    public override void Fire() => Fire(amountToChange, overSeconds);
 
     /// <a href=""></a> //#TBD#//
     public void Abort() => change?.Exit();

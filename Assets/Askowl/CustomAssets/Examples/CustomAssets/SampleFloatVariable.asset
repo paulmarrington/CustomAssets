@@ -15,7 +15,7 @@ MonoBehaviour:
   description: 'Sample float variable - driven by a slider
 
     and drive changes in other game objects.'
-  value: 0.99999994
+  value: 1
   persistent: 0
   range:
     min: 0

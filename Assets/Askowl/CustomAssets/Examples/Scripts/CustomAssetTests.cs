@@ -36,16 +36,18 @@ public class CustomAssetTests : PlayModeTests {
 
     yield return PushButton("CustomAssetGet");
 
-    CheckPattern(new Regex(
-                   @"^currentFloat asset is \d+(\.\d+)?\ninteger asset is \d+\nstr asset is\s*.*\nboolean asset is (True|False)\nlarger asset is \d+ / \d+(\.\d+)? / three$"),
-                 results.text);
+    CheckPattern(
+      new Regex(
+        @"^currentFloat asset is \d+(\.\d+)?\ninteger asset is \d+\nstr asset is\s*.*\nboolean asset is (True|False)\nlarger asset is \d+ / \d+(\.\d+)? / three$")
+     ,
+      results.text);
   }
 
   /// <a href="">Make sure we can update the contents of custom assets in memory</a> //#TBD#//
   [UnityTest, Timeout(10000)] public IEnumerator UpdateCustomAssets() {
     yield return Setup();
 
-    currentFloat.Set(1);
+    currentFloat.Set(0.4f);
     yield return PushButton("CustomAssetSet");
 
     int count = 0;
@@ -55,7 +57,7 @@ public class CustomAssetTests : PlayModeTests {
       yield return null;
     }
 
-    Assert.Greater(count, 10);
+    Assert.Greater(count, 1);
   }
 
   /// <a href="">Check for picking elements from a set sequentially</a> //#TBD#//
@@ -170,6 +172,7 @@ public class CustomAssetTests : PlayModeTests {
 
     Slider slider = Component<Slider>("Canvas/Integer Asset/Slider");
     slider.value = 5;
+    // ReSharper disable once Unity.InefficientPropertyAccess
     slider.value = 6;
     yield return null;
 
@@ -185,6 +188,7 @@ public class CustomAssetTests : PlayModeTests {
     toggle.isOn = false;
     yield return null;
 
+    // ReSharper disable once Unity.InefficientPropertyAccess
     toggle.isOn = true;
     yield return null;
 
@@ -217,19 +221,19 @@ public class CustomAssetTests : PlayModeTests {
 
     yield return PushButton("Check Instance");
 
-    CheckPattern(new Regex(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 1234 .* 1234$"), results.text);
+    CheckPattern(new Regex(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 0.1234 .* 0.1234$"), results.text);
   }
 
   /// <a href="">Make sure that larger objects can be manipulated and tested for equality</a> //#TBD#//
   [UnityTest] public IEnumerator TestCompoundSetters() {
     var zero       = new CustomAssetsExample.LargerAssetContents {I = 0, F = 0, S = ""};
     var largeAsset = LargerAssetSample.New("LargerAssetSample");
-    largeAsset.Set(zero);
+    largeAsset.Value = zero;
 
     Assert.AreEqual(largeAsset.Contents, zero);
 
     var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, F = 4.56f, S = "789"};
-    largeAsset.Set(setTo);
+    largeAsset.Value = setTo;
     Assert.AreNotEqual(largeAsset.Contents, zero);
     Assert.AreEqual(largeAsset.Contents, setTo);
     yield return null;
