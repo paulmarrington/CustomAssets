@@ -567,6 +567,56 @@ produces
 
 <img src="Health-Demo.png" width="75%" alt="Running demo of health-bar">
 
+### Health Bar Integrity Testing
+
+The integrity test loads our sample scene and exercises the slider to make sure that the health bar behaved accordingly.
+
+``` c#
+  public class HealthBarTranscript : PlayModeTests {
+    private static string scenePath = "Health";
+
+    //- PlayModeTests provides a support function to make sure
+    //- the scene is in the Build Settings so it can be run
+    #if UNITY_EDITOR
+    [InitializeOnLoadMethod]
+    private static void AddSceneToBuildSettings() => AddSceneToBuildSettings(scenePath);
+    #endif
+
+    //- We will only need a single method to test the integrity
+    //- of the health-bar functionaality.
+    [UnityTest] public IEnumerator HeathBarTests() {
+      yield return LoadScene(scenePath);
+      //- We will need a reference to the slider for control
+      //- and the foreground to check the results
+      var slider     = Component<Slider>("Testing Slider");
+      var foreground = Component<RectTransform>("Foreground");
+      //- Set the slider to match the health starting value
+      slider.value = foreground.localScale.x;
+
+      //- local function to set and check a health value.
+      //- Note the wait. It could be one frame, but I have made it longer
+      //- so we can see the test happening.
+      IEnumerator setAndCheck(float health) {
+        slider.value = health;
+        yield return new WaitForSeconds(0.1f);
+        var scale = foreground.localScale.x;
+        Assert.AreApproximatelyEqual(health, scale);
+      }
+
+      //- Check bounds
+      yield return setAndCheck(0);
+      yield return setAndCheck(1);
+      //- Ramp up and make sure all matches
+      for (float health = 0; health <= 1; health += 0.05f) yield return setAndCheck(health);
+      //- Now let's do some random ones
+      //- in case change of direction can be a problem.
+      for (int i = 0; i < 20; i++) {
+        yield return setAndCheck(Random.Range(0f, 1f));
+      }
+    }
+  }
+```
+
 ### Health Manager
 In this context a manager is logic (code) with a single concern (a data item). If that concern is not directly visual or player interactive then it is best served with a custom asset. By limiting I/O to some extremely simple and stupid MonoBehaviours we can test almost all of the game components in isolation or in groups as needed.
 
@@ -610,12 +660,48 @@ Following the single responsibility principle, each manager should be small and 
 
 * Managers are so decoupled that we need to tell our game that they exist. Create  game object from the ***GameObject/Create Managers*** menu and drag a reference to your manager into it. This only need be done in your opening scene.
 
-<img src="Health-Managers-GameObject.png" width="75%" alt="">
+<img src="Health-Managers-GameObject.png" width="75%" alt="Inspector view of health manager">
 
 * All other health changes can be made using `CustomAsset.ChangeOverTime` instances.
 
-<img src="Health-SmallPotion.png" width="75%" alt="">
+<img src="Health-SmallPotion.png" width="75%" alt="Effects of small healing potion">
 
 
-<img src="Health-PoisonArrow.png" width="75%" alt="">
+<img src="Health-PoisonArrow.png" width="75%" alt="Effects of being hit by a poison arrow">
+
+#### Health Manager Integrity Testing
+
+Managers do not need a scene to run, but they do need one for Fibers. They use ```UnityTest``` but do nothing visual. We could take this further by making sure that the increase in health matches the trickle charge per second value.
+
+``` c#
+//- While Fibers do not need to run from a MonoBehaviour,
+//- they still need a running scene - so we use UnityTest
+public class HealthManagerTest : PlayModeTests {
+//- The Timeout attribute uses Time.timeScale.
+[UnityTest, Timeout(100000)] public IEnumerator HealthManager() {
+  //- Our health component will take 1,000 seconds
+  //- to go from zero to full. Let's speed things up by 10x
+  Time.timeScale = 10;
+  try {
+    //- We don't need a specific scene, just load the custom assets
+    Manager.Load<HealthManagerTranscript>("HealthManager.asset");
+    var health = Manager.Load<Float>("Health.asset");
+    //- Set to 0 since once a custom asset is loaded in the editor 
+    //- it stays loaded
+    health.Set(0);
+    //- It looks like forever, but the Timeout attribute
+    //- will cause a test failure after 10 seconds
+    while (true) {
+      //- This causes a 1/10th of a second delay due to the modified scale
+      yield return new WaitForSeconds(1.0f);
+      //- Leaving once the test passes is a successful result.
+      //- This should take 1 second at the current time scale.
+      if (health >= 0.01f) yield break;
+    }
+  } finally {
+    //- reset the time scale so other tests aren't effected.
+    Time.timeScale = 1;
+  }
+}
+```
 
