@@ -5,7 +5,7 @@ using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <a href=""></a> //#TBD#//
+  /// <a href="http://bit.ly/2CwSUh0">Change a float value in linear fashion over time</a>
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Change Over Time")]
   public class ChangeOverTime : Trigger {
     [SerializeField] private Float targetForChange = default;
@@ -16,7 +16,7 @@ namespace CustomAsset.Mutable {
 
     private Fiber change;
 
-    /// <a href=""></a> //#TBD#//
+    /// <a href="http://bit.ly/2CwSUh0">Start a fiber to change over non-default period</a>
     public void Fire(float changeAmount, float seconds) {
       base.Fire();
       if (resetOnStart) targetForChange.Value = targetForChange.Minimum;
@@ -33,10 +33,10 @@ namespace CustomAsset.Mutable {
       change = Fiber.Start.Begin.Do(step).WaitFor(stepTime).Repeat(steps).Do(finish);
     }
 
-    /// <a href=""></a> //#TBD#// <inheritdoc />
+    /// <a href="http://bit.ly/2CwSUh0">Start a fiber to change over default period</a> <inheritdoc />
     public override void Fire() => Fire(amountToChange, overSeconds);
 
-    /// <a href=""></a> //#TBD#//
+    /// <a href="http://bit.ly/2CwSUh0">Abort a long-running change loop</a>
     public void Abort() => change?.Exit();
   }
 }

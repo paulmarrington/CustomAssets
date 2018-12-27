@@ -12,10 +12,35 @@ namespace CustomAsset.Mutable {
     /// <a href="">Emitter reference to tell others of data changes</a> //#TBD#//
     public readonly Emitter Emitter = new Emitter();
 
-    /// <a href="">The default is to fire the emitter at each polling interval.  Override Equals in T (Service) for services where you can tell if external data has changed</a> //#TBD#//
-    public void Poll() {
-      if (!Equals(null)) Emitter.Fire();
+    #region Polling
+
+    /// <a href=""></a> //#TBD#//
+    [Serializable] public class Polling {
+      [SerializeField] private bool  enabled                 = false;
+      [SerializeField] private float secondsDelayAtStart     = 5;
+      [SerializeField] private float updateIntervalInSeconds = 1;
+
+      /// <a href=""></a> //#TBD#//
+      public void Initialise(WithEmitter componentToPoll) {
+        if (!enabled) return;
+
+        void poll(Fiber fiber) {
+          if (!componentToPoll.Equals(null)) componentToPoll.Emitter.Fire();
+        }
+
+        Fiber.Start.WaitFor(secondsDelayAtStart).Begin.Do(poll).WaitFor(updateIntervalInSeconds).Again.Finish();
+      }
     }
+
+    [SerializeField] private Polling polling = default;
+
+    /// <a href="">Called when an asset is loaded and enabled. Used to ensure the custom asset does not leave memory prematurely and to load it if persistent</a> //#TBD#//
+    protected override void OnEnable() {
+      base.OnEnable();
+      polling.Initialise(this);
+    }
+
+    #endregion
   }
 
   /// <a href="">Base class for a custom asset. Provides getters and setters for the contained value and templates for casting to the contained type and to convert it to a string</a> //#TBD#// <inheritdoc cref="Constant.OfType&lt;T>" />
@@ -25,7 +50,7 @@ namespace CustomAsset.Mutable {
     [SerializeField, Label] private T value = default;
 
     /// <a href="">For safe(ish) access to the contents field</a> //#TBD#//
-    public T Value { get => value; set => Set(value); }
+    public virtual T Value { get => value; set => Set(value); }
 
     /// <a href="">All extraction by casting a custom object to the contained type. Same as getting the Value - as in myCustomAsset.Value === (MyCustomAsset) myCustomAsset</a> //#TBD#//
     public static implicit operator T(OfType<T> t) => (t == null) ? default : t.value;
@@ -69,6 +94,7 @@ namespace CustomAsset.Mutable {
       Load();
     }
 
+    /// <a href=""></a> //#TBD#//
     protected override void OnDisable() => Save();
 
     #endregion

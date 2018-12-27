@@ -1,11 +1,12 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace CustomAsset.Mutable {
-  /// <a href=""></a> //#TBD#// <inheritdoc />
+  /// <a href="http://bit.ly/2QNmw2q">Used for Animator where actions also require a parameter</a> <inheritdoc />
   public class NamedFloatDriver : ListenerComponent {
     [SerializeField] private string parameterName = default;
 
@@ -15,7 +16,12 @@ namespace CustomAsset.Mutable {
 
     [SerializeField] private FloatUnityEvent componentValueToSet = default;
 
-    /// <a href="">On a change the listener needs a copy of the changed data to react to</a> //#TBD#//
+    /// <a href="http://bit.ly/2QNmw2q">On a change the listener needs a copy of the changed data to react to</a>
     protected override void OnChange() => componentValueToSet.Invoke(parameterName, Asset.Value);
+
+    #if UNITY_EDITOR
+    [MenuItem("Component/CustomAssets/Named Float Driver")]
+    private static void AddConnector() => Selection.activeTransform.gameObject.AddComponent<NamedFloatDriver>();
+    #endif
   }
 }

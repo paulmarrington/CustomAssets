@@ -3,23 +3,23 @@ using Decoupled;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <a href=""></a> //#TBD#// /// <inheritdoc cref="Decoupled.GyroService" />
+  /// <a href="http://bit.ly/2RbzvKP">Reading gyroscope value to determine direction device is pointiing</a> /// <inheritdoc cref="Decoupled.GyroService" />
   [CreateAssetMenu(menuName = "Custom Assets/Device/Gyroscope"), Labels("Device")]
   public class GyroAsset : OfType<GyroService> {
     [SerializeField, Tooltip("Used in Slerp to reduce jitter")]
     private float smoothing = 0.2f;
 
-    /// <a href="">Retrieve service singleton. By preference use the inspector</a> //#TBD#//
+    /// <a href="http://bit.ly/2RbzvKP">Retrieve service singleton. By preference use the inspector</a>
     public static GyroAsset Instance => Instance<GyroAsset>();
 
-    /// <a href=""></a> //#TBD#//
+    /// <a href="http://bit.ly/2RbzvKP">Interface to the gyroscope device</a>
     public GyroService Device { get => Value; set => Value = value; }
 
     private float      settleTime;
     private bool       settled;
     private Quaternion rotateFrom, rotateTo, rotation;
 
-    /// <a href="">Poll at startup to see of the gyroscope is ready to use</a> //#TBD#//
+    /// <a href="http://bit.ly/2RbzvKP">Poll at startup to see of the gyroscope is ready to use</a>
     public bool Ready {
       get {
         if (settled) return true;
@@ -32,7 +32,7 @@ namespace CustomAsset.Mutable {
       }
     }
 
-    /// <a href="">The number of seconds that the Gyroscope took to settle</a> //#TBD#//
+    /// <a href="http://bit.ly/2RbzvKP">The number of seconds that the Gyroscope took to settle</a>
     public float SecondsSettlingTime => settleTime;
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace CustomAsset.Mutable {
     /// on the other hand, Android it ́s very device dependent, but having the low-pass filter implemented as
     /// stated above, effectively fixes this problem on most devices.
     ///</remarks>
-    /// <a href="">The smoothed orientation in space of the device as a Tetrad (Quaternion)</a> //#TBD#//
+    /// <a href="">The smoothed orientation in space of the device as a Tetrad (Quaternion)</a>
     public Quaternion Attitude {
       get {
         rotateTo   = Device.Attitude.RightToLeftHanded(Trig.ZAxis);
@@ -68,7 +68,7 @@ namespace CustomAsset.Mutable {
       }
     }
 
-    /// <a href=""></a> //#TBD#// /// <inheritdoc />
+    /// <a href="http://bit.ly/2RbzvKP"></a> /// <inheritdoc />
     protected override void Initialise() {
       Device     = GyroService.Instance;
       settleTime = Time.realtimeSinceStartup;

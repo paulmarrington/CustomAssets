@@ -11,10 +11,10 @@ namespace CustomAsset.Mutable {
     [SerializeField] private Range range = new Range(0, 1);
 
     /// <a href=""></a> //#TBD#//
-    public float Minimum => range.Min;
+    public float Minimum { get => range.Min; set => range.Min = value; }
 
     /// <a href=""></a> //#TBD#//
-    public float Maximum => range.Max;
+    public float Maximum { get => range.Max; set => range.Max = value; }
 
     /// <a href=""></a> //#TBD#//
     public static Float Instance(string name) => Instance<Float>(name);

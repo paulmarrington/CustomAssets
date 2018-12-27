@@ -3,7 +3,7 @@
 using UnityEngine;
 
 namespace CustomAsset.Constant {
-  /// <a href="">Boolean custom asset. Triggers event when changing from true to false or false to true</a> //#TBD#// <inheritdoc />
+  /// <a href="http://bit.ly/2CwSS8S">Boolean custom asset. Triggers event when changing from true to false or false to true</a> <inheritdoc />
   [CreateAssetMenu(menuName = "Custom Assets/Constant/Boolean")]
   public sealed class Boolean : OfType<bool> { }
 }

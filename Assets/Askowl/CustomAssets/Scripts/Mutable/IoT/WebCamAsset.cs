@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CustomAsset.Mutable {
-  /// <a href=""></a> //#TBD#// <inheritdoc />
+  /// <a href="http://bit.ly/2RbzvKP">Access web-cam footage as a custom asset</a> <inheritdoc />
   [CreateAssetMenu(menuName = "Custom Assets/Device/WebCam"), Labels("Device")]
   public class WebCamAsset : OfType<WebCamService> {
     private RawImage          rawImage;
@@ -12,17 +12,17 @@ namespace CustomAsset.Mutable {
     private int               lastVerticalMirror, lastRotationAngle = 1;
     private bool              ready;
 
-    /// <a href=""></a> //#TBD#//
+    /// <a href="http://bit.ly/2RbzvKP">Reference to the matching hardware driver</a>
     public WebCamService Device { get => Value; private set => Value = value; }
 
-    /// <a href="">The camera can be considered ready when it has done the first update</a> //#TBD#//
+    /// <a href="http://bit.ly/2RbzvKP">The camera can be considered ready when it has done the first update</a>
     public bool Ready => ready || (ready = Device.DidUpdateThisFrame);
 
-    /// <a href=""></a> //#TBD#// <inheritdoc />
-    protected override void Initialise() { Device = WebCamService.Instance; }
+    /// <a href="http://bit.ly/2RbzvKP">Fetching the hardware driver</a> <inheritdoc />
+    protected override void Initialise() => Device = WebCamService.Instance;
 
-    /// <a href="">Given a canvas, project the camera image on it</a> //#TBD#//
-    public void Project(GameObject background) {
+    /// <a href="http://bit.ly/2RbzvKP">Given a canvas, project the camera image on it</a>
+    public void Project(UnityEngine.GameObject background) {
       rawImage         = background.GetComponent<RawImage>() ?? background.AddComponent<RawImage>();
       rawImage.texture = Device.Texture;
 
@@ -34,7 +34,7 @@ namespace CustomAsset.Mutable {
       Device.Playing = true;
     }
 
-    /// <a href="">When the phone is rotated the image can rotate to match. This changes the aspect ratio. Call this method occasionally to make the changes.</a> //#TBD#//
+    /// <a href="http://bit.ly/2RbzvKP">When the phone is rotated the image can rotate to match. This changes the aspect ratio. Call this method occasionally to make the changes.</a>
     public void CorrectForDeviceScreenOrientation() {
       aspectRatioFitter.aspectRatio = Device.AspectRatio;
 

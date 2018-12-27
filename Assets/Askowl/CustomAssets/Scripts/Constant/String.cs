@@ -3,7 +3,7 @@
 using UnityEngine;
 
 namespace CustomAsset.Constant {
-  /// <a href="">CustomAsset that contains a string. Events are triggered every time the string changes</a> //#TBD#// <inheritdoc />
+  /// <a href="http://bit.ly/2QP2Kn9">CustomAsset that contains a string. Events are triggered every time the string changes</a> <inheritdoc />
   [CreateAssetMenu(menuName = "Custom Assets/Constant/String")]
   public sealed class String : OfType<string> { }
 }

@@ -1,3 +1,4 @@
+// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 using Askowl;
 using UnityEditor;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 namespace CustomAsset {
   /// <a href=""></a> //#TBD#//
   public class Manager : Base {
+    /// <a href=""></a> //#TBD#//
     public static T Load<T>(string path) where T : Base {
       path = Objects.FindFile(path);
       if (path == null) return default;
@@ -13,19 +15,12 @@ namespace CustomAsset {
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void OnAfterSceneLoadRuntimeMethod() {
+    private static void InitialiseCustomAssetsFiber() {
       void initialiser(Fiber fiber) {
         while (!AssetsWaitingInitialisation.Empty) AssetsWaitingInitialisation.Pop().Initialiser();
       }
       Fiber.Start.OnFixedUpdates.Begin.Do(initialiser).WaitFor(InitialiseAssetEmitter).Again.Finish();
     }
     private static bool managersLoaded;
-
-    [MenuItem("GameObject/Create Managers")]
-    public static void CreateManagersGameObject() {
-      var prefab     = Resources.Load("Managers");
-      var gameObject = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-      gameObject.name = prefab.name;
-    }
   }
 }
