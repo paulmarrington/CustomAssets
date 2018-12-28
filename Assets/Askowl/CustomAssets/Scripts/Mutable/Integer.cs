@@ -3,10 +3,10 @@
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <a href="">Integer CustomAsset contains an int value. Add listeners to your own classes with Register(this)</a> //#TBD#// <inheritdoc />
+  /// <a href="http://bit.ly/2QP2Kn9">Integer CustomAsset contains an int value. Add listeners to your own classes with Register(this)</a> //#TBD#// <inheritdoc />
   [CreateAssetMenu(menuName = "Custom Assets/Mutable/Integer")]
   public class Integer : OfType<int> {
-    /// <a href=""></a> //#TBD#//
+    /// <a href="http://bit.ly/2QP2Kn9"><see cref="OfType{T}.Instance{TC}"/></a> //#TBD#//
     public static Integer Instance(string name) => Instance<Integer>(name);
   }
 }

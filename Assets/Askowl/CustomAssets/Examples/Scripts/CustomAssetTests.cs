@@ -12,7 +12,8 @@ using UnityEngine.TestTools;
 using UnityEngine.UI;
 using AudioClips = CustomAsset.Constant.AudioClips;
 
-/// <a href="">Unity Test Runner PlayMode tests</a> //#TBD#// <inheritdoc />
+// ReSharper disable MissingXmlDoc
+
 public class CustomAssetTests : PlayModeTests {
   private Text  results;
   private Float currentFloat;
@@ -30,7 +31,6 @@ public class CustomAssetTests : PlayModeTests {
     currentFloat = FindObject<Float>("SampleFloatVariable");
   }
 
-  /// <a href="">Have the test scene open and press a button to display data in the results panel</a> //#TBD#//
   [UnityTest] public IEnumerator AccessCustomAssets() {
     yield return Setup();
 
@@ -43,7 +43,6 @@ public class CustomAssetTests : PlayModeTests {
       results.text);
   }
 
-  /// <a href="">Make sure we can update the contents of custom assets in memory</a> //#TBD#//
   [UnityTest, Timeout(10000)] public IEnumerator UpdateCustomAssets() {
     yield return Setup();
 
@@ -60,7 +59,6 @@ public class CustomAssetTests : PlayModeTests {
     Assert.Greater(count, 1);
   }
 
-  /// <a href="">Check for picking elements from a set sequentially</a> //#TBD#//
   [UnityTest] public IEnumerator TestSetPickerCyclic() {
     yield return Setup();
 
@@ -72,7 +70,6 @@ public class CustomAssetTests : PlayModeTests {
     for (int i = 0; i < 3; i++) Assert.AreEqual(clips[i], clips[i + 3]);
   }
 
-  /// <a href="">Check for picking elements from a set randomly, but restricted to new ones until a cycle is exhausted</a> //#TBD#//
   [UnityTest] public IEnumerator TestSetPickerExhaustive() {
     yield return Setup();
 
@@ -98,7 +95,6 @@ public class CustomAssetTests : PlayModeTests {
     }
   }
 
-  /// <a href="">Check that we can transfer a CustomAsset change event to a UnityEvent</a> //#TBD#//
   [UnityTest, Timeout(10000)] public IEnumerator TestUnityEvent() {
     yield return Setup();
 
@@ -110,7 +106,6 @@ public class CustomAssetTests : PlayModeTests {
     while (audioSource.isPlaying) yield return null;
   }
 
-  /// <a href="">React to a CustomAsset change event directly in a MonoBehaviour</a> //#TBD#//
   [UnityTest] public IEnumerator TestDirectEvent() {
     yield return Setup();
 
@@ -122,7 +117,6 @@ public class CustomAssetTests : PlayModeTests {
     CheckPattern(new Regex(@"Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d?:\d\d:\d\d"), results.text);
   }
 
-  /// <a href="">Have a CustomAsset.Trigger change event set of an animation</a> //#TBD#//
   [UnityTest, Timeout(10000)] public IEnumerator TestAnimationTriggerEvent() {
     yield return Setup();
 
@@ -142,7 +136,6 @@ public class CustomAssetTests : PlayModeTests {
     Assert.Less(elapsed, 10.0f);
   }
 
-  /// <a href="">Have a CustomAsset.Float change event change the colours on the results button</a> //#TBD#//
   [UnityTest] public IEnumerator TestFloatAsset() {
     yield return Setup();
 
@@ -153,7 +146,6 @@ public class CustomAssetTests : PlayModeTests {
 
   private string ResultsButtonText => Component<Text>("CustomAssetEventListeners/Canvas/Button/Text").text;
 
-  /// <a href="">Have a CustomAsset.String change event change the contents of the results button</a> //#TBD#//
   [UnityTest] public IEnumerator TestStringAsset() {
     yield return Setup();
 
@@ -166,7 +158,6 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual("The rain in spain", ResultsButtonText);
   }
 
-  /// <a href="">Have a CustomAsset.Integer change event the contents of the results button</a> //#TBD#//
   [UnityTest] public IEnumerator TestIntegerAsset() {
     yield return Setup();
 
@@ -180,7 +171,6 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual(expected: 6, actual: buttonValue);
   }
 
-  /// <a href="">Have a CustomAsset.Boolean change event the contents of the results button</a> //#TBD#//
   [UnityTest] public IEnumerator TestBooleanAsset() {
     yield return Setup();
 
@@ -200,7 +190,6 @@ public class CustomAssetTests : PlayModeTests {
     Assert.AreEqual("False", ResultsButtonText);
   }
 
-  /// <a href="">Make sure quotes are retrieved as expected - exhaustive random</a> //#TBD#//
   [UnityTest, Timeout(10000)] public IEnumerator TestQuotes() {
     yield return Setup();
 
@@ -215,7 +204,6 @@ public class CustomAssetTests : PlayModeTests {
     Assert.GreaterOrEqual(quotes.Count, 10);
   }
 
-  /// <a href="">Does Base.Instance return the same named item each time?</a> //#TBD#//
   [UnityTest] public IEnumerator TestInstance() {
     yield return Setup();
 
@@ -224,22 +212,20 @@ public class CustomAssetTests : PlayModeTests {
     CheckPattern(new Regex(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 0.1234 .* 0.1234$"), results.text);
   }
 
-  /// <a href="">Make sure that larger objects can be manipulated and tested for equality</a> //#TBD#//
   [UnityTest] public IEnumerator TestCompoundSetters() {
-    var zero       = new CustomAssetsExample.LargerAssetContents {I = 0, F = 0, S = ""};
+    var zero       = new CustomAssetsExample.LargerAssetContents {I = 0, f = 0, s = ""};
     var largeAsset = LargerAssetSample.New("LargerAssetSample");
     largeAsset.Value = zero;
 
     Assert.AreEqual(largeAsset.Contents, zero);
 
-    var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, F = 4.56f, S = "789"};
+    var setTo = new CustomAssetsExample.LargerAssetContents {I = 123, f = 4.56f, s = "789"};
     largeAsset.Value = setTo;
     Assert.AreNotEqual(largeAsset.Contents, zero);
     Assert.AreEqual(largeAsset.Contents, setTo);
     yield return null;
   }
 
-  /// <a href=""></a> //#TBD#//
   [UnityTest] public IEnumerator ChangeOverTime() {
     yield return Setup();
 

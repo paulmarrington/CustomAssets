@@ -4,13 +4,11 @@ using CustomAsset.Mutable;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <a href="">Simple listener to react to a directly triggered event from a button press</a> //#TBD#// <inheritdoc />
+// ReSharper disable MissingXmlDoc
+
 public sealed class DirectEventListenerSample : ListenerComponent {
   [SerializeField] private Text textComponent = default;
 
-  /// <inheritdoc />
-  protected override void OnChange() {
-    textComponent.text = "Direct Event heard at " + DateTime.Now;
-  }
+  protected override void OnChange() => textComponent.text = "Direct Event heard at " + DateTime.Now;
 }
 #endif

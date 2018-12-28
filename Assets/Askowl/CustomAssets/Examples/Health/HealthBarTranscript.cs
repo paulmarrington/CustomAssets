@@ -47,7 +47,7 @@ namespace Askowl.Transcripts {
         slider.value = health;
         yield return new WaitForSeconds(0.1f);
         var scale = foreground.localScale.x;
-        Assert.AreApproximatelyEqual(health, scale);
+        Assert.AreApproximatelyEqual(health, scale, 0.01f);
       }
 
       //- Check bounds
