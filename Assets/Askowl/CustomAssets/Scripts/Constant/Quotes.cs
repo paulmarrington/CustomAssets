@@ -15,16 +15,16 @@ namespace CustomAsset.Constant {
     /// <a href="http://bit.ly/2QR9rF8"></a> <inheritdoc />
     protected override void BuildSelector() {
       Fifo<string> choices = new Fifo<string>();
-      if (InitialSize > 0) {
-        base.BuildSelector(); // renews Choices
-        Rtf(choices, Selector.Choices);
+//      if (InitialSize > 0) {
+      base.BuildSelector(); // renews Choices
+      Rtf(choices, Selector.Choices);
+//      }
+
+      for (var i = 0; i < quoteFiles.Length; i++) {
+        if (quoteFiles[0] != null) Rtf(choices, quoteFiles[i].text.Split('\n'));
       }
 
-      if (quoteFiles != null) {
-        for (int i = 0; i < quoteFiles.Length; i++) Rtf(choices, quoteFiles[i].text.Split('\n'));
-      }
-
-      Selector.Choices = choices.ToArray();
+      if (choices.Count > 0) Selector.Choices = choices.ToArray();
     }
 
     /// <a href="http://bit.ly/2QR9rF8"></a>

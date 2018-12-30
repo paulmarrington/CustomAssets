@@ -14,20 +14,25 @@ namespace CustomAsset.Mutable {
     [SerializeField] private int   stepsPerSecond  = 10;
     [SerializeField] private bool  resetOnStart    = false;
 
-    private Fiber change;
+    private Fiber        change;
+    private bool         first = true;
+    private int          steps;
+    private float        stepTime, stepAmount;
+    private Fiber.Action step,     finish;
 
     /// <a href="http://bit.ly/2CwSUh0">Start a fiber to change over non-default period</a>
     public void Fire(float changeAmount, float seconds) {
       base.Fire();
+      if (first) {
+        first = false;
+        //- we heal in steps, not quitting on full health because player may also be taking damage
+        step   = (fiber) => targetForChange.Set(targetForChange + stepAmount);
+        finish = (fiber) => change = null;
+      }
       if (resetOnStart) targetForChange.Value = targetForChange.Minimum;
-      var steps                               = Math.Max((int) (stepsPerSecond * seconds), 1);
-      var stepTime                            = seconds      / steps;
-      var stepAmount                          = changeAmount / steps;
-
-      //- we heal in steps, not quitting on full health because player may also be taking damage
-      void step(Fiber fiber) => targetForChange.Set(targetForChange + stepAmount);
-
-      void finish(Fiber fiber) => change = null;
+      steps      = Math.Max((int) (stepsPerSecond * seconds), 1);
+      stepTime   = seconds      / steps;
+      stepAmount = changeAmount / steps;
 
       //- Fibers do not need to run from a MonoBehaviour
       change = Fiber.Start.Begin.Do(step).WaitFor(stepTime).Repeat(steps).Do(finish);
