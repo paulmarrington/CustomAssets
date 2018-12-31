@@ -15,12 +15,11 @@ namespace CustomAsset {
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void InitialiseCustomAssetsFiber() {
-      void initialiser(Fiber fiber) {
-        while (!AssetsWaitingInitialisation.Empty) AssetsWaitingInitialisation.Pop().Initialiser();
-      }
-      Fiber.Start.OnFixedUpdates.Begin.Do(initialiser).WaitFor(InitialiseAssetEmitter).Again.Finish();
-    }
+    private static void InitialiseCustomAssetsFiber() =>
+      Fiber.Start.OnFixedUpdates.Begin.Do(
+        _ => {
+          while (!AssetsWaitingInitialisation.Empty) AssetsWaitingInitialisation.Pop().Initialiser();
+        }, "Initialiser").WaitFor(InitialiseAssetEmitter).Again.Finish();
     private static bool managersLoaded;
   }
 }
