@@ -4,7 +4,6 @@ using UnityEngine;
 
 // ReSharper disable MissingXmlDoc
 
-/// <a href="http://bit.ly/2Rlzvru">Sample custom asset to test for more complex data</a> //#TBD#// <inheritdoc />
 [CreateAssetMenu(menuName = "Examples/LargerAssetSample")]
 public class LargerAssetSample : OfType<CustomAssetsExample.LargerAssetContents> {
   public static LargerAssetSample Instance(string name) => Instance<LargerAssetSample>(name);
