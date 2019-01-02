@@ -114,7 +114,7 @@ public class CustomAssetTests : PlayModeTests {
     trigger.Fire();
     yield return null;
 
-    CheckPattern(new Regex(@"Direct Event heard at \d\d/\d\d/\d\d\d\d \d\d?:\d\d:\d\d"), results.text);
+    CheckPattern(new Regex(@"Direct Event heard at \d\d?/\d\d?/\d\d\d\d \d\d?:\d\d:\d\d"), results.text);
   }
 
   [UnityTest, Timeout(10000)] public IEnumerator TestAnimationTriggerEvent() {
@@ -235,7 +235,7 @@ public class CustomAssetTests : PlayModeTests {
     int count = 0;
 
     while (Math.Abs(currentFloat) < 0.99f) {
-      Assert.Less(count++, 300);
+      Assert.Less(count++, 301);
       yield return null;
     }
 
