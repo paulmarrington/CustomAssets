@@ -1,4 +1,4 @@
-// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
+// Copyright 2018,19 (C) paul@marrington.net http://www.askowl.net/unity-packages
 using Askowl;
 using UnityEditor;
 using UnityEngine;
@@ -15,11 +15,12 @@ namespace CustomAsset {
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void InitialiseCustomAssetsFiber() =>
+    private static void InitialiseCustomAssetsFiber() {
       Fiber.Start.OnFixedUpdates.Begin.Do(
         _ => {
           while (!AssetsWaitingInitialisation.Empty) AssetsWaitingInitialisation.Pop().Initialiser();
-        }, "Initialiser").WaitFor(InitialiseAssetEmitter).Again.Finish();
+        }, "CustomAsset Initialiser").WaitFor(InitialiseAssetEmitter).Again.Finish();
+    }
     private static bool managersLoaded;
   }
 }

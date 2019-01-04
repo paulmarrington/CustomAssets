@@ -1,4 +1,5 @@
-﻿using Askowl;
+﻿// Copyright 2018,19 (C) paul@marrington.net http://www.askowl.net/unity-packages
+using Askowl;
 using UnityEngine;
 
 namespace CustomAsset {
@@ -24,13 +25,18 @@ namespace CustomAsset {
     /// <a href="http://bit.ly/2CzuMKF">Called by Managers MonoBehaviour or when mutual data is first accessed</a>
     protected virtual void Initialise() { }
 
+    /// make sure that this item will be initialised at least one frame after it is enabled and the scene is loaded
     protected virtual void OnEnable() {
       AssetsWaitingInitialisation.Push(this);
       if (AssetsWaitingInitialisation.Count == 1) InitialiseAssetEmitter.Fire();
     }
-    protected static readonly Emitter    InitialiseAssetEmitter      = Emitter.Instance;
+    /// triggered by scene load in <see cref="Manager"/>
+    protected static readonly Emitter InitialiseAssetEmitter = Emitter.Instance;
+
+    /// initialisation for all assets loaded before the related/first scene
     protected static readonly Fifo<Base> AssetsWaitingInitialisation = Fifo<Base>.Instance;
 
+    /// clear the decks as all is being destroyed
     protected virtual void OnDisable() => Initialised = false;
   }
 }

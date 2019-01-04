@@ -15,10 +15,8 @@ namespace CustomAsset.Constant {
     /// <a href="http://bit.ly/2QR9rF8"></a> <inheritdoc />
     protected override void BuildSelector() {
       Fifo<string> choices = new Fifo<string>();
-//      if (InitialSize > 0) {
       base.BuildSelector(); // renews Choices
       Rtf(choices, Selector.Choices);
-//      }
 
       for (var i = 0; i < quoteFiles.Length; i++) {
         if (quoteFiles[0] != null) Rtf(choices, quoteFiles[i].text.Split('\n'));
