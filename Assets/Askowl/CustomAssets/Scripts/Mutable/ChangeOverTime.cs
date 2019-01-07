@@ -17,7 +17,6 @@ namespace CustomAsset.Mutable {
     private Fiber        change;
     private int          steps;
     private float        stepTime, stepAmount;
-    private Fiber.Action step,     finish;
 
     /// <a href="http://bit.ly/2CwSUh0">Start a fiber to change over non-default period</a>
     public void Fire(float changeAmount, float seconds) {
