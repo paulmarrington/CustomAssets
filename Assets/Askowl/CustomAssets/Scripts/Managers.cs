@@ -9,6 +9,7 @@ namespace CustomAsset {
     /// <a href="http://bit.ly/2RjdFF2">List of managers to be loaded</a> //#TBD#//
     [SerializeField] public Manager[] managers = default;
 
+    #if UNITY_EDITOR
     /// <a href="http://bit.ly/2RjdFF2">Create a managers MonoBehaviour in the hierarchy</a> //#TBD#//
     [MenuItem("GameObject/Create Managers")]
     public static void CreateManagersGameObject() {
@@ -16,5 +17,6 @@ namespace CustomAsset {
       var gameObject = Instantiate(prefab, Vector3.zero, Quaternion.identity);
       gameObject.name = prefab.name;
     }
+    #endif
   }
 }
