@@ -17,12 +17,11 @@ namespace CustomAsset {
     #endif
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void InitialiseCustomAssetsFiber() {
+    private static void InitialiseCustomAssetsFiber() =>
       Fiber.Start.OnFixedUpdates.Begin.Do(
         _ => {
           while (!AssetsWaitingInitialisation.Empty) AssetsWaitingInitialisation.Pop().Initialiser();
         }, "CustomAsset Initialiser").WaitFor(InitialiseAssetEmitter).Again.Finish();
-    }
     private static bool managersLoaded;
   }
 }
