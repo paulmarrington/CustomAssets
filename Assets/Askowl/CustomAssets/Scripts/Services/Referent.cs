@@ -11,7 +11,7 @@ namespace CustomAsset.Services {
     where TS : Referent<TE, TS, TC>.Service
     where TC : Referent<TE, TS, TC>.Context {
     /// <a href="">Select service based on context and order</a> //#TBD#//
-    [SerializeField] private TS elector = default;
+    [SerializeField] private TE elector = default;
     /// <a href="">Context the service is to run in (must include environment)</a> //#TBD#//
     [SerializeField] private TC context = default;
 
