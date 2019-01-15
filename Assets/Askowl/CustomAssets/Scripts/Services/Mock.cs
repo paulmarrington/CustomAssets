@@ -3,7 +3,7 @@
 //using UnityEngine;
 //using System;
 //
-//namespace Decoupled.Mock {
+//namespace CustomAsset.Service {
 //  /// <a href="http://bit.ly/2APZMoL">MonoBehaviour that when active in a scene will replace services with a mock that will run without a real-world device</a> <inheritdoc />
 //  public class Mock<T> : MonoBehaviour where T : Service, new() {
 //    /// <a href="http://bit.ly/2APZMoL">An instance of the Mock service created here and used to replace any default service</a>
