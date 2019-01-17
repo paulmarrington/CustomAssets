@@ -2,8 +2,8 @@
 
 using UnityEngine;
 
-namespace CustomAsset.Services.Test {
+namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Test/Service", fileName = "TestSelector")]
-  public class Service : Referent<Elector, Service, Context>.Service { }
+  public class TestService : Referent<TestElector, TestService, TestContext>.Service { }
 }

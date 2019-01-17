@@ -3,6 +3,7 @@
 #if UNITY_EDITOR
 using System;
 using System.IO;
+using Askowl;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -12,7 +13,7 @@ using String = CustomAsset.Constant.String;
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   public class NewService : Base {
-    [MenuItem("Assets/Create/Custom Assets/Services/New Service")]
+    [MenuItem("Assets/Create/Custom Assets/Services/Create Service")]
     private static void NewServiceMenuItem() {
       var templatePath    = TemplatePath();
       var sources         = AssetDatabase.FindAssets("", new[] {templatePath});
@@ -21,14 +22,14 @@ namespace CustomAsset.Services {
       if (string.IsNullOrEmpty(destinationPath)) return;
       if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
 
-      using (var template = Askowl.Template.Instance) {
+      using (var template = Template.Instance) {
         template.Substitute("Template", serviceName);
         for (int i = 0; i < sources.Length; i++) {
           var sourcePath = AssetDatabase.GUIDToAssetPath(sources[i]);
           if (!File.Exists(sourcePath)) continue;
           var text     = template.Process(File.ReadAllText(sourcePath));
           var fileName = Path.GetFileNameWithoutExtension(sourcePath);
-          File.WriteAllText($"{destinationPath}/{fileName}.cs", text);
+          File.WriteAllText($"{destinationPath}/{serviceName}{fileName}.cs", text);
         }
 
         destinationPath = destinationPath.Substring(destinationPath.IndexOf("/Assets/", StringComparison.Ordinal) + 1);
@@ -38,7 +39,8 @@ namespace CustomAsset.Services {
         PlayerPrefs.SetString("CustomAssetServiceBuildServiceName",     serviceName);
         PlayerPrefs.SetString("CustomAssetServiceBuildDestinationPath", destinationPath);
 
-        Debug.Log($"Scripts for {destinationPath} waiting on rebuild for basic assets...");
+        Debug.Log($"Scripts for `{destinationPath}` waiting on rebuild for basic assets...");
+        // Will continue in `OnScriptsReloaded`
       }
     }
 
@@ -49,37 +51,58 @@ namespace CustomAsset.Services {
       var destinationPath = PlayerPrefs.GetString("CustomAssetServiceBuildDestinationPath");
       PlayerPrefs.DeleteKey("CustomAssetServiceBuildDestinationPath");
 
-      Debug.Log($"... rebuild complete, creating basic assets for {destinationPath}");
+      Debug.Log($"... rebuild complete, creating basic assets for `{destinationPath}`");
+      Debug.Log($"  1. Update `{serviceName}Context.cs` with context data for your service. Don't forget `Equals`");
+      Debug.Log($"  2. Fill `{serviceName}Service.cs` with supporting code and abstract or default interface methods");
+      Debug.Log($"  3. Fill `{serviceName}ServiceForMock.cs` interface methods for mocking");
+      Debug.Log($"  4. Write some tests to prove that the mock interface works as expected");
+      Debug.Log($"  5. Write `{serviceName}ServiceForSource.cs` where `Source` is a service source");
+      Debug.Log($"  6. Create an asset for each source and update relevant data accordingly");
+      Debug.Log($"  7. Repeat [5] for each source");
+      Debug.Log($"  8. Add source service assets to `{serviceName}Elector");
+      Debug.Log($"  9. Create Context assets and update `{serviceName}Referent` in GameObject `Managers` as needed");
 
       Environment mockEnvironment =
         AssetDatabase.LoadAssetAtPath<Environment>(
-          "Assets/Askowl/CustomAsset/Scripts/Services/Environments/Mock.asset");
+          "Assets/Askowl/CustomAssets/Scripts/Services/Environments/Mock.asset");
 
-      var referent = CreateInstance(serviceName, "Referent");
-      var context  = CreateInstance(serviceName, "Context");
-      var service  = CreateInstance(serviceName, "Service");
-      var elector  = CreateInstance(serviceName, "Elector");
+      var referent       = CreateInstance(serviceName, "Referent");
+      var context        = CreateInstance(serviceName, "Context");
+      var service        = CreateInstance(serviceName, "Service");
+      var serviceForMock = CreateInstance(serviceName, "ServiceForMock");
+      var elector        = CreateInstance(serviceName, "Elector");
 
-      var referentSo = new SerializedObject(referent);
-      var contextSo  = new SerializedObject(context);
-      var serviceSo  = new SerializedObject(service);
-      var electorSo  = new SerializedObject(elector);
+      var referentSerializedObject       = new SerializedObject(referent);
+      var contextSerializedObject        = new SerializedObject(context);
+      var serviceSerializedObject        = new SerializedObject(service);
+      var serviceForMockSerializedObject = new SerializedObject(serviceForMock);
+      var electorSerializedObject        = new SerializedObject(elector);
 
-      SetField(referentSo, "elector", elector);
-      SetField(referentSo, "context", context);
-      SetArrayField(electorSo, "services", service);
-      SetField(contextSo, "environment", mockEnvironment);
+      SetField(referentSerializedObject, "elector", elector);
+      SetField(referentSerializedObject, "context", context);
+      InsertIntoArrayField(electorSerializedObject, "services", serviceForMock);
+      SetField(contextSerializedObject, "environment", mockEnvironment);
 
-      AssetDatabase.CreateAsset(referent, $"{destinationPath}/Referent.asset");
-      AssetDatabase.CreateAsset(context,  $"{destinationPath}/MockContext.asset");
-      AssetDatabase.CreateAsset(elector,  $"{destinationPath}/Elector.asset");
-      AssetDatabase.CreateAsset(service,  $"{destinationPath}/MockService.asset");
+      AssetDatabase.CreateAsset(referent,       $"{destinationPath}/{serviceName}Referent.asset");
+      AssetDatabase.CreateAsset(context,        $"{destinationPath}/{serviceName}MockContext.asset");
+      AssetDatabase.CreateAsset(elector,        $"{destinationPath}/{serviceName}Elector.asset");
+      AssetDatabase.CreateAsset(serviceForMock, $"{destinationPath}/{serviceName}ServiceForMock.asset");
 
-      referentSo.ApplyModifiedProperties();
-      electorSo.ApplyModifiedProperties();
-      contextSo.ApplyModifiedProperties();
-      serviceSo.ApplyModifiedProperties();
+      referentSerializedObject.ApplyModifiedProperties();
+      electorSerializedObject.ApplyModifiedProperties();
+      contextSerializedObject.ApplyModifiedProperties();
+      serviceSerializedObject.ApplyModifiedProperties();
+      serviceForMockSerializedObject.ApplyModifiedProperties();
       AssetDatabase.SaveAssets();
+
+      var managers = UnityEngine.GameObject.Find("/Service Managers");
+      if (managers == default) {
+        var prefab = Resources.Load("Managers");
+        managers      = (UnityEngine.GameObject) Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        managers.name = "Service Managers";
+      }
+      var managersSerializedObject = new SerializedObject(managers.GetComponent<Managers>());
+      InsertIntoArrayField(managersSerializedObject, "managers", referent);
     }
 
     private static void SetField(SerializedObject asset, string fieldName, Object fieldValue) {
@@ -87,7 +110,7 @@ namespace CustomAsset.Services {
       if (serialisedProperty != null) serialisedProperty.objectReferenceValue = fieldValue;
     }
 
-    private static void SetArrayField(SerializedObject asset, string fieldName, Object fieldValue) {
+    private static void InsertIntoArrayField(SerializedObject asset, string fieldName, Object fieldValue) {
       var serialisedProperty = FindProperty(asset, fieldName);
       if (serialisedProperty != null) {
         serialisedProperty.InsertArrayElementAtIndex(0);
@@ -103,7 +126,7 @@ namespace CustomAsset.Services {
     }
 
     private static ScriptableObject CreateInstance(string serviceName, string scriptableObjectName) =>
-      CreateInstance($"CustomAsset.Services.{serviceName}.{scriptableObjectName}");
+      CreateInstance($"CustomAsset.Services.{serviceName}{scriptableObjectName}");
 
     private static string TemplatePath() {
       var paths = AssetDatabase.FindAssets("CustomAssetServiceTemplatePath");

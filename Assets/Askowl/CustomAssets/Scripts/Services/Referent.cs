@@ -2,7 +2,6 @@
 
 using System;
 using Askowl;
-using CustomAsset.Constant;
 using UnityEngine;
 
 namespace CustomAsset.Services {
@@ -62,7 +61,7 @@ namespace CustomAsset.Services {
     /// <a href=""></a> //#TBD#//
     [Serializable] public class Context : Base {
       /// <a href="">Production, Staging, Test, Dev or user defined environment</a> //#TBD#//
-      [SerializeField] private Enumeration environment = default;
+      [SerializeField] private Environment environment = default;
 
       /// <a href=""></a> //#TBD#//
       protected bool Equals(Context other) => base.Equals(other) && Equals(environment, other.environment);

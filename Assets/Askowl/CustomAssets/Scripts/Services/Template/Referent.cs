@@ -2,8 +2,8 @@
 
 using UnityEngine;
 
-namespace CustomAsset.Services.Template {
+namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Referent", fileName = "Referent")]
-  public class Referent : Referent<Elector, Service, Context> { }
+  public class TemplateReferent : Referent<TemplateElector, TemplateService, TemplateContext> { }
 }

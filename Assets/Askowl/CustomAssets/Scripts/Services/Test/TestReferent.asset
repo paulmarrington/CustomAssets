@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 749fc5dfb496246559751e00332b895f, type: 3}
-  m_Name: MockContext
+  m_Script: {fileID: 11500000, guid: 0a1372cf7d70e417b9e93bb691189947, type: 3}
+  m_Name: 
   m_EditorClassIdentifier: 
   description: 
-  environment: {fileID: 0}
+  elector: {fileID: 11400000, guid: d58bc7c9bf6c74662bab2930a90bed50, type: 2}
+  context: {fileID: 11400000, guid: 898f0c60022c54e78bc0cb142d9af286, type: 2}
