@@ -2,6 +2,7 @@
 
 using System;
 using Askowl;
+using CustomAsset.Constant;
 using UnityEngine;
 
 namespace CustomAsset.Services {
@@ -59,16 +60,18 @@ namespace CustomAsset.Services {
     }
 
     /// <a href=""></a> //#TBD#//
-    public class Context : Base {
+    [Serializable] public class Context : Base {
       /// <a href="">Production, Staging, Test, Dev or user defined environment</a> //#TBD#//
-      [SerializeField] private Enum environment = default;
+      [SerializeField] private Enumeration environment = default;
 
       /// <a href=""></a> //#TBD#//
       protected bool Equals(Context other) => base.Equals(other) && Equals(environment, other.environment);
 
       /// <inheritdoc />
       public override int GetHashCode() {
+        // ReSharper disable NonReadonlyMemberInGetHashCode
         unchecked { return (base.GetHashCode() * 397) ^ (environment != null ? environment.GetHashCode() : 0); }
+        // ReSharper restore NonReadonlyMemberInGetHashCode
       }
     }
   }
