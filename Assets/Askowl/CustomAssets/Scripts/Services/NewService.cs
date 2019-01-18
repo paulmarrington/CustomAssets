@@ -14,7 +14,7 @@ namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   public class NewService : Base {
     [MenuItem("Assets/Create/Custom Assets/Services/Create Service")]
-    private static void NewServiceMenuItem() {
+    private static void Phase1() {
       var templatePath    = TemplatePath();
       var sources         = AssetDatabase.FindAssets("", new[] {templatePath});
       var destinationPath = EditorUtility.SaveFilePanel("Save Your New Service", GetSelectedPathOrFallback(), "", "");
@@ -44,7 +44,7 @@ namespace CustomAsset.Services {
       }
     }
 
-    [DidReloadScripts] private static void OnScriptsReloaded() {
+    [DidReloadScripts] private static void Phase2() {
       if (!PlayerPrefs.HasKey("CustomAssetServiceBuildServiceName")) return;
       var serviceName = PlayerPrefs.GetString("CustomAssetServiceBuildServiceName");
       PlayerPrefs.DeleteKey("CustomAssetServiceBuildServiceName");
@@ -66,30 +66,25 @@ namespace CustomAsset.Services {
         AssetDatabase.LoadAssetAtPath<Environment>(
           "Assets/Askowl/CustomAssets/Scripts/Services/Environments/Mock.asset");
 
-      var referent       = CreateInstance(serviceName, "Referent");
+      var services       = CreateInstance(serviceName, "Services");
       var context        = CreateInstance(serviceName, "Context");
       var service        = CreateInstance(serviceName, "Service");
       var serviceForMock = CreateInstance(serviceName, "ServiceForMock");
-      var elector        = CreateInstance(serviceName, "Elector");
 
-      var referentSerializedObject       = new SerializedObject(referent);
+      var servicesSerializedObject       = new SerializedObject(services);
       var contextSerializedObject        = new SerializedObject(context);
       var serviceSerializedObject        = new SerializedObject(service);
       var serviceForMockSerializedObject = new SerializedObject(serviceForMock);
-      var electorSerializedObject        = new SerializedObject(elector);
 
-      SetField(referentSerializedObject, "elector", elector);
-      SetField(referentSerializedObject, "context", context);
-      InsertIntoArrayField(electorSerializedObject, "services", serviceForMock);
+      SetField(servicesSerializedObject, "context", context);
+      InsertIntoArrayField(servicesSerializedObject, "services", serviceForMock);
       SetField(contextSerializedObject, "environment", mockEnvironment);
 
-      AssetDatabase.CreateAsset(referent,       $"{destinationPath}/{serviceName}Referent.asset");
+      AssetDatabase.CreateAsset(services,       $"{destinationPath}/{serviceName}Referent.asset");
       AssetDatabase.CreateAsset(context,        $"{destinationPath}/{serviceName}MockContext.asset");
-      AssetDatabase.CreateAsset(elector,        $"{destinationPath}/{serviceName}Elector.asset");
       AssetDatabase.CreateAsset(serviceForMock, $"{destinationPath}/{serviceName}ServiceForMock.asset");
 
-      referentSerializedObject.ApplyModifiedProperties();
-      electorSerializedObject.ApplyModifiedProperties();
+      servicesSerializedObject.ApplyModifiedProperties();
       contextSerializedObject.ApplyModifiedProperties();
       serviceSerializedObject.ApplyModifiedProperties();
       serviceForMockSerializedObject.ApplyModifiedProperties();
@@ -102,7 +97,7 @@ namespace CustomAsset.Services {
         managers.name = "Service Managers";
       }
       var managersSerializedObject = new SerializedObject(managers.GetComponent<Managers>());
-      InsertIntoArrayField(managersSerializedObject, "managers", referent);
+      InsertIntoArrayField(managersSerializedObject, "managers", services);
     }
 
     private static void SetField(SerializedObject asset, string fieldName, Object fieldValue) {
@@ -116,6 +111,7 @@ namespace CustomAsset.Services {
         serialisedProperty.InsertArrayElementAtIndex(0);
         var arrayElementSerialisedProperty = serialisedProperty.GetArrayElementAtIndex(0);
         arrayElementSerialisedProperty.objectReferenceValue = fieldValue;
+        asset.ApplyModifiedProperties();
       }
     }
 
