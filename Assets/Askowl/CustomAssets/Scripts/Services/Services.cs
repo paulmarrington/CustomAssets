@@ -45,7 +45,7 @@ namespace CustomAsset.Services {
       }
     }
 
-    /// <a href=""></a> //#TBD#//
+    /// <a href="">If the last service fails, ask for another. If none work, returns null</a> //#TBD#//
     public Service Next {
       get {
         currentService  = selector.Next();
@@ -61,7 +61,7 @@ namespace CustomAsset.Services {
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal int usageBalance = 1;
       /// <a href=""></a> //#TBD#//
-      [SerializeField] internal Context context;
+      [SerializeField] internal Context context = default;
 
       /// <a href=""></a> //#TBD#//
       [NonSerialized] protected Emitter Emitter;

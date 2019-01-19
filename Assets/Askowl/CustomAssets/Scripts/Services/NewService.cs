@@ -60,7 +60,7 @@ namespace CustomAsset.Services {
       Debug.Log($"  6. Create an asset for each source and update relevant data accordingly");
       Debug.Log($"  7. Repeat [5] for each source");
       Debug.Log($"  8. Add source service assets to `{serviceName}Elector");
-      Debug.Log($"  9. Create Context assets and update `{serviceName}Referent` in GameObject `Managers` as needed");
+      Debug.Log($"  9. Create Context assets and update `{serviceName}Services` in GameObject `Managers` as needed");
 
       Environment mockEnvironment =
         AssetDatabase.LoadAssetAtPath<Environment>(
@@ -80,7 +80,7 @@ namespace CustomAsset.Services {
       InsertIntoArrayField(servicesSerializedObject, "services", serviceForMock);
       SetField(contextSerializedObject, "environment", mockEnvironment);
 
-      AssetDatabase.CreateAsset(services,       $"{destinationPath}/{serviceName}Referent.asset");
+      AssetDatabase.CreateAsset(services,       $"{destinationPath}/{serviceName}Services.asset");
       AssetDatabase.CreateAsset(context,        $"{destinationPath}/{serviceName}MockContext.asset");
       AssetDatabase.CreateAsset(serviceForMock, $"{destinationPath}/{serviceName}ServiceForMock.asset");
 
