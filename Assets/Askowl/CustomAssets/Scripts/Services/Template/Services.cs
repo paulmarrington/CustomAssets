@@ -5,5 +5,5 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Referent", fileName = "Referent")]
-  public class TemplateServices : Services<TemplateService, TemplateContext> { }
+  public class TemplateServices : Services<TemplateServiceConnector, TemplateContext> { }
 }

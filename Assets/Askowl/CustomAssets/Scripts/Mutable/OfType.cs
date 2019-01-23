@@ -10,10 +10,9 @@ namespace CustomAsset.Mutable {
   /// <a href="http://bit.ly/2QR9q42">Typeless base class that has an emitter</a>
   public class WithEmitter : Base {
     /// <a href="http://bit.ly/2QR9q42">Emitter reference to tell others of data changes</a>
-    public readonly Emitter Emitter = new Emitter();
+    public readonly Emitter Emitter = Emitter.Instance;
 
     #region Polling
-
     /// <a href="http://bit.ly/2QR9q42">Poll to fire an event where no other machanism exists</a>
     [Serializable] public class Polling {
       [SerializeField] private bool  enabled                 = false;
@@ -39,14 +38,12 @@ namespace CustomAsset.Mutable {
       base.OnEnable();
       polling?.Initialise(this);
     }
-
     #endregion
   }
 
   /// <a href="http://bit.ly/2QQjKcL">Base class for a custom asset. Provides getters and setters for the contained value and templates for casting to the contained type and to convert it to a string</a> <inheritdoc cref="Constant.OfType&lt;T>" />
   public class OfType<T> : WithEmitter {
     #region Data
-
     [SerializeField, Label] private T value = default;
 
     /// <a href="http://bit.ly/2QQjKcL">For safe(ish) access to the contents field</a>
@@ -57,11 +54,9 @@ namespace CustomAsset.Mutable {
 
     /// <a href="http://bit.ly/2QQjKcL">Pass string conversion responsibility from the custom asset to the containing value</a> <inheritdoc />
     public override string ToString() => value.ToString();
-
     #endregion
 
     #region Construction
-
     /// <a href="http://bit.ly/2QQjKcL">If this is a project asset, then you will need to reference it somewhere. Other classes can get a reference using `Instance()` or `Instance(string name)`. Also useful for creating in-memory versions to share between hosts</a>
     public new static TC Instance<TC>(string name = null) where TC : Base {
       var instance = Base.Instance<TC>(name);
@@ -96,21 +91,17 @@ namespace CustomAsset.Mutable {
 
     /// <a href="http://bit.ly/2QQjKcL"></a>
     protected override void OnDisable() => Save();
-
     #endregion
 
     #region Listeners
-
     /// <a href="http://bit.ly/2QQjKcL">For safe(ish) access to the contents field</a>
     public virtual void Set(T toValue) {
       value = toValue;
       Emitter.Fire();
     }
-
     #endregion
 
     #region Comparators
-
     /// <a href="http://bit.ly/2QQjKcL"></a> <inheritdoc />
     public override int GetHashCode() => Equals(Value, default(T)) ? 0 : Value.GetHashCode();
 
@@ -123,11 +114,9 @@ namespace CustomAsset.Mutable {
         return false;
       }
     }
-
     #endregion
 
     #region Persistence
-
     [SerializeField] private bool persistent = default;
 
     private string Key => $"{name}:{typeof(T)}";
@@ -145,11 +134,9 @@ namespace CustomAsset.Mutable {
     public void Save() {
       if (persistent) PlayerPrefs.SetString(Key, JsonUtility.ToJson(new Wrap {data = Value}));
     }
-
     #endregion
 
     #region EditorOnly
-
     #if UNITY_EDITOR
     private static void AssetToUnload(ScriptableObject asset) {
       if (newAssets.Contains(asset) || assetsToUnload.Contains(asset)) return;
@@ -173,7 +160,6 @@ namespace CustomAsset.Mutable {
     private static void AssetToUnload(ScriptableObject asset){}
     private static void NewAsset(ScriptableObject asset){}
     #endif
-
     #endregion
   }
 }

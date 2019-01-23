@@ -5,5 +5,8 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Context", fileName = "TemplateContext")]
-  public class TemplateContext : Services<TemplateService, TemplateContext>.Context { }
+  public class TemplateContext : Services<TemplateServiceConnector, TemplateContext>.Context {
+    /// <a href=""></a> //#TBD#//
+    protected bool Equals(TemplateContext other) => base.Equals(other);
+  }
 }

@@ -7,7 +7,7 @@
 
 
 ## Executive Summary
-Custom assets are project resources that contain data and code wrapped in a Unity ScriptableObject. Also, they provide emitters to signal change and persistence between sessions. Read the list of benefits [here](#benefits) and watch the video introduction [here](https://www.youtube. com/watch?v=).
+Custom assets are project resources that contain data and code wrapped in a Unity ScriptableObject. Also, they provide emitters to signal change and persistence between sessions. Read the list of benefits [here](#benefits) and watch the video introduction [here](https://www.youtube.com/watch?v=).
 
 I have chosen to use this executive summary to provide examples on how you can use custom assets.
 
@@ -21,15 +21,18 @@ After you create a custom asset in the project, any reference in components is t
 * be reviewed by other actions (such as no jumping on low health)
 * In this example a CustomAsset.Float project resource does the job while markedly reducing the amount of code and support compared to a singleton.
 
-See how easy it is to create [here](#health-bar) e in [this](https://www.youtube. com/watch?v=) short video including testing framework. Use the same techniques for stamina, mana, progress and the many other measures used in games. Then branch out to more uses.
+See how easy it is to create [here](#health-bar) e in [this](https://www.youtube.com/watch?v=) short video including testing framework. Use the same techniques for stamina, mana, progress and the many other measures used in games. Then branch out to more uses.
 
 ### Game Managers
-The traditional approach of using a MonoBehaviour as a manager creates a system that is difficult to test in isolation. [Here](https://www.youtube .com/watch?v=) we have a video on creating the framework for a health manager using custom assets. Go [here](#health-manager) if you prefer to read.
+The traditional approach of using a MonoBehaviour as a manager creates a system that is difficult to test in isolation. [Here](https://www.youtube.com/watch?v=) we have a video on creating the framework for a health manager using custom assets. Go [here](#health-manager) if you prefer to read.
 
 Refactoring existing code into custom asset managers can be done in very little time while providing benefits in stability, flexibility and testing. [Here](#refactoring-to-use-custom-assets) is a non-trivial example from existing code.
 
 ### Persistent Storage
 Every mutable custom asset includes a checkbox in the inspector for persistent storage. Data saves when changed and restored on program restart.
+
+### Decoupling Services
+A game that connects directly to external services is brittle. Custom Asset Services decouples your game from external services. It makes changing service providers easier. Multiple providers, fallback on failure amd mocking are all supported. Using different providers for different platforms is as easy as creating a new context asset. A database service, for example can have different contexts for production, staging, test and development.
 
 > Read the code in the Examples Folder and run the Example scene
 
@@ -130,7 +133,7 @@ Manager custom assets are the most useful if they are totally decoupled. They de
 
 Player managers should be logic. Data have their own custom assets. Since managers only react to events they need to be explicitly loaded. In the Unity editor select the menu ***GameObject // Create Managers***. Drag the managers into the list in the newly created MonoBehaviour.
 
-<img src="Managers.png" width="75%" alt="Manager Custom Asset Container">
+![Manager Custom Asset Container](Managers.png)
 
 For testing we don't need a scene. Another benefit of decoupling. `Manager` provides a `Load` method for independent testing. The asset can be found by name with or without a path. Only as much of the path as needed for uniqueness needs be given.
 
@@ -218,7 +221,7 @@ public sealed class CustomAssetsExample: MonoBehaviour {
   // ...
 }
 ```
-<img src="SampleCustomAsset.png" width="50%" alt="sample custom asset for float">
+![sample custom asset for float](SampleCustomAsset.png)
 
 Custom assets aid decoupling. Many components can operate without directly knowing each other.
 
@@ -393,9 +396,9 @@ Fortunately, the Unity framework has a solution to that problem. It is called `U
 ```
 will display in the inspector as follows.
 
-<img src="AudioClips1.png" width="50%" alt="Audio Clips CustomAsset">
+![Audio Clips CustomAsset](AudioClips1.png)
 
-<img src="AudioClips2.png" width="50%" alt="Choose audio clip from a list">
+![Choose audio clip from a list](AudioClips2.png)
 
 The reference to `AudioClips` is optional. It is only there so that we can change the fields in the editor without going to the asset.
 
@@ -413,8 +416,8 @@ Using `AudioClips` wherever you have sound effects makes your game sound a lot m
 
 It is always fun to factor out common manager custom assets into common code. Health, mana, stamina and similar look better if changes are not instantaneous. And some, like poison, have to happen over a period. Create managers without code using the `ChangeOverTime` custom asset.
 
-<img src="Health-SmallPotion.png" width="75%" alt="Change custom asset over time">
-<img src="Health-PoisonArrow.png" width="75%" alt="Change custom asset over time">
+![Change custom asset over time](Health-SmallPotion.png)
+![Change custom asset over time](Health-PoisonArrow.png)
 
 ### Custom Asset Sets
 `Set`, like `OfType` is a generic class. To instantiate it requires the type of set entries.
@@ -471,7 +474,7 @@ Drivers and Connectors (described below) also need a reference. They register fo
 ### Polling
 No matter how hard we try there is data that changes and we cannot get be informed in a timely manner. The technique of last resort is called polling - where we check periodically for change. The inspector for any mutable custom asset will includes some polling fields. Just enable polling in the inspector and set the intervals.
 
-<img src="Polling.png" width="75%" alt="Polling for changes">
+![Polling for changes](Polling.png)
 
 ## Using Custom Assets
 Life begins now. Without writing any code, you can use the prepackaged custom assets and listeners to connect components without them knowing about each other.
@@ -480,41 +483,41 @@ Don't believe me? Create a game object inside a canvas and add a slider componen
 
 ***Step 1***: Create a Float custom asset from the Unity editor main or context menu.
 
-<img src="Slider-6-Create-Custom-Asset.png" width="50%" alt="Menu to create a custom asset">
+![Menu to create a custom asset](Slider-6-Create-Custom-Asset.png)
 
 ***Step 2***: Select the custom asset and add any initial data.
 
-<img src="Float-CustomAsset-Editing.png" width="75%" alt="Inspector view of CustomAsset.Float">
+![Inspector view of CustomAsset.Float](Float-CustomAsset-Editing.png)
 
 ***Step 3***: Create a new GameObject in the Unity Hierarchy window. Make sure it is inside a Canvas GameObject.
 
-<img src="Slider-1-Hierarchy.png" width="25%" alt="Creating a slider">
+![Creating a slider](Slider-1-Hierarchy.png)
 
 ***Step 4***: Go to the inspector for the game object *Slider* and add a slider component.
 
-<img src="Slider-3-Component1.png" width="75%" alt="UI Slider Component Inspector View">
+![UI Slider Component Inspector View](Slider-3-Component1.png)
 
 ***Step 5***: Add an *On Value Change* field and drag the Float custom asset into the associated field. Use the function drop-down to select ***Float: Value***.
 
-<img src="Slider-4-Component2.png" width="75%" alt="Setting a slider to update a custom asset">
+![Setting a slider to update a custom asset](Slider-4-Component2.png)
 
 ***Step 6***: Lock the inspector on the Float custom asset and run the scene. Drag the slider and watch the value change in the inspector.
 
-<img src="Slider-2-Screen.png" width="25%" alt="How the slider looks on the unity application window">
+![How the slider looks on the unity application window](Slider-2-Screen.png)
 
 For extra points, we can create a code-less health display bar.
 
 ***Step 7***: Create a UI Button GameObject in a Canvas and change the image type to *Filled*. Note that moving the *Fill Amount* slider causes the button to change background proportionately.
 
-<img src="Slider-7-Image-to-Fill.png" width="75%" alt="Setting up an image to be filled driven by a Float custom asset">
+![Setting up an image to be filled driven by a Float custom asset](Slider-7-Image-to-Fill.png)
 
 ***Step 8***: Press the *Add Component* Button then search for and add the *FloatDriver* component. Set the custom asset to the one created above and the component value setter to *Image.FillAmount*.
 
-<img src="Slider-8-Listener.png" width="75%" alt="Adding a CustomAsset.Float driver">
+![Adding a CustomAsset.Float driver](Slider-8-Listener.png)
 
 ***Step 9***: Run the application and move the slider created above. The button fills and empties accordingly.
 
-<img src="Slider-9-Image-Filling.png" width="25%" alt="How the fill looks for this sample at 0.75">
+![How the fill looks for this sample at 0.75](Slider-9-Image-Filling.png)
 
 For components, like Animator, with named values Used *NamedFloatDriver* and it's siblings.
 
@@ -549,15 +552,15 @@ A driver is a MonoBehaviour that is designed to listen for custom asset changes 
 
 Add them to the Inspector view by dragging them in or using the menu ***Component/CustomAssets/Name of Driver***.
 
-<img src="Image-FillAmount-Driver.png" width="75%" alt="Sample CustomAsset.FloatDriver">
+![Sample CustomAsset.FloatDriver](Image-FillAmount-Driver.png)
 
 Triggers are the exception and can use methods from ***Static Parameters***.
 
-<img src="Audio-Play-Driver.png" width="75%" alt="Sample CustomAsset.TriggerDriver">
+![Sample CustomAsset.TriggerDriver](Audio-Play-Driver.png)
 
 All primitive data drivers have a matching version that starts with Named. These are to drive components like ***Animator*** that require a parameter name as well as the value. Since ***Animator*** does not expose it's internals to the Inspector, we need to resort to a connector.
 
-<img src="Animator-Driver.png" width="75%" alt="Sample CustomAsset.NamedFloatDriver">
+![Sample CustomAsset.NamedFloatDriver](Animator-Driver.png)
 
 This package provides drivers for all primitive data type, but it is trivial to add new ones.
 ``` c#
@@ -665,18 +668,97 @@ Debug.Log(Quotes.RTF("Life wasn't meant to be easy (George Bernard Shaw)"));
 produces
 ***"***Life wasn't meant to be easy***"***     *George Bernard Shaw*
 
+## Services
+* Creating a new service is easy. Just select the Assets or Project context menu ***Create // Custom Assets // Services // Create Service***
+* You will be asked to give a name to your service. Make the name descriptive. Your service will be created in a directory of the same name. Rename or move it as you wish.
+* Your scene is updated with a ***Service Managers*** game object with a Managers component adding your service manager.
+
+![Service Managers GameObject](ServiceManagerInHierarchy.png)
+
+![Service Managers GameObject with Managers component filled](ServiceManagerInInspector.png)
+
+* If the service directory isn't under a scripts directory you will need to add an assembly definition (Assets or Project context menu ***Create // Assembly Definition***)
+* Here I have renamed the ***Adze*** directory to ***Scripts*** and created an assembly definition file
+* There are four C# source files generated and three services.
+
+![Project View for Adze Services](AdzeProject.png)
+
+* Let's look at the source files first. They are all named starting with the name you gave your service.
+  * The `Context` file requires editing. It is used to compare every service against the current context. Every context asset has an environment. `Production`, `Staging`, `Test` and `Mock` are provided, but you can add more. You will need to add service specific context records to this file. Adze, as seen here, filters services on running platform and advertisement type. The context will also hold data to be sent to the underlying services.
+
+```c#
+  [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Context", fileName = "AdzeContext")]
+  public class AdzeContext : Services<AdzeService, AdzeContext>.Context {
+
+    #region Context Equality
+    public enum Mode { Banner, Interstitial, Reward }
+    [SerializeField] public RuntimePlatform platform = default;
+    [SerializeField] public Mode mode = Mode.Reward;
+    #endregion
+
+    #region Connection Data
+    [SerializeField] public string key = default;
+    [SerializeField] public string signature = default;
+    [SerializeField] public string location = default;
+    #endregion
+
+    protected bool Equals(AdzeContext other) =>
+      base.Equals(other) && Equals(platform, other.platform) && Equals(mode, other.mode);
+  }
+```
+
+  * The next file requiring attention is the `Service.cs`. It provides `Initialise()`,  `Emitter` to use for asynchronous services and `Error` and `Log` functions for analytics. The class is abstract as it will defer service actions to a provider. In this case `LogOnResponse` deals with analytics although a concrete service may override it if necessary.
+
+``` c#
+  [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Service", fileName = "AdzeSelector")]
+  public abstract class AdzeService : Services<AdzeService, AdzeContext>.Service {
+    /// Did the player take an action proposed by the advertisement?
+    [NonSerialized] public bool AdActionTaken;
+    /// >Did the player dismiss the advertisement without watching it?
+    [NonSerialized] public bool Dismissed;
+    /// default == error, empty == no logging else error message
+    [NonSerialized] public string ServiceError;
+
+    /// Display advert, returning default for no error, empty for no logging of a message else error message
+    protected abstract string Display(Emitter emitter);
+
+    // Registered with Emitter to provide common logging
+    protected override void LogOnResponse() {
+      if (ServiceError != default) {
+        if (!string.IsNullOrEmpty(ServiceError)) Error(ServiceError);
+      } else if (Dismissed) {
+        Log("Dismissed", "By Player");
+      } else {
+        Log("Action", AdActionTaken ? "Taken" : "Not Taken");
+      }
+    }
+    
+    /// Ask for advert and returns emitter to wait on completion or null on service error
+    public Emitter Show() {
+      AdActionTaken = Dismissed = default;
+      ServiceError  = default;
+      Log(action: "Show", message: "Now");
+      var emitter = GetAnEmitter();
+      ServiceError = Display(emitter);
+      return ServiceError == default ? emitter : null;
+    }
+  }
+```
+
+![Adze Custom Assert Service Context](AdzeContext.png)
+
 ## Examples
 ### Health Bar
 * First, create a test scene (menu Assets/Create/Scene)
 * Create a CustomAsset to store the health (menu Assets/Create/Custom Assets/Mutable/Float)
 
-<img src="Health-CustomAsset.png" width="75%" alt="Float custom asset to represent player health">
+![Float custom asset to represent player health](Health-CustomAsset.png)
 
 * Create a canvas (menu GameObject/UI/Canvas)
 * Create an empty child GameObject and call it ***HealthBar***
   * Set it to a reasonable size
 
-<img src="HealthBar.png" width="75%" alt="Inspector view of HealthBar game object transform">
+![Inspector view of HealthBar game object transform](HealthBar.png)
 
 * Create an image child (menu GameObject/UI/Image) and call it ***Background***
   * Set colour to red
@@ -684,23 +766,23 @@ produces
   * Set X and Y anchors to Min 0, Max 1
   * Change X pivot to 0
 
-<img src="Health-Background.png" width="75%" alt="Inspector view of health-bar background">
+![Inspector view of health-bar background](Health-Background.png)
 
 * Duplicate the Background, rename Foreground and change to green
 * The foreground is the only active component. We are going to reduce the scale so that the background shows through. Since transforms don't expose their data, we use a connector. (Drag connector into Inspector)
 *  And we need a float driver to change the scale when our health custom asset changes (drag Float-Driver into the inspector)
 * This is where we hook them up (drop health asset into the driver and set the component to ScaleX)
 
-<img src="Health-Foreground.png" width="75%" alt="Inspector view of health-bar foreground">
+![Inspector view of health-bar foreground](Health-Foreground.png)
 
 * We created the health scene for two reasons - so that we can tweak our health bar before adding it to our project and so we can add manual and automatic testing. We need to add a component to drive the health bar. Fortunately, the Unity UI has a slider that works a treat. (Bounds//context//UI//Slider)
 
-<img src="Health-Slider.png" width="75%" alt="Inspector view of health-bar test slider">
+![Inspector view of health-bar test slider](Health-Slider.png)
 
 * It is as simple as pie to hook in our custom asset (On Value Change/+/Health custom asset/Float.Value)
 * Run the scene and drag the slider to make the health bar change
 
-<img src="Health-Demo.png" width="75%" alt="Running demo of health-bar">
+![Running demo of health-bar](Health-Demo.png)
 
 ### Health Bar Integrity Testing
 
@@ -718,7 +800,7 @@ The integrity test loads our sample scene and exercises the slider to make sure 
     #endif
 
     //- We will only need a single method to test the integrity
-    //- of the health-bar functionaality.
+    //- of the health-bar functionality.
     [UnityTest] public IEnumerator HeathBarTests() {
       yield return LoadScene(scenePath);
       //- We will need a reference to the slider for control
@@ -787,22 +869,22 @@ Following the single responsibility principle, each manager should be small and 
 
 * Create a new ***Float*** custom asset and call it ***TrickleChargePerSecond***.
 
-<img src="Health-TrickleChargePerSecond.png" width="75%" alt="">
+![](Health-TrickleChargePerSecond.png)
 
 * Create a health manager with the menu or context menu ***Assets // Create // Manager // Health***. Fill custom asset references with ***Health*** and ***TrickleChargePerSecond*** custom asset references.
 
-<img src="Health-Manager.png" width="75%" alt="A health manager ready for deployment">
+![A health manager ready for deployment](Health-Manager.png)
 
 * Decoupled Managers need to tell our game that they exist. Create a game object from the ***GameObject/Create Managers*** menu and drag a reference to your manager into it. It only needs to be done in your opening scene.
 
-<img src="Health-Managers-GameObject.png" width="75%" alt="Inspector view of health manager">
+![Inspector view of health manager](Health-Managers-GameObject.png)
 
 * All other health changes can be made using `CustomAsset.ChangeOverTime` instances.
 
-<img src="Health-SmallPotion.png" width="75%" alt="Effects of small healing potion">
+![Effects of small healing potion](Health-SmallPotion.png)
 
 
-<img src="Health-PoisonArrow.png" width="75%" alt="Effects of being hit by a poison arrow">
+![Effects of being hit by a poison arrow](Health-PoisonArrow.png)
 
 #### Health Manager Integrity Testing
 

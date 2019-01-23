@@ -8,7 +8,7 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href="">Separate selection and service from context for easy Inspector configuration</a> //#TBD#//
   public class Services<TS, TC> : Manager
-    where TS : Services<TS, TC>.Service
+    where TS : Services<TS, TC>.ServiceConnector
     where TC : Services<TS, TC>.Context {
     /// <a href=""></a> //#TBD#//
     // ReSharper disable MissingXmlDoc
@@ -36,7 +36,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">Get the next service instance given selection order and repetitions</a> //#TBD#//
-    public Service Instance {
+    public ServiceConnector Instance {
       get {
         if (--usagesRemaining > 0) return currentService;
         currentService  = selector.Pick();
@@ -46,7 +46,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">If the last service fails, ask for another. If none work, returns null</a> //#TBD#//
-    public Service Next {
+    public ServiceConnector Next {
       get {
         currentService  = selector.Next();
         usagesRemaining = currentService.usageBalance;
@@ -55,7 +55,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">Parent class for decoupled services</a>
-    [Serializable] public class Service : Base {
+    [Serializable] public abstract class ServiceConnector : Base {
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal int priority = 1;
       /// <a href=""></a> //#TBD#//
@@ -63,19 +63,31 @@ namespace CustomAsset.Services {
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal Context context = default;
 
-      /// <a href=""></a> //#TBD#//
-      [NonSerialized] protected Emitter Emitter;
+      /// <a href="">Get a single-fire emitter to signal an asynchronous method has returned a result</a> //#TBD#//
+      protected Emitter GetAnEmitter() {
+        var emitter = Emitter.SingleFireInstance;
+        emitter.Subscribe(logOnResponse);
+        return emitter;
+      }
       /// <a href=""></a> //#TBD#//
       [NonSerialized] protected Log.MessageRecorder Log;
       /// <a href=""></a> //#TBD#//
       [NonSerialized] protected Log.EventRecorder Error;
 
+      /// <a href="">Concrete service implements this to prepare for action</a> //#TBD#//
+      protected abstract void Prepare();
+
+      /// <a href="">Registered with Emitter to provide common logging</a> //#TBD#/
+      protected abstract void LogOnResponse();
+      private Action logOnResponse;
+
       /// <a href="">Override to initialise concrete service instances</a>
       protected override void Initialise() {
         base.Initialise();
-        Emitter = new Emitter();
-        Log     = Askowl.Log.Messages();
-        Error   = Askowl.Log.Errors();
+        Log           = Askowl.Log.Messages();
+        Error         = Askowl.Log.Errors();
+        logOnResponse = LogOnResponse;
+        Prepare();
       }
     }
 
@@ -85,7 +97,7 @@ namespace CustomAsset.Services {
       [SerializeField] private Environment environment = default;
 
       /// <a href=""></a> //#TBD#//
-      protected bool Equals(Context other) => base.Equals(other) && Equals(environment, other.environment);
+      protected virtual bool Equals(Context other) => base.Equals(other) && Equals(environment, other.environment);
 
       /// <inheritdoc />
       public override int GetHashCode() {

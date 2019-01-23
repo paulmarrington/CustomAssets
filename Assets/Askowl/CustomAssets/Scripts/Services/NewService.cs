@@ -20,7 +20,11 @@ namespace CustomAsset.Services {
       var destinationPath = EditorUtility.SaveFilePanel("Save Your New Service", GetSelectedPathOrFallback(), "", "");
       var serviceName     = Path.GetFileNameWithoutExtension(destinationPath);
       if (string.IsNullOrEmpty(destinationPath)) return;
-      if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
+      if (Directory.Exists(destinationPath)) {
+        Debug.LogError($"{destinationPath} already exists. Please select a different name or project directory");
+        return;
+      }
+      Directory.CreateDirectory(destinationPath);
 
       using (var template = Template.Instance) {
         template.Substitute("Template", serviceName);
@@ -55,10 +59,10 @@ namespace CustomAsset.Services {
       Debug.Log($"  1. Update `{serviceName}Context.cs` with context data for your service. Don't forget `Equals`");
       Debug.Log($"  2. Fill `{serviceName}Service.cs` with supporting code and abstract or default interface methods");
       Debug.Log($"  3. Fill `{serviceName}ServiceForMock.cs` interface methods for mocking");
-      Debug.Log($"  4. Write some tests to prove that the mock interface works as expected");
+      Debug.Log("  4. Write some tests to prove that the mock interface works as expected");
       Debug.Log($"  5. Write `{serviceName}ServiceForSource.cs` where `Source` is a service source");
-      Debug.Log($"  6. Create an asset for each source and update relevant data accordingly");
-      Debug.Log($"  7. Repeat [5] for each source");
+      Debug.Log("  6. Create an asset for each source and update relevant data accordingly");
+      Debug.Log("  7. Repeat [5] for each source");
       Debug.Log($"  8. Add source service assets to `{serviceName}Elector");
       Debug.Log($"  9. Create Context assets and update `{serviceName}Services` in GameObject `Managers` as needed");
 
@@ -66,14 +70,14 @@ namespace CustomAsset.Services {
         AssetDatabase.LoadAssetAtPath<Environment>(
           "Assets/Askowl/CustomAssets/Scripts/Services/Environments/Mock.asset");
 
-      var services       = CreateInstance(serviceName, "Services");
-      var context        = CreateInstance(serviceName, "Context");
-      var service        = CreateInstance(serviceName, "Service");
-      var serviceForMock = CreateInstance(serviceName, "ServiceForMock");
+      var services         = CreateInstance(serviceName, "Services");
+      var context          = CreateInstance(serviceName, "Context");
+      var serviceConnector = CreateInstance(serviceName, "ServiceConnector");
+      var serviceForMock   = CreateInstance(serviceName, "ServiceConnectorForMock");
 
       var servicesSerializedObject       = new SerializedObject(services);
       var contextSerializedObject        = new SerializedObject(context);
-      var serviceSerializedObject        = new SerializedObject(service);
+      var serviceSerializedObject        = new SerializedObject(serviceConnector);
       var serviceForMockSerializedObject = new SerializedObject(serviceForMock);
 
       SetField(servicesSerializedObject, "context", context);

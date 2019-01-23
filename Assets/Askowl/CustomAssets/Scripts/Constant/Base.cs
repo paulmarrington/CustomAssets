@@ -31,7 +31,7 @@ namespace CustomAsset {
       if (AssetsWaitingInitialisation.Count == 1) InitialiseAssetEmitter.Fire();
     }
     /// triggered by scene load in <see cref="Manager"/>
-    protected static readonly Emitter InitialiseAssetEmitter = Emitter.Instance;
+    protected static readonly Emitter InitialiseAssetEmitter = Emitter.SingleFireInstance;
 
     /// initialisation for all assets loaded before the related/first scene
     protected static readonly Fifo<Base> AssetsWaitingInitialisation = Fifo<Base>.Instance;

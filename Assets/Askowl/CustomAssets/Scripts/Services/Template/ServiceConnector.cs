@@ -3,7 +3,7 @@
 using UnityEngine;
 
 namespace CustomAsset.Services {
-  /// <a href=""></a> //#TBD#//
+  /// <a href=""></a><inheritdoc /> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Service", fileName = "TemplateSelector")]
-  public class TemplateService : Services<TemplateService, TemplateContext>.Service { }
+  public abstract class TemplateServiceConnector : Services<TemplateServiceConnector, TemplateContext>.ServiceConnector { }
 }
