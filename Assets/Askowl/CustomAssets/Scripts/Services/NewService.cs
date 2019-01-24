@@ -70,25 +70,25 @@ namespace CustomAsset.Services {
         AssetDatabase.LoadAssetAtPath<Environment>(
           "Assets/Askowl/CustomAssets/Scripts/Services/Environments/Mock.asset");
 
-      var services         = CreateInstance(serviceName, "Services");
+      var servicesManager  = CreateInstance(serviceName, "ServicesManager");
       var context          = CreateInstance(serviceName, "Context");
       var serviceConnector = CreateInstance(serviceName, "ServiceConnector");
       var serviceForMock   = CreateInstance(serviceName, "ServiceConnectorForMock");
 
-      var servicesSerializedObject       = new SerializedObject(services);
-      var contextSerializedObject        = new SerializedObject(context);
-      var serviceSerializedObject        = new SerializedObject(serviceConnector);
-      var serviceForMockSerializedObject = new SerializedObject(serviceForMock);
+      var servicesManagerSerializedObject = new SerializedObject(servicesManager);
+      var contextSerializedObject         = new SerializedObject(context);
+      var serviceSerializedObject         = new SerializedObject(serviceConnector);
+      var serviceForMockSerializedObject  = new SerializedObject(serviceForMock);
 
-      SetField(servicesSerializedObject, "context", context);
-      InsertIntoArrayField(servicesSerializedObject, "services", serviceForMock);
+      SetField(servicesManagerSerializedObject, "context", context);
+      InsertIntoArrayField(servicesManagerSerializedObject, "services", serviceForMock);
       SetField(contextSerializedObject, "environment", mockEnvironment);
 
-      AssetDatabase.CreateAsset(services,       $"{destinationPath}/{serviceName}Services.asset");
-      AssetDatabase.CreateAsset(context,        $"{destinationPath}/{serviceName}MockContext.asset");
-      AssetDatabase.CreateAsset(serviceForMock, $"{destinationPath}/{serviceName}ServiceForMock.asset");
+      AssetDatabase.CreateAsset(servicesManager, $"{destinationPath}/{serviceName}ServicesManager.asset");
+      AssetDatabase.CreateAsset(context,         $"{destinationPath}/{serviceName}MockContext.asset");
+      AssetDatabase.CreateAsset(serviceForMock,  $"{destinationPath}/{serviceName}ServiceForMock.asset");
 
-      servicesSerializedObject.ApplyModifiedProperties();
+      servicesManagerSerializedObject.ApplyModifiedProperties();
       contextSerializedObject.ApplyModifiedProperties();
       serviceSerializedObject.ApplyModifiedProperties();
       serviceForMockSerializedObject.ApplyModifiedProperties();
@@ -101,7 +101,7 @@ namespace CustomAsset.Services {
         managers.name = "Service Managers";
       }
       var managersSerializedObject = new SerializedObject(managers.GetComponent<Managers>());
-      InsertIntoArrayField(managersSerializedObject, "managers", services);
+      InsertIntoArrayField(managersSerializedObject, "managers", servicesManager);
     }
 
     private static void SetField(SerializedObject asset, string fieldName, Object fieldValue) {

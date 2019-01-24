@@ -1,4 +1,4 @@
-﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
+﻿﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using System;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Service", fileName = "TemplateSelector")]
-  public class TemplateServiceConnectorForMock : TemplateServiceConnector {
+  public class TemplateServiceAdapterForMock : TemplateServiceAdapter {
     /// <a href="">Prepare the mock service for operations</a> //#TBD#//
     protected override void Prepare() => throw new NotImplementedException();
 

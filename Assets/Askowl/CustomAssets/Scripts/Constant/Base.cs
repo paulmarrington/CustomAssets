@@ -1,4 +1,5 @@
 ﻿// Copyright 2018,19 (C) paul@marrington.net http://www.askowl.net/unity-packages
+using System;
 using Askowl;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace CustomAsset {
     public string Description => description;
 
     /// <a href="http://bit.ly/2CzuMKF"></a>
-    protected bool Initialised;
+    [NonSerialized] protected bool Initialised;
 
     /// <a href="http://bit.ly/2CzuMKF">Called by Managers MonoBehaviour</a>
     public void Initialiser() {

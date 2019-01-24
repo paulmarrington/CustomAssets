@@ -8,7 +8,7 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href="">Separate selection and service from context for easy Inspector configuration</a> //#TBD#//
   public class Services<TS, TC> : Manager
-    where TS : Services<TS, TC>.ServiceConnector
+    where TS : Services<TS, TC>.ServiceAdapter
     where TC : Services<TS, TC>.Context {
     /// <a href=""></a> //#TBD#//
     // ReSharper disable MissingXmlDoc
@@ -36,7 +36,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">Get the next service instance given selection order and repetitions</a> //#TBD#//
-    public ServiceConnector Instance {
+    public ServiceAdapter Instance {
       get {
         if (--usagesRemaining > 0) return currentService;
         currentService  = selector.Pick();
@@ -46,7 +46,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">If the last service fails, ask for another. If none work, returns null</a> //#TBD#//
-    public ServiceConnector Next {
+    public ServiceAdapter Next {
       get {
         currentService  = selector.Next();
         usagesRemaining = currentService.usageBalance;
@@ -55,7 +55,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">Parent class for decoupled services</a>
-    [Serializable] public abstract class ServiceConnector : Base {
+    [Serializable] public abstract class ServiceAdapter : Base {
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal int priority = 1;
       /// <a href=""></a> //#TBD#//

@@ -669,6 +669,29 @@ produces
 ***"***Life wasn't meant to be easy***"***     *George Bernard Shaw*
 
 ## Services
+
+Decoupling software components and systems have been a focus for many decades. In the 80s we talked about software black boxes. You didn't care what was inside, just on the inputs and outputs.
+
+Microsoft had much fun in the 90's designing and implementing COM and DCOM. I still think of this as the high point in design for supporting decoupled interfaces.
+
+Now we have Web APIs, REST or SOAP interfaces and microservices. Design patterns such as the Factory Pattern are here to "force" decoupling at the enterprise software level. There have been dozens of standards over the years.
+
+Despite this, programmers have continued to create tightly coupled systems even while enforcing the requirements of the framework.
+
+Consider a simple example. I have an app that uses a Google Maps API to translate coordinates into a description "Five miles south-west of Gundagai". My app is running on an iPhone calling into a cloud of Google servers. The hardware is different and remote, and they both use completely different software systems. However, my app won't run, or at least perform correctly, without Google. Worse still if I am using a Google library, it won't even compile without a copy.
+
+A service custom asset provides a way to decouple your app from packages in the Unity3D ecosystem. It works at the C# class level, meaning that it does not provide the physical separation. That is provided by the Unity packages when needed. In approach, it acts very much like a C# Interface. So,w hat does it give us?
+
+1. You can build and test your app while waiting for supporting Unity packages to be complete.
+2. You can choose between unity packages without changing your app code. Changing from Google Analytics to Unity Analytics to Fabric is as simple as getting or writing the connector code.
+3. You can provide a standard interface to a related area. For social media, the interface could support FaceBook, Twitter, Youtube and others. You could then send a command to one, some or all of them. Think of this regarding posting to multiple platforms.
+4. You can have more than one service then cycle through them or select one at random. For advertising, you can move to a new platform if the current one cannot serve you an ad.
+5. Platforms such as iOS, Android, Mac, Steam, Windows, etc can used different underlying services without code changes.
+6. Mocking is not only possible, but flexible and easy to implement.
+
+Now I could write some twisted documentation that I feel would be confusing. Instead I present a real-world example for an advertising service manager.
+
+### Adze: A Sample Service
 * Creating a new service is easy. Just select the Assets or Project context menu ***Create // Custom Assets // Services // Create Service***
 * You will be asked to give a name to your service. Make the name descriptive. Your service will be created in a directory of the same name. Rename or move it as you wish.
 * Your scene is updated with a ***Service Managers*** game object with a Managers component adding your service manager.
@@ -707,11 +730,11 @@ produces
   }
 ```
 
-  * The next file requiring attention is the `Service.cs`. It provides `Initialise()`,  `Emitter` to use for asynchronous services and `Error` and `Log` functions for analytics. The class is abstract as it will defer service actions to a provider. In this case `LogOnResponse` deals with analytics although a concrete service may override it if necessary.
+  * The next file requiring attention is the `Service.cs`. It provides `Initialise()`,  `Emitter` to use for asynchronous services and `Error` and `Log` functions for analytics. The class is abstract as it will defer service actions to a provider. In this case `LogOnResponse` deals with analytics although a concrete service may override it if necessary. Many service adapters are just a list of abstract methods to implement. Sometimes, like here, an interface can be massaged for concrete service differences.
 
 ``` c#
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Service", fileName = "AdzeSelector")]
-  public abstract class AdzeService : Services<AdzeService, AdzeContext>.Service {
+  public abstract class AdzeServiceAdapter : Services<AdzeServiceAdapter, AdzeContext>.ServiceAdapter {
     /// Did the player take an action proposed by the advertisement?
     [NonSerialized] public bool AdActionTaken;
     /// >Did the player dismiss the advertisement without watching it?
@@ -745,7 +768,30 @@ produces
   }
 ```
 
+  * The first concrete service implementation is `ServiceForMock`. Once you have fleshed out `ServiceAdapter` this file will no longer compile until you implement the new abstract methods. This mock is a bit light-on. We would want to check on what happens on conditions such as a service error. We will leave hefty mocking to the next section.
+
+``` c#
+  [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Service", fileName = "TemplateSelector")]
+  public class AdzeServiceAdapterForMock : AdzeServiceAdapter {
+    protected override void Prepare() { }
+
+    protected override string Display(Emitter emitter) {
+      Log("Mocking", "Display Advertisement");
+      emitter.Fire();
+      return default;
+    }
+  }
+```
+
+  * The final file created is `ServicesManager` does not require editing. It selects services from the list that match a global context. More on that later.
+
+* The helper also creates three asset files.
+  * `MockContext` is the context you will want to use when you don't want to annoy a real service. It is used for development, particularly of edge cases, and to reproduce problems (bugs) when they arise. It is also used to test other components that need the service in a reliable and usable way.  By default it will only work in the mock environment, under the Unity editor and in reward mode. There is more on mocking in the next section.
+  * `ServiceForMock`, lock all service adapters should not have any information to look at in the inspector. as it will all be in the context.
+
 ![Adze Custom Assert Service Context](AdzeContext.png)
+
+### Service Mocking
 
 ## Examples
 ### Health Bar
