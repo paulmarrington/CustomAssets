@@ -768,7 +768,7 @@ Now I could write some twisted documentation that I feel would be confusing. Ins
   }
 ```
 
-  * The first concrete service implementation is `ServiceForMock`. Once you have fleshed out `ServiceAdapter` this file will no longer compile until you implement the new abstract methods. This mock is a bit light-on. We would want to check on what happens on conditions such as a service error. We will leave hefty mocking to the next section.
+  * The first concrete service implementation is `ServiceForMock`. Once you have fleshed out `ServiceAdapter` this file will no longer compile until you implement the new abstract methods. Create the simplest possible version that will work at this stage. We would want to check on what happens on conditions such as a service error. We will leave hefty mocking to the next section.
 
 ``` c#
   [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Service", fileName = "TemplateSelector")]
@@ -787,9 +787,78 @@ Now I could write some twisted documentation that I feel would be confusing. Ins
 
 * The helper also creates three asset files.
   * `MockContext` is the context you will want to use when you don't want to annoy a real service. It is used for development, particularly of edge cases, and to reproduce problems (bugs) when they arise. It is also used to test other components that need the service in a reliable and usable way.  By default it will only work in the mock environment, under the Unity editor and in reward mode. There is more on mocking in the next section.
-  * `ServiceForMock`, lock all service adapters should not have any information to look at in the inspector. as it will all be in the context.
 
-![Adze Custom Assert Service Context](AdzeContext.png)
+![Adze Custom Asset Service Context Inspector View](AdzeContext.png)
+
+  * `ServiceForMock` is covered in detail below.
+
+![Adze Custom Asset Service Inspector View](AdzeServiceForMock.png)
+
+  * All concrete services, however, do have some information to review.
+    * ***Priority*** provides simple ordering. Once the list of services has been filtered, it is sorted by priority. This only affects top-down and round-robin service selection. If a service fails, the next on the list is attempted.
+    * ***Usage Balance*** defines how many repeat calls on a service are made before a new selection is used. It does not benefit top-down selection. In Adze, for example, we can use it to ensure that twice as many advertisements come from ChartBoost as from AdMob.
+  * `ServiceManager` is where we reference all the services and provide a context to decide which to use.
+
+![Adze Custom Asset Service Inspector View](AdzeServicesManager.png)
+
+### Service Masking
+
+Mocking is all very well but real services will have libraries that talk to the outside world. And those libraries won't even load on all platforms. This is not a show-stopper because Able provides tools that make it easy to set C# compiler definitions that we can use to exclude code we can't use.
+
+For focus and brevity reasons the service adapter excluded the masking code that comes as standard. Here is the full monty.
+
+``` c#
+using Askowl;
+using UnityEditor;
+using UnityEngine;
+#if TemplateServiceFor
+// Add using statements for service library here
+#endif
+
+namespace CustomAsset.Services {
+  <inheritdoc />
+  [CreateAssetMenu(menuName = "Custom Assets/Services/Template/Service", fileName = "TemplateServiceFor")]
+  public abstract class TemplateServiceAdapter : Services<TemplateServiceAdapter, TemplateContext>.ServiceAdapter {
+    #region Service Support
+    // Code that is common to all services belongs here
+    #endregion
+
+    #region Public Interface
+    // Methods calling code will use to call a service - over and above abstract ones defined below.
+    #endregion
+
+    #region Abstract Service Interface Methods
+    // List of abstract methods that all concrete service adapters need to implement
+    #endregion
+
+    #region Service Library Access
+    #if TemplateServiceFor
+    public override bool IsExternalServiceAvailable() => true;
+    // Add any code that accesses the service library here
+    #else
+    public override bool IsExternalServiceAvailable() => false;
+    #endif
+    #endregion
+
+    #region Compiler Definition
+    [InitializeOnLoadMethod] private static void DetectService() {
+      bool usable = DefineSymbols.HasPackage("") || DefineSymbols.HasFolder("");
+      DefineSymbols.AddOrRemoveDefines(addDefines: usable, named: "TemplateServiceFor");
+    }
+    #endregion
+  }
+}
+```
+
+Taking the last first, look at `DetectService()` at the end of the class. `InitializeOnLoadMethod` ensures that it is only run in the editor. It's only job is to see if a service package is available, and if it is create a c# compile-time symbol.
+
+Your Tasks are:
+
+1. The first task is to replace `TemplateServiceFor` with a unique service specific symbol. For Adze it could be `AdzeServiceForChartBoost`.
+2. Tell `DetectService()` whether to add or remove the compiler symbol. If the external service is using the Unity packaga manager, use `HasPackage`. Otherwise, hopefully, you can sense the presence with the presence or absence of a folder inside ***Assets***.
+3. For each concrete service, duplicate the ServiceAdapter file and;
+   1. Remove `abstract` from the class definition line
+   2. Implement all the abstract methods, calling into the library access region for anything that references the external service library.
 
 ### Service Mocking
 

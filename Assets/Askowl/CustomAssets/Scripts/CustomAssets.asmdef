@@ -2,7 +2,8 @@
     "name": "CustomAssets",
     "references": [
         "Able",
-        "Fibers"
+        "Fibers",
+        "AbleEditor"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

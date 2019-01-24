@@ -26,7 +26,8 @@ namespace CustomAsset.Services {
     /// <inheritdoc />
     protected override void Initialise() {
       // only use services that are valid for the current context
-      services = services.Where(service => service.context.Equals(context)).ToArray();
+      var useful = services.Where(service => service.context.Equals(context) && service.IsExternalServiceAvailable());
+      services = useful.ToArray();
       // service processing order is dependent on the priority each gives
       Array.Sort(array: services, comparison: (x, y) => x.priority.CompareTo(value: y.priority));
 
@@ -61,7 +62,7 @@ namespace CustomAsset.Services {
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal int usageBalance = 1;
       /// <a href=""></a> //#TBD#//
-      [SerializeField] internal Context context = default;
+      [SerializeField] public Context context = default;
 
       /// <a href="">Get a single-fire emitter to signal an asynchronous method has returned a result</a> //#TBD#//
       protected Emitter GetAnEmitter() {
@@ -76,6 +77,9 @@ namespace CustomAsset.Services {
 
       /// <a href="">Concrete service implements this to prepare for action</a> //#TBD#//
       protected abstract void Prepare();
+
+      /// <a href=""></a> //#TBD#//
+      public abstract bool IsExternalServiceAvailable();
 
       /// <a href="">Registered with Emitter to provide common logging</a> //#TBD#/
       protected abstract void LogOnResponse();
