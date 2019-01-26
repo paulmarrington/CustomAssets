@@ -3,9 +3,7 @@
 using System;
 using System.Linq;
 using Askowl;
-using NUnit.Framework;
 using UnityEngine;
-using Cache = Askowl.Cache;
 
 namespace CustomAsset.Services {
   /// <a href="">Separate selection and service from context for easy Inspector configuration</a> //#TBD#//
@@ -17,13 +15,16 @@ namespace CustomAsset.Services {
     public enum Order { TopDown, RoundRobin, Random, RandomExhaustive }
     // ReSharper restore MissingXmlDoc
 
-    [SerializeField] private TC    context  = default;
     [SerializeField] private TS[]  services = default;
+    [SerializeField] private TC    context  = default;
     [SerializeField] private Order order    = Order.TopDown;
 
-    private Selector<TS> selector;
-    private int          usagesRemaining;
-    private TS           currentService;
+    /// <a href="">Used in testing.</a> //#TBD#//
+    public Selector<TS> selector;
+    /// <a href=""></a> //#TBD#//
+    public int          usagesRemaining;
+    /// <a href=""></a> //#TBD#//
+    public TS           currentService;
 
     /// <inheritdoc />
     protected override void Initialise() {

@@ -742,7 +742,7 @@ Now I could write some twisted documentation that I feel would be confusing. Ins
 ``` c#
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Service", fileName = "AdzeServiceAdapter")]
   public class AdzeServiceAdapter : Services<AdzeServiceAdapter, AdzeContext>.ServiceAdapter {
-    public class Result {
+    [Serializable] public class Result {
       public bool AdActionTaken;
       public bool Dismissed;
       public string ServiceError;
@@ -887,6 +887,61 @@ Your Tasks are:
 The service builder has generated a mock service for you. We filled it with very basic positive response above. It also generated one mocking service custom asset. This is often enough for most services. Not so for Adze. Advertising services are not critical and are more likely to fail. Duplicate this asset three time since they will all use the same code reference.
 
 ![Mock Adze Services Project View](AdzeMockProjectView.png)
+
+Let's move on to the source. Fortunately we encapsulated all the communications information in the `Result` and pass a reference to our concrete method. Further more, the data indicates behaviour driven testing. See the Adze documentation for the full Gherkin executable documentation. We will only do a subset here.
+
+``` gherkin
+@CustomAsset
+Feature: Adze
+  Adze provides a decoupled layer to external advertising services.
+
+  Rule: First passing service will respond to a display request repeatedly
+  
+    Background:
+      Given 4 services available
+      And they are ordered  as "Round Robin"
+      
+    Example: The first service responds
+      Given that the first service works
+      When I ask for an advertisement
+      Then I get the first service
+      When I ask for an advertisement again
+      Then I get the first service again
+      
+    #... Examples to cover all the other combinations
+```
+
+Before we can write the step definitions we are going to need to make necessary data available.
+
+* Add `[SerializedField] public Result results` to the mock concrete service; plus
+* Fill the result object passed to the service method with that set in the Inspector; and we get
+
+``` c#
+  [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/ServiceForMock", fileName = "AdzeServiceForMock")]
+  public class AdzeServiceForMock : AdzeServiceAdapter {
+    [SerializeField] public Result mockResult;
+    [SerializeField] private float secondsDelay = 0.1f;
+
+    protected override string Display(Emitter emitter, Result result) {
+      Log("Mocking", "Display Advertisement");
+      result.dismissed     = mockResult.dismissed;
+      result.adActionTaken = mockResult.adActionTaken;
+      result.serviceError  = mockResult.serviceError;
+      Fiber.Start.WaitFor(secondsDelay).Fire(emitter);
+      return default;
+    }
+    public override bool IsExternalServiceAvailable() => true;
+  }
+```
+![Complete Mock asset in Inspector](MockCompleteInInspector.png)
+
+Let's see if we have all we need for the step definitions.
+
+* Providing there are more than we need we can truncate `ServiceManager.selector.Choices`.
+* set `ServiceManager.selector.Choices[0].serviceError = default` to mark as passed OK.
+* `ServiceManager.selector.CycleIndex` should be 0 after each run.
+
+For more detail, go to ***Askowl BDD*** for information on writing anr running Gherkin executable specifications and ***Askowl Adze for the full feature specifications and definitions for Adze***
 
 ## Examples
 ### Health Bar
