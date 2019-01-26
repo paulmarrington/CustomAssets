@@ -3,7 +3,9 @@
 using System;
 using System.Linq;
 using Askowl;
+using NUnit.Framework;
 using UnityEngine;
+using Cache = Askowl.Cache;
 
 namespace CustomAsset.Services {
   /// <a href="">Separate selection and service from context for easy Inspector configuration</a> //#TBD#//
@@ -65,15 +67,16 @@ namespace CustomAsset.Services {
       [SerializeField] public Context context = default;
 
       /// <a href="">Get a single-fire emitter to signal an asynchronous method has returned a result</a> //#TBD#//
-      protected Emitter GetAnEmitter() {
-        var emitter = Emitter.SingleFireInstance;
-        emitter.Subscribe(logOnResponse);
-        return emitter;
-      }
+      protected Emitter GetAnEmitter<T>() where T : class =>
+        Emitter.SingleFireInstance.Subscribe(logOnResponse).Context(Cache<T>.NodeInstance);
+
       /// <a href=""></a> //#TBD#//
-      [NonSerialized] protected Log.MessageRecorder Log;
+      protected static T Result<T>(Emitter emitter) where T : class => Cache<T>.Value(emitter.Context());
+
       /// <a href=""></a> //#TBD#//
-      [NonSerialized] protected Log.EventRecorder Error;
+      protected Log.MessageRecorder Log;
+      /// <a href=""></a> //#TBD#//
+      protected Log.EventRecorder Error;
 
       /// <a href="">Concrete service implements this to prepare for action</a> //#TBD#//
       protected abstract void Prepare();
@@ -82,8 +85,8 @@ namespace CustomAsset.Services {
       public abstract bool IsExternalServiceAvailable();
 
       /// <a href="">Registered with Emitter to provide common logging</a> //#TBD#/
-      protected abstract void LogOnResponse();
-      private Action logOnResponse;
+      protected abstract void LogOnResponse(Emitter emitter);
+      private Emitter.Action logOnResponse;
 
       /// <a href="">Override to initialise concrete service instances</a>
       protected override void Initialise() {

@@ -1,6 +1,6 @@
 ﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using System;
+using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Services {
@@ -8,10 +8,13 @@ namespace CustomAsset.Services {
   [CreateAssetMenu(menuName = "Custom Assets/Services/Template/ServiceForMock", fileName = "TemplateServiceForMock")]
   public class TemplateServiceForMock : TemplateServiceAdapter {
     /// <a href="">Prepare the mock service for operations</a> //#TBD#//
-    protected override void Prepare() => throw new NotImplementedException();
+    protected override void Prepare() => base.Prepare();
 
     /// <a href="">Use Log and Error to record analytics based on service responses</a> //#TBD#//
-    protected override void LogOnResponse() => throw new NotImplementedException();
+    protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
+
+    protected override void TemplateServiceMethod(Emitter emitter, TemplateServiceMethodResult result) =>
+      throw new System.NotImplementedException();
 
     /// <inheritdoc />
     public override bool IsExternalServiceAvailable() => true;
