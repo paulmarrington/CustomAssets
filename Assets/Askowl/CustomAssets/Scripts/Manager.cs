@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace CustomAsset {
-  /// <a href="http://bit.ly/2RjdJog">Logic-only manager custom asset superclass</a> //#TBD#//
+  /// <a href=""></a> //#TBD#//
   public class Manager : Base {
     #if UNITY_EDITOR
     /// <a href="http://bit.ly/2RjdFF2">To Load managers during play-mode testing (without a scene)</a> //#TBD#//
@@ -22,6 +22,5 @@ namespace CustomAsset {
         _ => {
           while (!AssetsWaitingInitialisation.Empty) AssetsWaitingInitialisation.Pop().Initialiser();
         }, "CustomAsset Initialiser").WaitFor(InitialiseAssetEmitter).Again.Finish();
-    private static bool managersLoaded;
   }
 }
