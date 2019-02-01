@@ -1,5 +1,6 @@
 ﻿// Copyright 2018 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
@@ -24,6 +25,6 @@ namespace CustomAsset.Mutable {
     public void Deregister() => listener.Deregister();
 
     /// <a href="http://bit.ly/2QNmw2q">After we have ensured the change is for the expected member, tell interested parties</a>
-    protected abstract void OnChange();
+    protected abstract void OnChange(Emitter emitter);
   }
 }

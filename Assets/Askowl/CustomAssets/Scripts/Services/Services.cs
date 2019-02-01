@@ -22,9 +22,9 @@ namespace CustomAsset.Services {
     /// <a href="">Used in testing.</a> //#TBD#//
     public Selector<TS> selector;
     /// <a href=""></a> //#TBD#//
-    public int          usagesRemaining;
+    public int usagesRemaining;
     /// <a href=""></a> //#TBD#//
-    public TS           currentService;
+    public TS currentService;
 
     /// <inheritdoc />
     protected override void Initialise() {
@@ -69,7 +69,7 @@ namespace CustomAsset.Services {
 
       /// <a href="">Get a single-fire emitter to signal an asynchronous method has returned a result</a> //#TBD#//
       protected Emitter GetAnEmitter<T>() where T : class =>
-        Emitter.SingleFireInstance.Subscribe(logOnResponse).Context(Cache<T>.NodeInstance);
+        Emitter.SingleFireInstance.Listen(logOnResponse).Context(Cache<T>.NodeInstance);
 
       /// <a href=""></a> //#TBD#//
       protected static T Result<T>(Emitter emitter) where T : class => Cache<T>.Value(emitter.Context());
