@@ -104,17 +104,18 @@ namespace CustomAsset.Services {
       }
 
       /// <a href=""></a> //#TBD#//
-      protected virtual void Serve<T>(T dto) => throw new System.NotImplementedException();
+      protected virtual void Serve<T>(T dto) => throw new NotImplementedException();
 
       /// <a href=""></a> //#TBD#//
-      public Emitter Service<T>() where T : Cached<T>, ServiceDto {
-        T dto = Cached<T>.Instance;
-        dto.Emitter = Emitter.SingleFireInstance.Listen(logOnResponse).Context(dto);
-        dto.Emitter.Context(dto);
+      public Emitter Call<T>() where T : Cached<T>, ServiceDto {
+        T dto = Cached<T>.Instance; // disposed of when emitter dies (after one fire or on error)
+        dto.Emitter      = Emitter.SingleFireInstance.Listen(logOnResponse).Context(dto);
         dto.ErrorMessage = default;
         dto.Clear();
         Serve(dto);
-        return dto.ErrorMessage == default ? dto.Emitter : null;
+        if (dto.ErrorMessage == default) return dto.Emitter;
+        dto.Emitter.Dispose();
+        return null;
       }
     }
 
