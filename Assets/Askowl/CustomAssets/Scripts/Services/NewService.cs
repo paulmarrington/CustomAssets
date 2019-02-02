@@ -70,14 +70,12 @@ namespace CustomAsset.Services {
         AssetDatabase.LoadAssetAtPath<Environment>(
           "Assets/Askowl/CustomAssets/Scripts/Services/Environments/Mock.asset");
 
-      var servicesManager  = CreateInstance(serviceName, "ServicesManager");
-      var context          = CreateInstance(serviceName, "Context");
-      var serviceConnector = CreateInstance(serviceName, "ServiceConnector");
-      var serviceForMock   = CreateInstance(serviceName, "ServiceConnectorForMock");
+      var servicesManager = CreateInstance(serviceName, "ServicesManager");
+      var context         = CreateInstance(serviceName, "Context");
+      var serviceForMock  = CreateInstance(serviceName, "ServiceForMock");
 
       var servicesManagerSerializedObject = new SerializedObject(servicesManager);
       var contextSerializedObject         = new SerializedObject(context);
-      var serviceSerializedObject         = new SerializedObject(serviceConnector);
       var serviceForMockSerializedObject  = new SerializedObject(serviceForMock);
 
       SetField(servicesManagerSerializedObject, "context", context);
@@ -90,7 +88,6 @@ namespace CustomAsset.Services {
 
       servicesManagerSerializedObject.ApplyModifiedProperties();
       contextSerializedObject.ApplyModifiedProperties();
-      serviceSerializedObject.ApplyModifiedProperties();
       serviceForMockSerializedObject.ApplyModifiedProperties();
       AssetDatabase.SaveAssets();
 

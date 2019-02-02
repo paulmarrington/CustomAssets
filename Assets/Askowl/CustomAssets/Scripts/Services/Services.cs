@@ -24,7 +24,7 @@ namespace CustomAsset.Services {
     /// <a href=""></a> //#TBD#//
     public int usagesRemaining;
     /// <a href=""></a> //#TBD#//
-    public TS currentService;
+    [HideInInspector] public TS currentService;
 
     /// <inheritdoc />
     protected override void Initialise() {
@@ -67,13 +67,6 @@ namespace CustomAsset.Services {
       /// <a href=""></a> //#TBD#//
       [SerializeField] public Context context = default;
 
-      /// <a href="">Get a single-fire emitter to signal an asynchronous method has returned a result</a> //#TBD#//
-      protected Emitter GetAnEmitter<T>() where T : class =>
-        Emitter.SingleFireInstance.Listen(logOnResponse).Context(Cache<T>.NodeInstance);
-
-      /// <a href=""></a> //#TBD#//
-      protected static T Result<T>(Emitter emitter) where T : class => Cache<T>.Value(emitter.Context());
-
       /// <a href=""></a> //#TBD#//
       protected Log.MessageRecorder Log;
       /// <a href=""></a> //#TBD#//
@@ -96,6 +89,32 @@ namespace CustomAsset.Services {
         Error         = Askowl.Log.Errors();
         logOnResponse = LogOnResponse;
         Prepare();
+      }
+
+      /// <a href=""></a> //#TBD#//
+      public interface ServiceDto {
+        /// <a href="">Is default for no error, empty for no logging of a message else error message</a> //#TBD#//
+        string ErrorMessage { get; set; }
+
+        /// <a href=""></a> //#TBD#//
+        Emitter Emitter { get; set; }
+
+        /// <a href=""></a> //#TBD#//
+        void Clear();
+      }
+
+      /// <a href=""></a> //#TBD#//
+      protected virtual void Serve<T>(T dto) => throw new System.NotImplementedException();
+
+      /// <a href=""></a> //#TBD#//
+      public Emitter Service<T>() where T : Cached<T>, ServiceDto {
+        T dto = Cached<T>.Instance;
+        dto.Emitter = Emitter.SingleFireInstance.Listen(logOnResponse).Context(dto);
+        dto.Emitter.Context(dto);
+        dto.ErrorMessage = default;
+        dto.Clear();
+        Serve(dto);
+        return dto.ErrorMessage == default ? dto.Emitter : null;
       }
     }
 

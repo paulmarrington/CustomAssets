@@ -1,6 +1,5 @@
 ﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using System;
 using Askowl;
 using UnityEditor;
 
@@ -9,22 +8,13 @@ namespace CustomAsset.Services {
   public abstract class TemplateServiceAdapter : Services<TemplateServiceAdapter, TemplateContext>.ServiceAdapter {
     #region Service Support
     /// <a href=""></a> //#TBD#//
-    [Serializable] public class Result {
-      // enter all result data references here
-
-      /// <a href="">Is default for no error, empty for no logging of a message else error message</a> //#TBD#//
-      public string errorMessage;
-
-      internal virtual void Clear() => errorMessage = default;
-    }
-
-    /// <a href=""></a> //#TBD#//
     protected override void Prepare() { }
 
     protected override void LogOnResponse(Emitter emitter) {
-      var result = Result<Result>(emitter);
-      if (result.errorMessage != default) {
-        if (!string.IsNullOrEmpty(result.errorMessage)) Error($"Service Error: {result.errorMessage}");
+      var dto   = emitter.Context<ServiceDto>();
+      var error = dto.ErrorMessage;
+      if (error != default) {
+        if (!string.IsNullOrEmpty(error)) Error($"Service Error: {error}");
       } else {
         Log("Warning", $"LogOnResponse for '{GetType().Name}");
       }
@@ -41,18 +31,14 @@ namespace CustomAsset.Services {
     // List of virtual interface methods that all concrete service adapters need to implement.
 
     // **************** Start of TemplateServiceMethod **************** //
-    /// <a href=""></a> //#TBD#//
-    public class TemplateServiceMethodResult : Result { }
-    /// <a href=""></a> //#TBD#//
-    public Emitter TemplateServiceMethod() {
-      var emitter = GetAnEmitter<TemplateServiceMethodResult>();
-      var result  = Result<TemplateServiceMethodResult>(emitter);
-      result.Clear();
-      TemplateServiceMethod(emitter, result);
-      return result.errorMessage == default ? emitter : null;
+    /// A service dto contains data required to call service and data returned from said call
+    public class TemplateServiceDto : Cached<TemplateServiceDto>, ServiceDto {
+      public string  ErrorMessage { get; set; }
+      public Emitter Emitter      { get; set; }
+      public void    Clear()      { } // clear previous results if necessary
     }
-    /// <a href=""></a> //#TBD#//
-    protected abstract void TemplateServiceMethod(Emitter emitter, TemplateServiceMethodResult result);
+    /// Abstract services - one per dto type
+    protected abstract override void Serve<TemplateServiceDto>(TemplateServiceDto dto);
     // **************** End of TemplateServiceMethod **************** //
     #endregion
 
@@ -64,7 +50,7 @@ namespace CustomAsset.Services {
     #endif
 
     [InitializeOnLoadMethod] private static void DetectService() {
-      bool usable = DefineSymbols.HasPackage("") || DefineSymbols.HasFolder("");
+      bool usable = DefineSymbols.HasPackage("TemplateServiceFor") || DefineSymbols.HasFolder("TemplateServiceFor");
       DefineSymbols.AddOrRemoveDefines(addDefines: usable, named: "TemplateServiceFor");
     }
     #endregion
