@@ -14,9 +14,10 @@ namespace CustomAsset.Services {
     /// <a href="">Use Log and Error to record analytics based on service responses</a> //#TBD#//
     protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
 
-    protected override void Serve(ServiceExampleServiceDto dto) {
-      dto.Result = "OK";
-      Fiber.Start.WaitFor(seconds: 0.3f).Fire(dto.Emitter);
+    protected override string Serve(AddDto dto, Emitter emitter) {
+      dto.result = dto.request.firstValue + dto.request.secondValue;
+      Fiber.Start.WaitFor(seconds: 0.1f).Fire(emitter);
+      return null;
     }
     /// <inheritdoc />
     public override bool IsExternalServiceAvailable() => true;

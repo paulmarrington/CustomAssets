@@ -1122,7 +1122,6 @@ GameObject:
   - component: {fileID: 301581640}
   - component: {fileID: 301581639}
   - component: {fileID: 301581638}
-  - component: {fileID: 301581642}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1207,7 +1206,7 @@ MonoBehaviour:
   componentValueToSet:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 301581642}
+      - m_Target: {fileID: 0}
         m_MethodName: set_text
         m_Mode: 0
         m_Arguments:
@@ -1236,7 +1235,7 @@ MonoBehaviour:
   componentValueToSet:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 301581642}
+      - m_Target: {fileID: 0}
         m_MethodName: set_text
         m_Mode: 0
         m_Arguments:
@@ -1265,7 +1264,7 @@ MonoBehaviour:
   componentValueToSet:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 301581642}
+      - m_Target: {fileID: 0}
         m_MethodName: set_text
         m_Mode: 0
         m_Arguments:
@@ -1277,18 +1276,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: CustomAsset.Mutable.StringDriver+StringUnityEvent, CustomAssets, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
---- !u!114 &301581642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301581634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 936911a5a4408402c954127ef164c771, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &301581643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1306,7 +1293,7 @@ MonoBehaviour:
   componentValueToSet:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 301581642}
+      - m_Target: {fileID: 0}
         m_MethodName: set_text
         m_Mode: 0
         m_Arguments:
@@ -2905,6 +2892,9 @@ GameObject:
   - component: {fileID: 1092706616}
   - component: {fileID: 1092706615}
   - component: {fileID: 1092706614}
+  - component: {fileID: 1092706619}
+  - component: {fileID: 1092706620}
+  - component: {fileID: 1092706621}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -3159,6 +3149,139 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf526d5b768b142109409a05095ab7d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1092706619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092706608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a285a716e5148dea8f738c6c1d9e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listener:
+    assetToMonitor: {fileID: 11400000, guid: 1f59e2f4f4a1a4cb9b12734904f20220, type: 2}
+  componentValueToSet:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 301581636}
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: CustomAsset.Mutable.StringDriver+StringUnityEvent, CustomAssets, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+--- !u!114 &1092706620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092706608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a285a716e5148dea8f738c6c1d9e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listener:
+    assetToMonitor: {fileID: 11400000, guid: b0fcec34644ba410fb3e78b802485769, type: 2}
+  componentValueToSet:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 301581636}
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: CustomAsset.Mutable.StringDriver+StringUnityEvent, CustomAssets, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+--- !u!114 &1092706621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092706608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a285a716e5148dea8f738c6c1d9e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listener:
+    assetToMonitor: {fileID: 11400000, guid: 6e626fa2cf7984ebeb7f4663c64d8f4e, type: 2}
+  componentValueToSet:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 301581636}
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: CustomAsset.Mutable.StringDriver+StringUnityEvent, CustomAssets, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+--- !u!1 &1122194168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1122194170}
+  - component: {fileID: 1122194169}
+  m_Layer: 0
+  m_Name: Service Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1122194169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122194168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 326731ed953c048018c2104716ef51aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  managers:
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!4 &1122194170
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122194168}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1151565815
 GameObject:
   m_ObjectHideFlags: 0
@@ -5966,7 +6089,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2114017731
 MonoBehaviour:
   m_ObjectHideFlags: 0

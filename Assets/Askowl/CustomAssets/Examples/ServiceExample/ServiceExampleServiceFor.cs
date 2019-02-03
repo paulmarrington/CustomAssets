@@ -1,5 +1,6 @@
 // Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
 using UnityEngine;
 #if ServiceExampleServiceFor || true
 using Askowl;
@@ -18,10 +19,10 @@ namespace CustomAsset.Services {
     // Implement all interface methods that call concrete service adapters need to implement
 
     /// One service override per service method
-    protected override void Serve(ServiceExampleServiceDto dto) {
-      // Access the external service here. Save and call dti.Emitter.Fire when service call completes
-      // or set dto.ErrorMessage if the service call fails to initialise
-    }
+    // Access the external service here. Save and call dti.Emitter.Fire when service call completes
+    // or set dto.ErrorMessage if the service call fails to initialise
+    protected override string Serve(AddDto dto, Emitter emitter) =>
+      throw new NotImplementedException();
 
     #endif
   }

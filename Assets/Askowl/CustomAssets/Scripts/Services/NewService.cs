@@ -79,6 +79,7 @@ namespace CustomAsset.Services {
       var serviceForMockSerializedObject  = new SerializedObject(serviceForMock);
 
       SetField(servicesManagerSerializedObject, "context", context);
+      SetField(serviceForMockSerializedObject,  "context", context);
       InsertIntoArrayField(servicesManagerSerializedObject, "services", serviceForMock);
       SetField(contextSerializedObject, "environment", mockEnvironment);
 

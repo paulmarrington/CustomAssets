@@ -35,7 +35,9 @@ namespace CustomAsset.Services {
       Array.Sort(array: services, comparison: (x, y) => x.priority.CompareTo(value: y.priority));
 
       selector = new Selector<TS> {
-        IsRandom = order <= Order.RoundRobin, ExhaustiveBelow = order == Order.RandomExhaustive ? services.Length : 0
+        IsRandom        = order <= Order.RoundRobin
+      , ExhaustiveBelow = order == Order.RandomExhaustive ? services.Length : 0
+      , Choices         = services
       };
     }
 
@@ -59,13 +61,13 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">Parent class for decoupled services</a>
-    [Serializable] public abstract class ServiceAdapter : Base {
+    [Serializable] public abstract class ServiceAdapter : Base, Server {
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal int priority = 1;
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal int usageBalance = 1;
       /// <a href=""></a> //#TBD#//
-      [SerializeField] public Context context = default;
+      [SerializeField] public TC context = default;
 
       /// <a href=""></a> //#TBD#//
       protected Log.MessageRecorder Log;
@@ -92,29 +94,25 @@ namespace CustomAsset.Services {
       }
 
       /// <a href=""></a> //#TBD#//
-      public interface ServiceDto {
-        /// <a href="">Is default for no error, empty for no logging of a message else error message</a> //#TBD#//
-        string ErrorMessage { get; set; }
+      protected virtual string Serve<T>(T dto, Emitter emitter) => throw new NotImplementedException();
 
-        /// <a href=""></a> //#TBD#//
-        Emitter Emitter { get; set; }
-
-        /// <a href=""></a> //#TBD#//
-        void Clear();
+      /// <a href=""></a> //#TBD#//
+      public Service<T> Service<T>() where T : DelayedCache<T> {
+        var service = Cache<Service<T>>.Instance;
+        service.Server       = this;
+        service.Dto          = DelayedCache<T>.Instance;
+        service.Emitter      = Emitter.SingleFireInstance.Listen(logOnResponse);
+        service.ErrorMessage = null;
+        service.Emitter.Context(service);
+        return service;
       }
 
       /// <a href=""></a> //#TBD#//
-      protected virtual void Serve<T>(T dto) => throw new NotImplementedException();
-
-      /// <a href=""></a> //#TBD#//
-      public Emitter Call<T>() where T : Cached<T>, ServiceDto {
-        T dto = Cached<T>.Instance; // disposed of when emitter dies (after one fire or on error)
-        dto.Emitter      = Emitter.SingleFireInstance.Listen(logOnResponse).Context(dto);
-        dto.ErrorMessage = default;
-        dto.Clear();
-        Serve(dto);
-        if (dto.ErrorMessage == default) return dto.Emitter;
-        dto.Emitter.Dispose();
+      public Emitter Call<T>(Service<T> service) {
+        service.ErrorMessage = null;
+        service.ErrorMessage = Serve(service.Dto, service.Emitter);
+        if (service.ErrorMessage == default) return service.Emitter;
+        service.Emitter.Dispose(); // since it does not get fired
         return null;
       }
     }
@@ -134,5 +132,34 @@ namespace CustomAsset.Services {
         // ReSharper restore NonReadonlyMemberInGetHashCode
       }
     }
+  }
+
+  /// <a href=""></a> //#TBD#//
+  public interface Server {
+    /// <a href=""></a> //#TBD#//
+    Emitter Call<T>(Service<T> service);
+  }
+
+  /// <a href=""></a> //#TBD#//
+  public class Service : IDisposable {
+    /// <a href="">Is default for no error, empty for no logging of a message else error message</a> //#TBD#//
+    public string ErrorMessage { get; set; }
+
+    /// <a href=""></a> //#TBD#//
+    public Emitter Emitter;
+
+    /// <a href=""></a> //#TBD#//
+    public Server Server;
+
+    public void Dispose() => Emitter?.Dispose(); // Dto disposed of by the same command
+  }
+
+  /// <a href=""></a> //#TBD#//
+  public class Service<T> : Service {
+    /// <a href=""></a> //#TBD#//
+    public T Dto;
+
+    /// <a href=""></a> //#TBD#//
+    public Emitter Call() => Server.Call<T>(this);
   }
 }

@@ -13,8 +13,8 @@ namespace CustomAsset.Services {
     protected override void Prepare() { }
 
     protected override void LogOnResponse(Emitter emitter) {
-      var dto   = emitter.Context<ServiceDto>();
-      var error = dto.ErrorMessage;
+      var service = emitter.Context<Service>();
+      var error   = service.ErrorMessage;
       if (error != default) {
         if (!string.IsNullOrEmpty(error)) Error($"Service Error: {error}");
       } else {
@@ -34,14 +34,16 @@ namespace CustomAsset.Services {
 
     // **************** Start of ServiceExampleServiceMethod **************** //
     /// A service dto contains data required to call service and data returned from said call
-    public class ServiceExampleServiceDto : Cached<ServiceExampleServiceDto>, ServiceDto {
-      public string  ErrorMessage { get; set; }
-      public Emitter Emitter      { get; set; }
-      public string  Result;
-      public void    Clear() { } // clear previous results if necessary
+    public class AddDto : DelayedCache<AddDto> {
+      public struct Request {
+        public int firstValue;
+        public int secondValue;
+      }
+      public Request request;
+      public int     result;
     }
     /// Abstract services - one per dto type
-    protected abstract void Serve(ServiceExampleServiceDto dto);
+    protected abstract string Serve(AddDto dto, Emitter emitter);
     // **************** End of ServiceExampleServiceMethod **************** //
     #endregion
 

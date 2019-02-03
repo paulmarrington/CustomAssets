@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65c9b917f570747f298119669466f7d8, type: 3}
-  m_Name: 
+  m_Name: ServiceExampleMockContext
   m_EditorClassIdentifier: 
   description: 
   environment: {fileID: 11400000, guid: 70502b9cf99024047b81c7c8668f28a3, type: 2}
