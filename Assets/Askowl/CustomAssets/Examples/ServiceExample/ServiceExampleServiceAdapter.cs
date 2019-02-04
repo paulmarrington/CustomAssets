@@ -18,7 +18,7 @@ namespace CustomAsset.Services {
       if (error != default) {
         if (!string.IsNullOrEmpty(error)) Error($"Service Error: {error}");
       } else {
-        Log("Warning", $"LogOnResponse for '{GetType().Name}");
+        Log("Success", $"service response for '{GetType().Name}");
       }
     }
 
@@ -43,7 +43,8 @@ namespace CustomAsset.Services {
       public int     result;
     }
     /// Abstract services - one per dto type
-    protected abstract string Serve(AddDto dto, Emitter emitter);
+    public abstract Emitter Call(Service<AddDto> service);
+//    public abstract Emitter Serve(AddDto dto, Emitter emitter);
     // **************** End of ServiceExampleServiceMethod **************** //
     #endregion
 

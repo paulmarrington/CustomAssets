@@ -61,7 +61,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">Parent class for decoupled services</a>
-    [Serializable] public abstract class ServiceAdapter : Base, Server {
+    [Serializable] public abstract class ServiceAdapter : Base {
       /// <a href=""></a> //#TBD#//
       [SerializeField] internal int priority = 1;
       /// <a href=""></a> //#TBD#//
@@ -94,26 +94,13 @@ namespace CustomAsset.Services {
       }
 
       /// <a href=""></a> //#TBD#//
-      protected virtual string Serve<T>(T dto, Emitter emitter) => throw new NotImplementedException();
-
-      /// <a href=""></a> //#TBD#//
       public Service<T> Service<T>() where T : DelayedCache<T> {
         var service = Cache<Service<T>>.Instance;
-        service.Server       = this;
         service.Dto          = DelayedCache<T>.Instance;
         service.Emitter      = Emitter.SingleFireInstance.Listen(logOnResponse);
         service.ErrorMessage = null;
         service.Emitter.Context(service);
         return service;
-      }
-
-      /// <a href=""></a> //#TBD#//
-      public Emitter Call<T>(Service<T> service) {
-        service.ErrorMessage = null;
-        service.ErrorMessage = Serve(service.Dto, service.Emitter);
-        if (service.ErrorMessage == default) return service.Emitter;
-        service.Emitter.Dispose(); // since it does not get fired
-        return null;
       }
     }
 
@@ -133,33 +120,27 @@ namespace CustomAsset.Services {
       }
     }
   }
-
-  /// <a href=""></a> //#TBD#//
-  public interface Server {
-    /// <a href=""></a> //#TBD#//
-    Emitter Call<T>(Service<T> service);
-  }
-
   /// <a href=""></a> //#TBD#//
   public class Service : IDisposable {
     /// <a href="">Is default for no error, empty for no logging of a message else error message</a> //#TBD#//
     public string ErrorMessage { get; set; }
 
     /// <a href=""></a> //#TBD#//
-    public Emitter Emitter;
+    public Boolean Error => ErrorMessage != null;
 
     /// <a href=""></a> //#TBD#//
-    public Server Server;
+    public Emitter Emitter;
 
-    public void Dispose() => Emitter?.Dispose(); // Dto disposed of by the same command
+    public void Dispose() {
+      var emitter = Emitter;
+      Emitter = null;     // so we don't spin out
+      emitter?.Dispose(); // Dto disposed of by the same command
+    }
   }
 
   /// <a href=""></a> //#TBD#//
   public class Service<T> : Service {
     /// <a href=""></a> //#TBD#//
     public T Dto;
-
-    /// <a href=""></a> //#TBD#//
-    public Emitter Call() => Server.Call<T>(this);
   }
 }

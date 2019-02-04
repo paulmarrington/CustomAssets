@@ -34,7 +34,7 @@ namespace CustomAsset.Services {
     /// A service dto contains data required to call service and data returned from said call
     public class TemplateServiceDto : Cached<TemplateServiceDto> { }
     /// Abstract services - one per dto type
-    protected abstract string Serve(TemplateServiceDto dto, Emitter emitter);
+    public abstract Emitter Call(Service<TemplateServiceDto> service);
     // **************** End of TemplateServiceMethod **************** //
     #endregion
 

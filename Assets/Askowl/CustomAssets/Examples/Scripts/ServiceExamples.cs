@@ -3,6 +3,7 @@
 
 using System.Collections;
 using CustomAsset;
+using CustomAsset.Mutable;
 using CustomAsset.Services;
 using NUnit.Framework;
 using UnityEngine.TestTools;
@@ -11,15 +12,19 @@ using UnityEngine.TestTools;
 namespace Askowl.Examples {
   public class ServiceExamples : PlayModeTests {
     [UnityTest] public IEnumerator Basic() {
-      var manager = Manager.Load<ServiceExampleServicesManager>("ServiceExampleServicesManager.asset");
-      var service = manager.Instance.Service<ServiceExampleServiceAdapter.AddDto>();
+      var mockState = Manager.Load<String>("MockState.asset");
 
-      var dto = service.Dto;
+      var manager = Manager.Load<ServiceExampleServicesManager>("ServiceExampleServicesManager.asset");
+      var mathServer  = (ServiceExampleServiceAdapter) manager.Instance;
+      var addService = mathServer.Service<ServiceExampleServiceAdapter.AddDto>();
+      if (addService.Error) Assert.Fail(addService.ErrorMessage);
+
+      var dto = addService.Dto;
       dto.request = new ServiceExampleServiceAdapter.AddDto.Request {firstValue = 21, secondValue = 22};
       dto.result  = 0; // don't need to set this except to ensure test validity
 
       yield return Fiber.Start
-                        .WaitFor(service.Call())
+                        .WaitFor(mathServer.Call(addService))
                         .Do(_ => Assert.AreEqual(43, dto.result))
                         .AsCoroutine();
     }

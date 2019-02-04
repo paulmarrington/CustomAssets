@@ -13,8 +13,8 @@ namespace CustomAsset.Services {
     /// <a href="">Use Log and Error to record analytics based on service responses</a> //#TBD#//
     protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
 
-    protected override string Serve(TemplateServiceDto dto, Emitter emitter) =>
-      throw new System.NotImplementedException();
+    public override Emitter Call(Service<TemplateServiceDto> service) => throw new System.NotImplementedException();
+
     /// <inheritdoc />
     public override bool IsExternalServiceAvailable() => true;
   }
