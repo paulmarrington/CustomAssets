@@ -11,83 +11,65 @@ using UnityEngine.TestTools;
 
 namespace Askowl.CustomAssets.Examples {
   public class ServiceExamples : PlayModeTests {
-    [UnityTest] public IEnumerator TopDownSuccess() {
-      addFiber = Fiber.Instance
-                      .WaitFor(_ => mathServer.Call(addService))
-                      .Do(_ => Assert.IsFalse(addService.Error, addService.ErrorMessage))
-                      .Fire(_ => callCompleteEmitter);
-    }
-    private Fiber addFiber;
-
-    [UnityTest] public IEnumerator TopDownSuccess1() {
-      var mockState = Manager.Load<String>("MockState.asset");
-      mockState.Text = "Success";
-
-      var manager    = Manager.Load<ServiceExampleServicesManager>("ServiceExampleServicesManager.asset");
+    /// Sample service call
+    private Emitter CallService() {
+      // Load the service manager for this service type. You can cache this. It does not change
+      var manager = Manager.Load<ServiceExampleServicesManager>("ServiceExampleServicesManager.asset");
+      // Get a reference to a server. Don't cache if it is anything but top-down ordering
       var mathServer = (ServiceExampleServiceAdapter) manager.Instance;
-      var addService = mathServer.Service<ServiceExampleServiceAdapter.AddDto>();
-
-      var dto = addService.Dto;
-      dto.request = new ServiceExampleServiceAdapter.AddDto.Request {firstValue = 21, secondValue = 22};
-      dto.result  = 0; // don't need to set this except to ensure test validity
-
-      yield return Fiber.Start
-                        .WaitFor(mathServer.Call(addService))
-                        .Do(_ => Assert.IsFalse(addService.Error, addService.ErrorMessage))
-                        .Do(_ => Assert.AreEqual(43, dto.result))
-                        .AsCoroutine();
+      // servers can have multiple services
+      addService = mathServer.Service<ServiceExampleServiceAdapter.AddDto>();
+      // The DTO will have request data going in and response data coming back
+      var request = addService.Dto.request;
+      request.firstValue  = firstValue;
+      request.secondValue = secondValue;
+      // Here is the call. It may fall back to other servers if one or more fail to respond
+      return mathServer.Call(addService); // and returns a single-use emitter that fires on completion
     }
 
-    [UnityTest] public IEnumerator ServiceError() {
-      var mockState = Manager.Load<String>("MockState.asset");
-      mockState.Text = "ServiceFailure";
+    private String                                       mockState;
+    private int                                          firstValue, secondValue;
+    private Service<ServiceExampleServiceAdapter.AddDto> addService;
 
-      var manager    = Manager.Load<ServiceExampleServicesManager>("ServiceExampleServicesManager.asset");
-      var mathServer = (ServiceExampleServiceAdapter) manager.Instance;
-      var addService = mathServer.Service<ServiceExampleServiceAdapter.AddDto>();
-
-      var dto = addService.Dto;
-      dto.request = new ServiceExampleServiceAdapter.AddDto.Request {firstValue = 21, secondValue = 22};
-      dto.result  = 0; // don't need to set this except to ensure test validity
-
-      yield return Fiber.Start
-                        .WaitFor(mathServer.Call(addService))
-                        .Do(_ => Assert.IsFalse(addService.Error, addService.ErrorMessage))
-                        .Do(_ => Assert.AreEqual(43, dto.result))
-                        .AsCoroutine();
+    private IEnumerator ServiceTest(string label) {
+      yield return Feature.Go("CustomAssetsDefinitions", featureFile: "Services", label).AsCoroutine();
     }
 
-    [UnityTest] public IEnumerator ServiceFallback() { yield return null; }
+    [UnityTest] public IEnumerator TopDownSuccess()  { yield return ServiceTest("@TopDownSuccess"); }
+    [UnityTest] public IEnumerator TopDownFailure()  { yield return ServiceTest("@TopDownFailure"); }
+    [UnityTest] public IEnumerator TopDownFallback() { yield return ServiceTest("@TopDownFallback"); }
 
-    [Step(@"^a mock state of ""(.*)""$")] public void MockStateOf(string[] matches) {
+    [Step(@"^a (\S+) stack with (\d+) services$")] public void ServerStack(string[] matches) { }
+
+    [Step(@"^server success of ""(.*)""$")] public void MockStateOf(string[] matches) {
       mockState      = Manager.Load<String>("MockState.asset");
       mockState.Text = matches[0];
     }
-    private String mockState;
 
-    [Step(@"^an add service on the math server$")] public void MathServer() {
-      var manager = Manager.Load<ServiceExampleServicesManager>("ServiceExampleServicesManager.asset");
-      mathServer = (ServiceExampleServiceAdapter) manager.Instance;
-      addService = mathServer.Service<ServiceExampleServiceAdapter.AddDto>();
-    }
-    private ServiceExampleServiceAdapter                 mathServer;
-    private Service<ServiceExampleServiceAdapter.AddDto> addService;
+    [Step(@"^an add service on the math server$")] public void MathServer() { }
 
-    [Step(@"^we add (\d+) and (\d+)$")] public Emitter AddService(string[] matches) {
-      dto                     = addService.Dto;
-      dto.request.firstValue  = int.Parse(matches[0]);
-      dto.request.secondValue = int.Parse(matches[1]);
-      callCompleteEmitter     = Emitter.SingleFireInstance;
-      addFiber.Go();
-      return callCompleteEmitter;
+    [Step(@"^we add (\d+) and (\d+)$")] public void AddService(string[] matches) {
+      firstValue  = int.Parse(matches[0]);
+      secondValue = int.Parse(matches[1]);
     }
-    private ServiceExampleServiceAdapter.AddDto dto;
-    private Emitter                             callCompleteEmitter;
 
-    [Step(@"^we will get a result of (\d+)$")] public void AddResult(string[] matches) {
-      var expected = int.Parse(matches[0]);
-      Assert.AreEqual(expected, dto.result);
+    [Step(@"^we will get a result of (\d+)$")] public Emitter AddResult(string[] matches) {
+      var expected        = int.Parse(matches[0]);
+      var completeEmitter = Emitter.SingleFireInstance;
+      Fiber.Start.WaitFor(CallService())
+           .Do(_ => Assert.AreEqual(expected, addService.Dto.result)).Fire(completeEmitter);
+      return completeEmitter;
     }
+
+    [Step(@"^we get a service error$")] public Emitter ServiceError() {
+      var completeEmitter = Emitter.SingleFireInstance;
+      Fiber.Start.WaitFor(CallService())
+           .Do(_ => Assert.IsTrue(addService.Error)).Fire(completeEmitter);
+      return completeEmitter;
+    }
+
+    [Step(@"^a service message of ""(.*)""$")] public void ServiceMessage(string[] matches) =>
+      Assert.AreEqual(expected: matches[0], actual: addService.ErrorMessage);
     /*
     [Step(@"^$")] public void () { }
     */
