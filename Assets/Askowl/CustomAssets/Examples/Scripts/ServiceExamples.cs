@@ -12,6 +12,14 @@ using UnityEngine.TestTools;
 namespace Askowl.CustomAssets.Examples {
   public class ServiceExamples : PlayModeTests {
     [UnityTest] public IEnumerator TopDownSuccess() {
+      addFiber = Fiber.Instance
+                      .WaitFor(_ => mathServer.Call(addService))
+                      .Do(_ => Assert.IsFalse(addService.Error, addService.ErrorMessage))
+                      .Fire(_ => callCompleteEmitter);
+    }
+    private Fiber addFiber;
+
+    [UnityTest] public IEnumerator TopDownSuccess1() {
       var mockState = Manager.Load<String>("MockState.asset");
       mockState.Text = "Success";
 
@@ -51,9 +59,6 @@ namespace Askowl.CustomAssets.Examples {
 
     [UnityTest] public IEnumerator ServiceFallback() { yield return null; }
 
-    /*
-    [Step(@"^$")] public void () { }
-    */
     [Step(@"^a mock state of ""(.*)""$")] public void MockStateOf(string[] matches) {
       mockState      = Manager.Load<String>("MockState.asset");
       mockState.Text = matches[0];
@@ -68,12 +73,24 @@ namespace Askowl.CustomAssets.Examples {
     private ServiceExampleServiceAdapter                 mathServer;
     private Service<ServiceExampleServiceAdapter.AddDto> addService;
 
-    [Step(@"^we have a request with values (\d+) and (\d+)$")] public void AddServiceRequest(string[] matches) {
+    [Step(@"^we add (\d+) and (\d+)$")] public Emitter AddService(string[] matches) {
       dto                     = addService.Dto;
       dto.request.firstValue  = int.Parse(matches[0]);
       dto.request.secondValue = int.Parse(matches[1]);
+      callCompleteEmitter     = Emitter.SingleFireInstance;
+      addFiber.Go();
+      return callCompleteEmitter;
     }
     private ServiceExampleServiceAdapter.AddDto dto;
+    private Emitter                             callCompleteEmitter;
+
+    [Step(@"^we will get a result of (\d+)$")] public void AddResult(string[] matches) {
+      var expected = int.Parse(matches[0]);
+      Assert.AreEqual(expected, dto.result);
+    }
+    /*
+    [Step(@"^$")] public void () { }
+    */
   }
 }
 #endif
