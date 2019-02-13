@@ -5,12 +5,12 @@ using CustomAsset;
 using CustomAsset.Mutable;
 using UnityEngine;
 
-#if UNITY_EDITOR && CustomAssets
+#if AskowlTests
 
 // ReSharper disable MissingXmlDoc
 
 //- Once the asset is create it can be loaded and used by anyone as it has no external code dependencies.
-namespace Askowl.Transcripts {
+namespace Askowl.CustomAssets.Transcripts {
   //- Custom assets must be created to physical files in the project. We could have more than one.
   [CreateAssetMenu(menuName = "Managers/Health"), Serializable]
   public class HealthManagerTranscript : Manager {

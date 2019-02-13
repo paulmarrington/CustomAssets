@@ -1,9 +1,9 @@
-﻿#if UNITY_EDITOR && CustomAssets
+﻿#if AskowlTests
 using CustomAsset.Mutable;
 using UnityEngine;
 
 // ReSharper disable MissingXmlDoc
-namespace Askowl.Examples {
+namespace Askowl.CustomAssets.Examples {
   [CreateAssetMenu(menuName = "Examples/LargerAssetSample")]
   public class LargerAssetSample : OfType<CustomAssetsExample.LargerAssetContents> {
     public static LargerAssetSample Instance(string name) => Instance<LargerAssetSample>(name);

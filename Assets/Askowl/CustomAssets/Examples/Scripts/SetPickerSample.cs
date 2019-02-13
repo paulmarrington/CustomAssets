@@ -1,9 +1,9 @@
-﻿#if UNITY_EDITOR && CustomAssets
+﻿#if AskowlTests
 using System;
 using CustomAsset.Constant;
 using UnityEngine;
 
-namespace Askowl.Examples {
+namespace Askowl.CustomAssets.Examples {
   /// <a href="http://bit.ly/2RcqaCt">Satisfy Unity Inspector</a> <inheritdoc />
   [Serializable] public class AudioClipSet : Set<AudioClip> { }
 

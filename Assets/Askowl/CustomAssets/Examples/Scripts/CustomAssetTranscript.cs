@@ -11,7 +11,7 @@
 
 //- Now we will refactor a real game manager from a 2D game. The original code is to the left while we will build up the custom asset managers on the right
 
-#if UNITY_EDITOR && CustomAssets
+#if AskowlTests
 using System;
 using CustomAsset;
 using CustomAsset.Mutable;
@@ -20,7 +20,7 @@ using GameObject = CustomAsset.GameObject;
 
 // ReSharper disable MissingXmlDoc
 
-namespace Askowl.Transcripts {
+namespace Askowl.CustomAssets.Transcripts {
   //- Because a custom asset exists on disk as part of the project, we need to create a concrete form. We could have more than one for a multi-player game
   [CreateAssetMenu(menuName = "Managers/Player Death"), Serializable]
   public class PlayerDeathManager : Manager {
@@ -55,7 +55,7 @@ namespace Askowl.Transcripts {
     private void RestartGame() {
       lives.Value = maximumLives;
       coins.Value = 0;
-      //- THe SceneManager shown below interfaces the scene to Unity management 
+      //- THe SceneManager shown below interfaces the scene to Unity management
       scene.Value = 0;
     }
 

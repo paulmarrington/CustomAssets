@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR && CustomAssets
+﻿#if AskowlTests
 using System;
 using System.Collections;
 using Askowl;
@@ -12,7 +12,7 @@ using Integer = CustomAsset.Mutable.Integer;
 using String = CustomAsset.Mutable.String;
 
 // ReSharper disable MissingXmlDoc
-namespace Askowl.Examples {
+namespace Askowl.CustomAssets.Examples {
   [RequireComponent(typeof(AudioSource))]
   public sealed class CustomAssetsExample : MonoBehaviour {
     [SerializeField] private Float                     maxFloat      = default;

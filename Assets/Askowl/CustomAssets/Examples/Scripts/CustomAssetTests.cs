@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR && CustomAssets
+﻿#if AskowlTests
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using UnityEngine.UI;
 using AudioClips = CustomAsset.Constant.AudioClips;
 
 // ReSharper disable MissingXmlDoc
-namespace Askowl.Examples {
+namespace Askowl.CustomAssets.Examples {
   public class CustomAssetTests : PlayModeTests {
     private Text  results;
     private Float currentFloat;

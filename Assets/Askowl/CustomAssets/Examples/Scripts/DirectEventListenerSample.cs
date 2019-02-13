@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR && CustomAssets
+﻿#if AskowlTests
 using System;
 using Askowl;
 using CustomAsset.Mutable;
@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // ReSharper disable MissingXmlDoc
-namespace Askowl.Examples {
+namespace Askowl.CustomAssets.Examples {
 
   public sealed class DirectEventListenerSample : ListenerComponent {
     [SerializeField] private Text textComponent = default;

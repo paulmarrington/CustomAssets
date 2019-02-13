@@ -14,7 +14,7 @@
 
 //- To finish up, let's write a quick Unity test that can be automated if you wish. It will be run in the Unity Test Runner and drives our visual test slider directly.
 
-#if UNITY_EDITOR && CustomAssets
+#if AskowlTests
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
@@ -24,7 +24,7 @@ using UnityEngine.UI;
 
 // ReSharper disable MissingXmlDoc
 
-namespace Askowl.Transcripts {
+namespace Askowl.CustomAssets.Transcripts {
   public class HealthBarTranscript : PlayModeTests {
     private static string scenePath = "Health";
 
