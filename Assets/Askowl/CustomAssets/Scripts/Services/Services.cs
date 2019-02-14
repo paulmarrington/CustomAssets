@@ -42,22 +42,19 @@ namespace CustomAsset.Services {
     }
 
     /// <a href="">Get the next service instance given selection order and repetitions</a> //#TBD#//
-    public ServiceAdapter Instance {
-      get {
-        if (--usagesRemaining > 0) return currentService;
-        currentService  = selector.Pick();
-        usagesRemaining = currentService.usageBalance;
-        return currentService;
-      }
+    public TI Instance<TI>() where TI : TS {
+      if (--usagesRemaining > 0) return (TI) currentService;
+      currentService  = selector.Pick();
+      usagesRemaining = currentService.usageBalance;
+      return (TI) currentService;
     }
 
     /// <a href="">If the last service fails, ask for another. If none work, returns null</a> //#TBD#//
-    public ServiceAdapter Next {
-      get {
-        currentService  = selector.Next();
-        usagesRemaining = currentService.usageBalance;
-        return currentService;
-      }
+    public TI Next<TI>() where TI : TS {
+      currentService = selector.Next();
+      if (currentService == default) return default;
+      usagesRemaining = currentService.usageBalance;
+      return (TI) currentService;
     }
 
     /// <a href="">Parent class for decoupled services</a>
@@ -93,15 +90,15 @@ namespace CustomAsset.Services {
         Prepare();
       }
 
-      /// <a href=""></a> //#TBD#//
-      public Service<T> Service<T>() where T : DelayedCache<T> {
-        var service = Cache<Service<T>>.Instance;
-        service.Dto          = DelayedCache<T>.Instance;
-        service.Emitter      = Emitter.SingleFireInstance.Listen(logOnResponse);
-        service.ErrorMessage = null;
-        service.Emitter.Context(service);
-        return service;
-      }
+//      /// <a href=""></a> //#TBD#//
+//      public Service<T> Service<T>() where T : DelayedCache<T> {
+//        var service = Cache<Service<T>>.Instance;
+//        service.Dto          = DelayedCache<T>.Instance;
+//        service.Emitter      = Emitter.SingleFireInstance.Listen(logOnResponse);
+//        service.ErrorMessage = null;
+//        service.Emitter.Context(service);
+//        return service;
+//      }
     }
 
     /// <a href=""></a> //#TBD#//
@@ -139,7 +136,18 @@ namespace CustomAsset.Services {
   }
 
   /// <a href=""></a> //#TBD#//
-  public class Service<T> : Service {
+  public class Service<T> : Service where T : DelayedCache<T> {
+    /// <a href=""></a> //#TBD#//
+    public static Service<T> Instance {
+      get {
+        var service = Cache<Service<T>>.Instance;
+        service.Dto          = DelayedCache<T>.Instance;
+        service.Emitter      = Emitter.SingleFireInstance;
+        service.ErrorMessage = null;
+        service.Emitter.Context(service);
+        return service;
+      }
+    }
     /// <a href=""></a> //#TBD#//
     public T Dto;
   }

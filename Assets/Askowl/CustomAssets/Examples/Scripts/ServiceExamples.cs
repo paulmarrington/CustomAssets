@@ -15,16 +15,27 @@ namespace Askowl.CustomAssets.Examples {
     private Emitter CallService() {
       // Load the service manager for this service type. You can cache this. It does not change
       var manager = Manager.Load<ServiceExampleServicesManager>("ServiceExampleServicesManager.asset");
-      // Get a reference to a server. Don't cache if it is anything but top-down ordering
-      var mathServer = (ServiceExampleServiceAdapter) manager.Instance;
-      // servers can have multiple services
-      addService = mathServer.Service<ServiceExampleServiceAdapter.AddDto>();
+      // Build Service DTO
+      addService = Service<ServiceExampleServiceAdapter.AddDto>.Instance;
       // The DTO will have request data going in and response data coming back
-      var request = addService.Dto.request;
-      request.firstValue  = firstValue;
-      request.secondValue = secondValue;
-      // Here is the call. It may fall back to other servers if one or more fail to respond
-      return mathServer.Call(addService); // and returns a single-use emitter that fires on completion
+      addService.Dto.request = new ServiceExampleServiceAdapter.AddDto.Request
+        {firstValue = firstValue, secondValue = secondValue};
+      // Get a reference to a server. Don't cache
+      Emitter finished = Emitter.SingleFireInstance;
+
+      var mathServer = manager.Instance<ServiceExampleServiceAdapter>();
+      Fiber.Start.Begin
+           .WaitFor(_ => mathServer.Call(addService))
+           .If(_ => !addService.Error).Exit().Else
+           .Do(
+              fiber => {
+                addService.ErrorMessage = null;
+                mathServer              = manager.Next<ServiceExampleServiceAdapter>();
+                if (mathServer == null) { fiber.Exit(); }
+              })
+           .Again.Finish();
+
+      return finished;
     }
 
     private String                                       mockState;

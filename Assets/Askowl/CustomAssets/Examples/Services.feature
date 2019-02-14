@@ -15,7 +15,7 @@ Feature: CustomAsset Services
     And an add service on the math server
     When we add 21 and 22
     Then we get a service error
-    And a service message of ""
+    And a service message of "Service 1 Failed"
 
   @TopDownFallback
   Scenario: Top-Down Service Fallback Success

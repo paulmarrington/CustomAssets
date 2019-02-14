@@ -44,7 +44,6 @@ namespace CustomAsset.Services {
     }
     /// Abstract services - one per dto type
     public abstract Emitter Call(Service<AddDto> service);
-//    public abstract Emitter Serve(AddDto dto, Emitter emitter);
     // **************** End of ServiceExampleServiceMethod **************** //
     #endregion
 

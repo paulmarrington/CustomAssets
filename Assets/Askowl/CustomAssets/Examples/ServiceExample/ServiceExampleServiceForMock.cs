@@ -9,7 +9,11 @@ namespace CustomAsset.Services {
   [CreateAssetMenu(
     menuName = "Custom Assets/Services/ServiceExample/ServiceForMock", fileName = "ServiceExampleServiceForMock")]
   public class ServiceExampleServiceForMock : ServiceExampleServiceAdapter {
-    [SerializeField] private String mockState = default;
+    [SerializeField] private String mockState    = default;
+    [SerializeField] private int    serviceIndex = 0;
+
+    /// So the test can see who asked to provide service
+    public int ServiceNumber => serviceIndex + 1;
 
     /// <a href="">Prepare the mock service for operations</a> //#TBD#//
     protected override void Prepare() => base.Prepare();
@@ -18,13 +22,15 @@ namespace CustomAsset.Services {
     protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
 
     public override Emitter Call(Service<AddDto> service) {
-      switch (mockState.Text) {
-        case "Success":
+      var states = mockState.Text.Split(',');
+      if (states.Length <= serviceIndex) return null;
+      switch (states[serviceIndex]) {
+        case "Pass":
           service.Dto.result = service.Dto.request.firstValue + service.Dto.request.secondValue;
           Fiber.Start.WaitFor(seconds: 0.1f).Fire(service.Emitter);
           return service.Emitter;
-        case "ServiceFailure":
-          service.ErrorMessage = "Service Failure";
+        case "Fail":
+          service.ErrorMessage = $"Service {serviceIndex} Failed";
           return null;
         default:
           service.ErrorMessage = $"Unknown mock state {mockState.Text}";
