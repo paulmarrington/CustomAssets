@@ -20,17 +20,16 @@ namespace CustomAsset.Services {
 
     /// <a href="">Use Log and Error to record analytics based on service responses</a> //#TBD#//
     protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
-
     public override Emitter Call(Service<AddDto> service) {
       var states = mockState.Text.Split(',');
       if (states.Length <= serviceIndex) return null;
       switch (states[serviceIndex]) {
         case "Pass":
-          service.Dto.result = service.Dto.request.firstValue + service.Dto.request.secondValue;
+          service.Dto.response = service.Dto.request.firstValue + service.Dto.request.secondValue;
           Fiber.Start.WaitFor(seconds: 0.1f).Fire(service.Emitter);
           return service.Emitter;
         case "Fail":
-          service.ErrorMessage = $"Service {serviceIndex} Failed";
+          service.ErrorMessage = $"Service {ServiceNumber} Failed";
           return null;
         default:
           service.ErrorMessage = $"Unknown mock state {mockState.Text}";

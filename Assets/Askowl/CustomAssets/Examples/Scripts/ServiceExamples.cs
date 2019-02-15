@@ -18,25 +18,12 @@ namespace Askowl.CustomAssets.Examples {
       // Build Service DTO
       addService = Service<ServiceExampleServiceAdapter.AddDto>.Instance;
       // The DTO will have request data going in and response data coming back
-      addService.Dto.request = new ServiceExampleServiceAdapter.AddDto.Request
-        {firstValue = firstValue, secondValue = secondValue};
-      // Get a reference to a server. Don't cache
-      Emitter finished = Emitter.SingleFireInstance;
-
-      var mathServer = manager.Instance<ServiceExampleServiceAdapter>();
-      Fiber.Start.Begin
-           .WaitFor(_ => mathServer.Call(addService))
-           .If(_ => !addService.Error).Exit().Else
-           .Do(
-              fiber => {
-                addService.ErrorMessage = null;
-                mathServer              = manager.Next<ServiceExampleServiceAdapter>();
-                if (mathServer == null) { fiber.Exit(); }
-              })
-           .Again.Finish();
-
-      return finished;
+      addService.Dto.request = (firstValue, secondValue);
+      // Here we make the service call with fallback if available/necessary
+      return manager.CallService(addService);
     }
+
+    // ************ Everything below here is scaffolding ************
 
     private String                                       mockState;
     private int                                          firstValue, secondValue;
@@ -68,7 +55,7 @@ namespace Askowl.CustomAssets.Examples {
       var expected        = int.Parse(matches[0]);
       var completeEmitter = Emitter.SingleFireInstance;
       Fiber.Start.WaitFor(CallService())
-           .Do(_ => Assert.AreEqual(expected, addService.Dto.result)).Fire(completeEmitter);
+           .Do(_ => Assert.AreEqual(expected, addService.Dto.response)).Fire(completeEmitter);
       return completeEmitter;
     }
 

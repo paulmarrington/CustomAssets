@@ -1,5 +1,6 @@
 ﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
 using Askowl;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace CustomAsset.Services {
     /// <a href="">Use Log and Error to record analytics based on service responses</a> //#TBD#//
     protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
 
-    public override Emitter Call(Service<TemplateServiceDto> service) => throw new System.NotImplementedException();
+    public override Emitter Call(Service<TemplateServiceDto> service) => throw new NotImplementedException();
 
     /// <inheritdoc />
     public override bool IsExternalServiceAvailable() => true;

@@ -32,7 +32,7 @@ namespace CustomAsset.Services {
 
     // **************** Start of TemplateServiceMethod **************** //
     /// A service dto contains data required to call service and data returned from said call
-    public class TemplateServiceDto : Cached<TemplateServiceDto> { }
+    public class TemplateServiceDto : DelayedCache<TemplateServiceDto> { }
     /// Abstract services - one per dto type
     public abstract Emitter Call(Service<TemplateServiceDto> service);
     // **************** End of TemplateServiceMethod **************** //

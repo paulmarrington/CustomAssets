@@ -35,12 +35,8 @@ namespace CustomAsset.Services {
     // **************** Start of ServiceExampleServiceMethod **************** //
     /// A service dto contains data required to call service and data returned from said call
     public class AddDto : DelayedCache<AddDto> {
-      public struct Request {
-        public int firstValue;
-        public int secondValue;
-      }
-      public Request request;
-      public int     result;
+      public (int firstValue, int secondValue) request;
+      public int                               response;
     }
     /// Abstract services - one per dto type
     public abstract Emitter Call(Service<AddDto> service);

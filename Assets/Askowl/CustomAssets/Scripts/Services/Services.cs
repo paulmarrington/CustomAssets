@@ -35,7 +35,7 @@ namespace CustomAsset.Services {
       Array.Sort(array: services, comparison: (x, y) => x.priority.CompareTo(value: y.priority));
 
       selector = new Selector<TS> {
-        IsRandom        = order <= Order.RoundRobin
+        IsRandom        = order > Order.RoundRobin
       , ExhaustiveBelow = order == Order.RandomExhaustive ? services.Length : 0
       , Choices         = services
       };
@@ -44,6 +44,7 @@ namespace CustomAsset.Services {
     /// <a href="">Get the next service instance given selection order and repetitions</a> //#TBD#//
     public TI Instance<TI>() where TI : TS {
       if (--usagesRemaining > 0) return (TI) currentService;
+      if (order             == Order.TopDown) selector.Top();
       currentService  = selector.Pick();
       usagesRemaining = currentService.usageBalance;
       return (TI) currentService;
@@ -55,6 +56,29 @@ namespace CustomAsset.Services {
       if (currentService == default) return default;
       usagesRemaining = currentService.usageBalance;
       return (TI) currentService;
+    }
+
+    /// <a href=""></a> //#TBD#//
+    public Emitter CallService(Service service) => CallServiceFiber.Go((this, Instance<TS>(), service));
+    private Fiber callFiber;
+
+    private class CallServiceFiber : DelayedCache<CallServiceFiber> {
+      private (Services<TS, TC> manager, TS server, Service service) scope;
+
+      public CallServiceFiber() =>
+        fiber = Fiber.Instance.Begin
+                     .WaitFor(
+                        _ => MethodCache.Call(scope.server, "Call", new object[] {scope.service.Reset()}) as Emitter)
+                     .Until(_ => !scope.service.Error || ((scope.server = scope.manager.Next<TS>()) == null))
+                     .Do(_ => Dispose());
+      private readonly Fiber fiber;
+
+      public static Emitter Go((Services<TS, TC> manager, TS server, Service service) scope) {
+        var instance = Cache<CallServiceFiber>.Instance;
+        instance.scope = scope;
+        instance.fiber.Go();
+        return instance.fiber.OnComplete;
+      }
     }
 
     /// <a href="">Parent class for decoupled services</a>
@@ -89,16 +113,6 @@ namespace CustomAsset.Services {
         logOnResponse = LogOnResponse;
         Prepare();
       }
-
-//      /// <a href=""></a> //#TBD#//
-//      public Service<T> Service<T>() where T : DelayedCache<T> {
-//        var service = Cache<Service<T>>.Instance;
-//        service.Dto          = DelayedCache<T>.Instance;
-//        service.Emitter      = Emitter.SingleFireInstance.Listen(logOnResponse);
-//        service.ErrorMessage = null;
-//        service.Emitter.Context(service);
-//        return service;
-//      }
     }
 
     /// <a href=""></a> //#TBD#//
@@ -126,12 +140,20 @@ namespace CustomAsset.Services {
     public Boolean Error => ErrorMessage != null;
 
     /// <a href=""></a> //#TBD#//
-    public Emitter Emitter;
+    public Emitter Emitter => emitter ?? (emitter = Emitter.SingleFireInstance);
+    private Emitter emitter;
 
     public void Dispose() {
-      var emitter = Emitter;
-      Emitter = null;     // so we don't spin out
-      emitter?.Dispose(); // Dto disposed of by the same command
+      ErrorMessage = null;
+      var em = Emitter;
+      emitter = null; // so we don't spin out
+      em?.Dispose();  // Dto disposed of by the same command
+    }
+
+    /// <a href=""></a> //#TBD#//
+    public Service Reset() {
+      Dispose();
+      return this;
     }
   }
 
@@ -141,13 +163,12 @@ namespace CustomAsset.Services {
     public static Service<T> Instance {
       get {
         var service = Cache<Service<T>>.Instance;
-        service.Dto          = DelayedCache<T>.Instance;
-        service.Emitter      = Emitter.SingleFireInstance;
-        service.ErrorMessage = null;
-        service.Emitter.Context(service);
+        service.Dto = DelayedCache<T>.Instance;
+        service.Reset();
         return service;
       }
     }
+
     /// <a href=""></a> //#TBD#//
     public T Dto;
   }
