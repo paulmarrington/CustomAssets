@@ -1,12 +1,14 @@
 ﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 #if AskowlTests
+using System;
 using System.Collections;
 using Askowl.Gherkin;
 using CustomAsset;
-using CustomAsset.Mutable;
 using CustomAsset.Services;
-using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.TestTools;
+using String = CustomAsset.Mutable.String;
 // ReSharper disable MissingXmlDoc
 
 namespace Askowl.CustomAssets.Examples {
@@ -55,7 +57,13 @@ namespace Askowl.CustomAssets.Examples {
       var expected        = int.Parse(matches[0]);
       var completeEmitter = Emitter.SingleFireInstance;
       Fiber.Start.WaitFor(CallService())
-           .Do(_ => Assert.AreEqual(expected, addService.Dto.response)).Fire(completeEmitter);
+           .Do(
+              _ => {
+                if (expected != addService.Dto.response)
+                  Debug.Log($"*** AddResult FAILED '{addService.Dto}'"); //#DM#// 
+              })
+//           .Do(_ => Assert.AreEqual(expected, addService.Dto.response))
+           .Fire(completeEmitter);
       return completeEmitter;
     }
 

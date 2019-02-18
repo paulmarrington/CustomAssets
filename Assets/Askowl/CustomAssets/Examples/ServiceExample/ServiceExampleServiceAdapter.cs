@@ -37,6 +37,8 @@ namespace CustomAsset.Services {
     public class AddDto : DelayedCache<AddDto> {
       public (int firstValue, int secondValue) request;
       public int                               response;
+      public override string ToString() =>
+        $"({request.firstValue}, {request.secondValue}) => {response}";
     }
     /// Abstract services - one per dto type
     public abstract Emitter Call(Service<AddDto> service);

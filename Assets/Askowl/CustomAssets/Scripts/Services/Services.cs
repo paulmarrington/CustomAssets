@@ -77,6 +77,11 @@ namespace CustomAsset.Services {
         var instance = Cache<CallServiceFiber>.Instance;
         instance.scope = scope;
         instance.fiber.Go();
+        instance.fiber.OnComplete.Listen(
+          _ => { //#DM#// 
+            Debug.Log($"OnComplete {instance.GetHashCode()} {scope.service}");
+            _.StopListening();
+          });
         return instance.fiber.OnComplete;
       }
     }
@@ -171,5 +176,7 @@ namespace CustomAsset.Services {
 
     /// <a href=""></a> //#TBD#//
     public T Dto;
+
+    public override string ToString() => Dto.ToString();
   }
 }
