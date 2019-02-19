@@ -59,7 +59,7 @@ namespace CustomAsset.Services {
     }
 
     /// <a href=""></a> //#TBD#//
-    public Emitter CallService(Service service) => CallServiceFiber.Go((this, Instance<TS>(), service));
+    public Emitter CallService(Service service) => CallServiceFiber.Go((this, Instance<TS>(), service)); //#TBD#//
     private Fiber callFiber;
 
     private class CallServiceFiber : DelayedCache<CallServiceFiber> {
@@ -76,13 +76,7 @@ namespace CustomAsset.Services {
       public static Emitter Go((Services<TS, TC> manager, TS server, Service service) scope) {
         var instance = Cache<CallServiceFiber>.Instance;
         instance.scope = scope;
-        instance.fiber.Go();
-        instance.fiber.OnComplete.Listen(
-          _ => { //#DM#// 
-            Debug.Log($"OnComplete {instance.GetHashCode()} {scope.service}");
-            _.StopListening();
-          });
-        return instance.fiber.OnComplete;
+        return instance.fiber.Go().OnComplete;
       }
     }
 

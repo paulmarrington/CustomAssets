@@ -24,3 +24,14 @@ Feature: CustomAsset Services
     And an add service on the math server
     When we add 11 and 12
     Then we will get a result of 23
+
+  @RoundRobin
+  Scenario: Round-Robin Service Stack
+    Given a round-robin stack with 2 services
+    And server success of "Pass,Pass"
+    When we add 11 and 12
+    Then we use service 1
+    When we add 11 and 12
+    Then we use service 2
+    When we add 11 and 12
+    Then we use service 1

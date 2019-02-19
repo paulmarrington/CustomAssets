@@ -20,6 +20,7 @@ namespace CustomAsset.Services {
 
     /// <a href="">Use Log and Error to record analytics based on service responses</a> //#TBD#//
     protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
+
     public override Emitter Call(Service<AddDto> service) {
       var states = mockState.Text.Split(',');
       if (states.Length <= serviceIndex) return null;
