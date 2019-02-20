@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Askowl;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace CustomAsset.Services {
   /// <a href="">Separate selection and service from context for easy Inspector configuration</a> //#TBD#//
@@ -22,7 +23,7 @@ namespace CustomAsset.Services {
     /// <a href="">Used in testing.</a> //#TBD#//
     public Selector<TS> selector;
     /// <a href=""></a> //#TBD#//
-    public int usagesRemaining;
+    [HideInInspector] public int usagesRemaining;
     /// <a href=""></a> //#TBD#//
     [HideInInspector] public TS currentService;
 
@@ -36,15 +37,19 @@ namespace CustomAsset.Services {
 
       selector = new Selector<TS> {
         IsRandom        = order > Order.RoundRobin
-      , ExhaustiveBelow = order == Order.RandomExhaustive ? services.Length : 0
+      , ExhaustiveBelow = order == Order.RandomExhaustive ? services.Length + 1 : 0
       , Choices         = services
       };
+      usagesRemaining = 0;
     }
 
     /// <a href="">Get the next service instance given selection order and repetitions</a> //#TBD#//
     public TI Instance<TI>() where TI : TS {
-      if (--usagesRemaining > 0) return (TI) currentService;
-      if (order             == Order.TopDown) selector.Top();
+      if (order == Order.TopDown) {
+        selector.Top();
+      } else if (--usagesRemaining > 0) {
+        return (TI) currentService;
+      }
       currentService  = selector.Pick();
       usagesRemaining = currentService.usageBalance;
       return (TI) currentService;
@@ -76,6 +81,7 @@ namespace CustomAsset.Services {
       public static Emitter Go((Services<TS, TC> manager, TS server, Service service) scope) {
         var instance = Cache<CallServiceFiber>.Instance;
         instance.scope = scope;
+        Assert.IsNotNull(scope.server);
         return instance.fiber.Go().OnComplete;
       }
     }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 
   priority: 1
-  usageBalance: 1
+  usageBalance: 2
   context: {fileID: 11400000, guid: a7e62e8f5761145b9839ed59762d7d9e, type: 2}
   mockState: {fileID: 11400000, guid: 67401ebea3bac4c35910be6e89d7e1e9, type: 2}
   serviceIndex: 1

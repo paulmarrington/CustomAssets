@@ -12,9 +12,6 @@ namespace CustomAsset.Services {
     [SerializeField] private String mockState    = default;
     [SerializeField] private int    serviceIndex = 0;
 
-    /// So the test can see who asked to provide service
-    public int ServiceNumber => serviceIndex + 1;
-
     /// <a href="">Prepare the mock service for operations</a> //#TBD#//
     protected override void Prepare() => base.Prepare();
 
@@ -26,11 +23,15 @@ namespace CustomAsset.Services {
       if (states.Length <= serviceIndex) return null;
       switch (states[serviceIndex]) {
         case "Pass":
-          service.Dto.response = service.Dto.request.firstValue + service.Dto.request.secondValue;
+          if (service.Dto.request.firstValue == 0) {
+            service.Dto.response = serviceIndex;
+          } else {
+            service.Dto.response = service.Dto.request.firstValue + service.Dto.request.secondValue;
+          }
           Fiber.Start.WaitFor(seconds: 0.1f).Fire(service.Emitter);
           return service.Emitter;
         case "Fail":
-          service.ErrorMessage = $"Service {ServiceNumber} Failed";
+          service.ErrorMessage = $"Service {serviceIndex + 1} Failed";
           return null;
         default:
           service.ErrorMessage = $"Unknown mock state {mockState.Text}";

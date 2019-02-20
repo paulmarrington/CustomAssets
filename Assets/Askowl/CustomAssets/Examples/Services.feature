@@ -28,10 +28,23 @@ Feature: CustomAsset Services
   @RoundRobin
   Scenario: Round-Robin Service Stack
     Given a round-robin stack with 2 services
+    And each service is called 2 times in a row
     And server success of "Pass,Pass"
-    When we add 11 and 12
-    Then we use service 1
-    When we add 11 and 12
-    Then we use service 2
-    When we add 11 and 12
-    Then we use service 1
+    When we repeat the service call
+    Then we get the same service twice cycling
+
+  @Random
+  Scenario: Random Service Choice
+    Given a random stack with 2 services
+    And each service is called 2 times in a row
+    And server success of "Pass,Pass"
+    When we repeat the service call
+    Then we will eventually get the same service number twice in a row
+
+  @RandomExhaustive
+  Scenario: Exhaustive Random Service Choice
+    Given a random-exhaustive stack with 2 services
+    And each service is called 2 times in a row
+    And server success of "Pass,Pass"
+    When we repeat the service call
+    Then we will never get the same service number twice in a row

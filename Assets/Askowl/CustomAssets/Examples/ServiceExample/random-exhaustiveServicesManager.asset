@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4847664e908cd473e8e4fd44829ee277, type: 3}
-  m_Name: round-robinServicesManager
+  m_Name: random-exhaustiveServicesManager
   m_EditorClassIdentifier: 
   description: 
   services:
   - {fileID: 11400000, guid: 8d5c3d73b391b499d8bf0dfe45431a77, type: 2}
   - {fileID: 11400000, guid: 37a5ce57a7dd741deac297333ecb5ce1, type: 2}
   context: {fileID: 11400000, guid: a7e62e8f5761145b9839ed59762d7d9e, type: 2}
-  order: 1
-  usagesRemaining: 2
-  currentService: {fileID: 11400000, guid: 37a5ce57a7dd741deac297333ecb5ce1, type: 2}
+  order: 3
+  usagesRemaining: 1
+  currentService: {fileID: 11400000, guid: 8d5c3d73b391b499d8bf0dfe45431a77, type: 2}
