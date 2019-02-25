@@ -674,18 +674,18 @@ Decoupling software components and systems have been a focus for many decades. I
 
 Microsoft had much fun in the 90's designing and implementing COM and DCOM. I still think of this as the high point in design for supporting decoupled interfaces.
 
-Now we have Web APIs, REST or SOAP interfaces and microservices. Design patterns such as the Factory Pattern are here to "force" decoupling at the enterprise software level. There have been dozens of standards over the years.
+Now we have Web APIs, REST or SOAP interfaces and micro-services. Design patterns such as the Factory Pattern are here to "force" decoupling at the enterprise software level. There have been dozens of standards over the years.
 
 Despite this, programmers have continued to create tightly coupled systems even while enforcing the requirements of the framework.
 
 Consider a simple example. I have an app that uses a Google Maps API to translate coordinates into a description "Five miles south-west of Gundagai". My app is running on an iPhone calling into a cloud of Google servers. The hardware is different and remote, and they both use completely different software systems. However, my app won't run, or at least perform correctly, without Google. Worse still if I am using a Google library, it won't even compile without a copy.
 
-A service custom asset provides a way to decouple your app from packages in the Unity3D ecosystem. It works at the C# class level, meaning that it does not provide the physical separation. That is provided by the Unity packages when needed. In approach, it acts very much like a C# Interface. So,w hat does it give us?
+A service custom asset provides a way to decouple your app from packages in the Unity3D ecosystem. It works at the C# class level, meaning that it does not provide the physical separation. That is provided by the Unity packages when needed. In approach, it acts very much like a C# Interface. So, what does it give us?
 
 1. You can build and test your app while waiting for supporting Unity packages to be complete.
 2. You can choose between unity packages without changing your app code. Changing from Google Analytics to Unity Analytics to Fabric is as simple as getting or writing the connector code.
 3. You can provide a standard interface to a related area. For social media, the interface could support FaceBook, Twitter, Youtube and others. You could then send a command to one, some or all of them. Think of this regarding posting to multiple platforms.
-4. You can have more than one service then cycle through them or select one at random. For advertising, you can move to a new platform if the current one cannot serve you an ad.
+4. You can have more than one service then cycle through them or select one at random. You can try another advertising provider if the current one cannot serve you an ad.
 5. Platforms such as iOS, Android, Mac, Steam, Windows, etc can used different underlying services without code changes.
 6. Mocking is not only possible, but flexible and easy to implement.
 

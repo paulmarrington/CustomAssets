@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using Askowl;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace CustomAsset.Services {
   /// <a href="">Separate selection and service from context for easy Inspector configuration</a> //#TBD#//
@@ -64,13 +63,15 @@ namespace CustomAsset.Services {
     }
 
     /// <a href=""></a> //#TBD#//
-    public Emitter CallService(Service service) => CallServiceFiber.Go((this, Instance<TS>(), service)).OnComplete; //#TBD#//
+    public Emitter CallService(Service service) =>
+      CallServiceFiber.Go((this, Instance<TS>(), service)).OnComplete; //#TBD#//
 
-    private class CallServiceFiber : Fiber.Closure<(CallServiceFiber, Services<TS, TC> manager, TS server, Service service)> {
+    private class
+      CallServiceFiber : Fiber.Closure<CallServiceFiber, (Services<TS, TC> manager, TS server, Service service)> {
       protected override void Activities(Fiber fiber) =>
         fiber.Begin
-             .WaitFor(_ => MethodCache.Call(scope.server, "Call", new object[] {scope.service.Reset()}) as Emitter)
-             .Until(_ => !scope.service.Error || ((scope.server = scope.manager.Next<TS>()) == null));
+             .WaitFor(_ => MethodCache.Call(Scope.server, "Call", new object[] {Scope.service.Reset()}) as Emitter)
+             .Until(_ => !Scope.service.Error || ((Scope.server = Scope.manager.Next<TS>()) == null));
     }
 
     /// <a href="">Parent class for decoupled services</a>

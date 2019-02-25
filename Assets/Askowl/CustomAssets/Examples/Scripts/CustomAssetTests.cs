@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Askowl;
 using CustomAsset.Mutable;
 using NUnit.Framework;
 using UnityEditor;
@@ -235,7 +234,7 @@ namespace Askowl.CustomAssets.Examples {
       int count = 0;
 
       while (Math.Abs(currentFloat) < 0.99f) {
-        Assert.Less(count++, 501);
+        Assert.Less(count++, 600);
         yield return null;
       }
 
