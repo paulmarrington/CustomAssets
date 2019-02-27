@@ -21,8 +21,8 @@ namespace CustomAsset.Mutable {
     protected override void OnChange(Emitter emitter) => componentValueToSet.Invoke(parameterName, Asset.Value);
 
     #if UNITY_EDITOR
-    [MenuItem("Component/CustomAssets/Named Boolean Driver")]
-    private static void AddConnector() => Selection.activeTransform.gameObject.AddComponent<NamedBooleanDriver>();
+    [MenuItem("Component/CustomAssets/Named Boolean Driver")] private static void AddConnector() =>
+      Selection.activeTransform.gameObject.AddComponent<NamedBooleanDriver>();
     #endif
   }
 }

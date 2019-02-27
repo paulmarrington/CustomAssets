@@ -21,8 +21,8 @@ namespace CustomAsset.Mutable {
     protected override void OnChange(Emitter emitter) => componentValueToSet.Invoke(parameterName, Asset.Value);
 
     #if UNITY_EDITOR
-    [MenuItem("Component/CustomAssets/Named Integer Driver")]
-    private static void AddConnector() => Selection.activeTransform.gameObject.AddComponent<NamedIntegerDriver>();
+    [MenuItem("Component/CustomAssets/Named Integer Driver")] private static void AddConnector() =>
+      Selection.activeTransform.gameObject.AddComponent<NamedIntegerDriver>();
     #endif
   }
 }

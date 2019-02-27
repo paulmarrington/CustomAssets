@@ -19,8 +19,8 @@ namespace CustomAsset.Mutable {
     protected override void OnChange(Emitter _) => componentValueToSet.Invoke(parameterName);
 
     #if UNITY_EDITOR
-    [MenuItem("Component/CustomAssets/Named Trigger Driver")]
-    private static void AddConnector() => Selection.activeTransform.gameObject.AddComponent<NamedTriggerDriver>();
+    [MenuItem("Component/CustomAssets/Named Trigger Driver")] private static void AddConnector() =>
+      Selection.activeTransform.gameObject.AddComponent<NamedTriggerDriver>();
     #endif
   }
 }

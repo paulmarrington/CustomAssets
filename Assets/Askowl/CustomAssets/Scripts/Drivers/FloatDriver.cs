@@ -20,8 +20,8 @@ namespace CustomAsset.Mutable {
     protected override void OnChange(Emitter emitter) => componentValueToSet.Invoke(Asset.Value);
 
     #if UNITY_EDITOR
-    [MenuItem("Component/CustomAssets/Float Driver")]
-    private static void AddConnector() => Selection.activeTransform.gameObject.AddComponent<FloatDriver>();
+    [MenuItem("Component/CustomAssets/Float Driver")] private static void AddConnector() =>
+      Selection.activeTransform.gameObject.AddComponent<FloatDriver>();
     #endif
   }
 }

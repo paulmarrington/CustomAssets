@@ -21,8 +21,8 @@ namespace CustomAsset.Mutable {
     protected override void OnChange(Emitter emitter) => componentValueToSet.Invoke(parameterName, Asset);
 
     #if UNITY_EDITOR
-    [MenuItem("Component/CustomAssets/Named String Driver")]
-    private static void AddConnector() => Selection.activeTransform.gameObject.AddComponent<NamedStringDriver>();
+    [MenuItem("Component/CustomAssets/Named String Driver")] private static void AddConnector() =>
+      Selection.activeTransform.gameObject.AddComponent<NamedStringDriver>();
     #endif
   }
 }
