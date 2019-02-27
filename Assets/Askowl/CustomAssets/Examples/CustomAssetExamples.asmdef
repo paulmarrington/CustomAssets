@@ -4,8 +4,7 @@
         "Able",
         "CustomAssets",
         "Fibers",
-        "AbleEditor",
-        "BDD"
+        "AbleEditor"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"
