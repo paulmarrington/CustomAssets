@@ -20,7 +20,7 @@ using GameObject = CustomAsset.GameObject;
 
 // ReSharper disable MissingXmlDoc
 
-namespace Askowl.CustomAssets.Transcripts {
+namespace Askowl.Transcripts {
   //- Because a custom asset exists on disk as part of the project, we need to create a concrete form. We could have more than one for a multi-player game
   [CreateAssetMenu(menuName = "Managers/Player Death"), Serializable]
   public class PlayerDeathManager : Manager {
@@ -29,7 +29,7 @@ namespace Askowl.CustomAssets.Transcripts {
     [SerializeField] private Integer coins  = default;
     [SerializeField] private Integer lives  = default;
     [SerializeField] private Integer scene  = default;
-    //- This is the only data custom asset that need could be CustomAsset.Constant.Integer, but we may want to change it based on user level. It could also be persistent.
+    //- This is the only data custom asset that could be CustomAsset.Constant.Integer, but we may want to change it based on user level. It could also be persistent.
     [SerializeField] private Integer maximumLives = default;
     //- These two are sent with a GameObjectConnector MonoBehaviour. Add it to the relevant game object by selecting it and using the menu option Component/CustomAssets/GameObject Connnector
     [SerializeField] private GameObject player     = default;
@@ -64,8 +64,7 @@ namespace Askowl.CustomAssets.Transcripts {
   }
 
   //- The scene manager would normally be in separate file
-  [CreateAssetMenu(menuName = "Managers/Scene"), Serializable]
-  public class SceneManager : Manager {
+  [CreateAssetMenu(menuName = "Managers/Scene"), Serializable] public class SceneManager : Manager {
     [SerializeField] private Integer scene = default;
 
     //- Action triggered when scene changes

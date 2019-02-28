@@ -12,7 +12,7 @@
 //- It is as simple as pie to hook in our custom asset [[On Value Change/+/Health custom asset/Float.Value]]
 //- Let's run it up and see if I have made any mistakes
 
-//- To finish up, let's write a quick Unity test that can be automated if you wish. It will be run in the Unity Test Runner and drives our visual test slider directly.
+//- To finish up, we will write a quick Unity test that can be automated if you wish. It will be run in the Unity Test Runner and drives our visual test slider directly.
 
 #if AskowlTests
 using System.Collections;

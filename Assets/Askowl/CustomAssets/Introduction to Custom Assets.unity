@@ -112,6 +112,72 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &888935056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 888935057}
+  - component: {fileID: 888935059}
+  - component: {fileID: 888935058}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &888935057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888935056}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -869, y: -478, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4028356786464883887}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &888935058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888935056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &888935059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888935056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
 --- !u!1 &1853267407
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +467,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4028356786464883884}
+      - m_Target: {fileID: 0}
         m_MethodName: EnableTests
         m_Mode: 1
         m_Arguments:
@@ -872,7 +938,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4028356786464883887}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9}
   m_AnchorMax: {x: 1, y: 0.99}
@@ -1160,7 +1226,7 @@ RectTransform:
   - {fileID: 4028356784881344190}
   - {fileID: 4028356786457641706}
   m_Father: {fileID: 4028356786464883887}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.05, y: 0.05}
   m_AnchorMax: {x: 0.95, y: 0.3}
@@ -1314,7 +1380,7 @@ RectTransform:
   m_Children:
   - {fileID: 4028356786229037358}
   m_Father: {fileID: 4028356786464883887}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.05, y: 0.65}
   m_AnchorMax: {x: 0.95, y: 0.89}
@@ -1446,7 +1512,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4028356786464883887}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1.5}
@@ -1768,10 +1834,10 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
@@ -1779,7 +1845,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: Custom assets are an extension to the unity ScriptableObject classes to provide containers for logic and data isolated from the interactive I/O elements of a game. Allows complete decoupling of components and groups of components, data from logic and logic from the rest of the Unity framework. Vital information is editable in the Unity inspector. Problems can be isolated to integrity tests against one or more manager custom assets without having to run up a complete system. Provide an implementation of the observer pattern. Support persistence. Connect directly to game objects, animator, transform etc.
 --- !u!1 &4028356786443366008
 GameObject:
   m_ObjectHideFlags: 0
@@ -1815,7 +1881,7 @@ RectTransform:
   - {fileID: 4028356785155060787}
   - {fileID: 4028356784497558183}
   m_Father: {fileID: 4028356786464883887}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.05, y: 0.35}
   m_AnchorMax: {x: 0.95, y: 0.6}
@@ -2003,9 +2069,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4028356786464883883}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6134866c304054e0dac343533edc3c6a, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cff8ef67ac654d0bac0230edd04e466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  homePageUrl: http://www.askowl.net/unity-custom-assets
+  documentationUrl: https://paulmarrington.github.io/Unity-Documentation/CustomAssets
+  doxygenUrl: https://paulmarrington.github.io/Unity-Documentation/CustomAssets/Doxygen/html/annotated.html
+  videosUrl: https://www.youtube.com/watch?v=FRPBmxCsRcg&list=PLufDQjKXLJJp3nEq6Rk2CAXye0wf9MMSO
+  supportUrl: https://www.patreon.com/paulmarrington
+  exampleScene: 
+  testsAvailable: {fileID: 4028356784881344191}
 --- !u!223 &4028356786464883886
 Canvas:
   m_ObjectHideFlags: 0
@@ -2038,6 +2111,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 888935057}
   - {fileID: 4028356786132285586}
   - {fileID: 4028356785318597788}
   - {fileID: 4028356785554620794}
