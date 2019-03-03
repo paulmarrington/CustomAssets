@@ -9,7 +9,7 @@ using UnityEngine;
 
 // ReSharper disable MissingXmlDoc
 
-//- Once the asset is create it can be loaded and used by anyone as it has no external code dependencies.
+//- Once the asset is create it can be loaded and used by code as it has no external code dependencies.
 namespace Askowl.CustomAssets.Transcripts {
   //- Custom assets must be created to physical files in the project. We could have more than one.
   [CreateAssetMenu(menuName = "Managers/Health"), Serializable]
@@ -22,7 +22,7 @@ namespace Askowl.CustomAssets.Transcripts {
     //- We use Initialise rather than OnEnable because we can't create a GameObject for Fibers in OnEnable. Initialise is called by a Managers MonoBehaviour or by PlayModeTests.AssetLoad during testing.
     protected override void Initialise() {
       base.Initialise();
-      //- We can just update health every second. Float corrects for health over the maximum
+      //- We can just update health every second. The Float custom asset corrects for health over the maximum
       void trickleCharge(Fiber fiber) => health.Value += trickleChargePerSecond;
       //- Fibers are efficient, only taking up time once a second to update health value
       Fiber.Start.Begin.WaitFor(seconds: 1.0f).Do(trickleCharge).Again.Finish();

@@ -24,7 +24,7 @@ using UnityEngine.UI;
 
 // ReSharper disable MissingXmlDoc
 
-namespace Askowl.CustomAssets.Transcripts {
+namespace Askowl.Transcripts {
   public class HealthBarTranscript : PlayModeTests {
     private static string scenePath = "Health";
 
@@ -61,3 +61,4 @@ namespace Askowl.CustomAssets.Transcripts {
   }
 }
 #endif
+//- I guess you will want to see the test running...

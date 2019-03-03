@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Askowl/Able/Examples/Askowl-Able-Examples.unity
     guid: 3e5c4eb90e6424231961f278916b4dde
+  - enabled: 1
+    path: Assets/Askowl/CustomAssets/Examples/Example/Health.unity
+    guid: 40ed2d761e41f497588aa0441cdf98d3
   m_configObjects: {}

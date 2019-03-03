@@ -13,7 +13,7 @@ namespace CustomAsset.Mutable {
     public readonly Emitter Emitter = Emitter.Instance;
 
     #region Polling
-    /// <a href="http://bit.ly/2QR9q42">Poll to fire an event where no other machanism exists</a>
+    /// <a href="http://bit.ly/2QR9q42">Poll to fire an event where no other mechanism exists</a>
     [Serializable] public class Polling {
       [SerializeField] private bool  enabled                 = false;
       [SerializeField] private float secondsDelayAtStart     = 5;

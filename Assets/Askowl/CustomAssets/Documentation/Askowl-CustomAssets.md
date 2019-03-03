@@ -9,7 +9,7 @@
 ## Executive Summary
 Custom assets are all about decoupling. They are project resources that contain data and code wrapped in a Unity ScriptableObject. They provide emitters to signal change and persistence between sessions. Read the list of benefits [here](#benefits) and watch the video introduction [here](https://www.youtube.com/watch?v=).
 
-I have chosen to use this executive summary to provide examples on how you can use custom assets.
+I have chosen to use this executive summary to provide examples of how you can use custom assets.
 
 ### Decoupling Components
 After you create a custom asset in the project, any reference in components is to the same object. Our example is the ubiquitous player health - a value between zero and one that needs to be accessed by components to:
@@ -33,11 +33,64 @@ Every mutable custom asset includes a checkbox in the inspector for persistent s
 
 > Read the code in the Examples Folder and run the Example scene
 
+## Videos
+* A Health System Example
+  1. [The Health Bar](https://youtu.be/7P6fc-AQfnk)
+  2. [The Health Manager](https://youtu.be/pgzjMbyY7tc)
+* [Converting a Game Manager to Custom Assets](https://youtu.be/juJ-R53hlaE)
+
 ## Cheat Sheet
 
+* ***Manager***: Basic custom asset. Loaded in Managers game object or with Manager.Load for testing
+
+### Mutable Custom Assets
+Entries can be changed and listeners can register to react to the change.
+* ***AudioClips*** - AudioClipSet where list of clips can be modified
+* ***Boolean***
+* ***ChangeOverTime*** - Given a Float custom asset, change it's slowly
+* ***Field*** - Static helper class for setting fields in a compound custom assets
+* ***Float***
+* ***GameObject*** - Use with connector to access a game object from a custom asset
+* ***Integer***
+* ***OfType*** - Base mutable providing emitter and persistence activities
+* ***String***
+* ***StringSet*** - List of strings with picker
+* ***Trigger*** - Fired on command instead of on change
+
+###  Constant Custom Assets
+* ***AudioClips*** - Pick from AudioClipSet
+* ***AudioClipSet*** - Picker for clip, volume, pitch and distance
+* ***Base*** - Base class for all custom assets
+* ***Boolean***
+* ***Enumeration*** - Subclass to define set
+* ***Float***
+* ***Integer***
+* ***OfType*** - Base class for all constant custom assets
+* ***Quotes*** - Pick a quote from a QuoteSet
+* ***QuoteSet*** - Quotes container loaded from text assets
+* ***String***
+* ***StringSet*** - Set of strings when Enumeration is too heavy duty
+
+### Connectors
+* ***Animator*** - Given the parameter name, trigger or set bool, int or float animation control.
+* ***GameObject*** - give access to a game object from a custom asset
+* ***RectTransform*** - access/update position and anchors
+* ***Transform*** - access/update size and scale
+
+### Drivers
+* ***Boolean*** - for boolean unity events
+* ***Driver*** - Register and deregister the listener with the channel
+* ***Integer*** - for integer unity events
+* ***NamedBoolean*** - driver for named events used in the animator
+* ***NamedFloat*** - driver for named events used in the animator
+* ***NamedInteger*** - driver for named events used in the animator
+* ***NamedString*** - driver for named events used in the animator
+* ***NamedTrigger*** - driver for named events used in the animator
+* ***String*** - for string unity events
+* ***Trigger*** - for action trigger unity events
 
 ## Introduction
-Unity provides a base class called [ScriptableObject](https://docs.unity3d.com/ScriptReference/ScriptableObject.html). Derive from it to create objects or assets that don't need to be attached to game objects.
+Unity provides a base class called [ScriptableObject](https://docs.unity3d.com/ScriptReference/ScriptableObject.html). Derive from them to create objects or assets that don't need to be attached to game objects.
 
 In short, a `ScriptableObject` is a class that contains serialisable data and functionality. Each instance of a class that derives from `ScriptableObject` has representation on disk as an asset. Each asset is a source for data and actions not coupled to a scene. The decoupling makes for functionality that is easy to test. It also provides modules to be shared across and between projects.
 
@@ -103,7 +156,7 @@ By contrast, a custom asset approach would be more like:
 health = maxHealth;
 ```
 
-Manager custom assets are the most useful if they are totally decoupled. They deal with data custom assets by making changes and responding to events. This manager can be tested in isolation without loading the complete game. It could also be tested in concert with the HealthManager and/or the HitManager for more complex scenarios.
+Manager custom assets are the most useful when decoupled. They deal with data custom assets by making changes and responding to events. This manager can be tested in isolation without loading the complete game. Test in concert with the HealthManager and the HitManager for more complex scenarios.
 
 ``` c#
   [CreateAssetMenu(menuName = "Managers/Armor"), Serializable]
@@ -126,11 +179,11 @@ Manager custom assets are the most useful if they are totally decoupled. They de
 ```
 #### Manager Loading
 
-Player managers should be logic. Data have their own custom assets. Since managers only react to events they need to be explicitly loaded. In the Unity editor select the menu ***GameObject // Create Managers***. Drag the managers into the list in the newly created MonoBehaviour.
+Player managers should be logic. Data have their custom assets. Since managers only react to events, they need to be explicitly loaded. In the Unity editor select the menu ***GameObject // Create Managers***. Drag the managers into the list in the newly created MonoBehaviour.
 
 ![Manager Custom Asset Container](Managers.png)
 
-For testing we don't need a scene. Another benefit of decoupling. `Manager` provides a `Load` method for independent testing. The asset can be found by name with or without a path. Only as much of the path as needed for uniqueness needs be given.
+For testing, we don't need a scene — another benefit of decoupling. `Manager` provides a `Load` method for independent testing. The asset can be found by name with or without a path. Only as much of the path as needed for uniqueness needs be given.
 
 ``` c#
   public class HealthManagerTest : PlayModeTests {
@@ -150,7 +203,6 @@ For testing we don't need a scene. Another benefit of decoupling. `Manager` prov
           if (health >= 0.01f) yield break;
         }
       } finally {
-        //- reset the time scale so other tests aren't effected.
         Time.timeScale = 1;
       }
     }
@@ -290,7 +342,7 @@ All CustomAsset instances have a description field. Since you can use generic as
 Each if these custom assets can be in a project with or without supporting code. It is possible, for example, to have a `Float` value set in the ***On Value Changed*** field of a Slider or Scrollbar, then displayed using a driver like `CustomAsset.FloatDriver` to set the fill amount on a health bar Image component.
 
 #### Float
-The mutable `Float` custom asset also includes a range that can be set in the inspector. Attempts to change the value outside the limits will cause the value to be set to the closest bound. It allows managers to increase or decrease a value without being concerned with going outside acceptable limits.
+The mutable `Float` custom asset also includes a range set in the inspector. Attempts to change the value outside the limits leave the value at the closest bound. It allows managers to increase or decrease a value without being concerned with going outside acceptable limits.
 
 ``` c#
 health += 0.2f;
@@ -298,12 +350,12 @@ health += 0.2f;
 if (health < 0.8) health += 0.2f;
 ```
 
-Bounds can be set with sliders or text entry. The latter is necessary if you need a value outside the range the sliders are set for.
+Set bounds with sliders or text entry. The latter is necessary if you need a value outside the range the sliders are set.
 
-The range may need to be changed due to conditions. A tired warrior may not be able to have health over 80%. Use `Float.Minimum` and `Float.Maximum` to make the adjustments.
+Conditions may require a range change. A tired warrior may not be able to have health over 80%. Use `Float.Minimum` and `Float.Maximum` to make the adjustments.
 
 ### Object (non-primitive) Custom Assets
-There will be times where using primitive custom assets is too granular and a more complex custom asset could be better represented as a class. There are a few boundaries. The class must be serialisable and any members you want to change in the inspector labelled as serialised fields.
+A class will better represent a more complex custom asset. There are a few boundaries. The class must be serialisable and any members you want to change in the inspector labelled as serialised fields.
 
 ``` c#
   [Serializable] public class LargerAssetContents {
@@ -313,7 +365,7 @@ There will be times where using primitive custom assets is too granular and a mo
   }
 ```
 
-If the object custom asset is to be mutable, care must be taken while setting fields. The static `CustomAsset.Mutable.Field` class provides helpers for float, double, int, long, bool, string, Vector2, Vector3, Vector4 and Quaternion types. There is also a generic form for adding new structs. You will need to provide a comparator.
+Take care while setting fields. The static `CustomAsset.Mutable.Field` class provides helpers for float, double, int, long, bool, string, Vector2, Vector3, Vector4 and Quaternion types. There is also a generic form for adding new structs. You need to provide a comparator.
 
 ``` c#
 Field.Set(largeAssetContents, ref largeAssetContents.F, 12);
@@ -349,9 +401,9 @@ Create a serialisable field CustomAsset or MonoBehaviour that intends to use the
 }
 ```
 
-In this example, different services will sub-class context and add additional fields. A common one is `platform` so that different service implementations can be used for iOS, Android, Steam, etc.
+In this example, different services sub-class context and add additional fields. A common one is `platform`, allowing different service implementations for iOS, Android, Steam, and others.
 
-During initialisation the service manager will decide which service can be selected from given current context.
+During initialisation, the service manager decides which service are from the given current context.
 
 ``` c#
 var useful = services.Where(service => service.context.Equals(context) && service.IsExternalServiceAvailable());
@@ -436,7 +488,7 @@ Using `AudioClips` wherever you have sound effects makes your game sound a lot m
 
 ### ChangeOverTime
 
-It is always fun to factor out common manager custom assets into common code. Health, mana, stamina and similar look better if changes are not instantaneous. And some, like poison, have to happen over a period. Create managers without code using the `ChangeOverTime` custom asset.
+It is always fun to factor out common manager custom assets into common code. Health, mana, stamina and similar look better if changes are not instantaneous. Moreover, some, like poison, have to happen over a period. Create managers without code using the `ChangeOverTime` custom asset.
 
 ![Change custom asset over time](Health-SmallPotion.png)
 ![Change custom asset over time](Health-PoisonArrow.png)
@@ -494,7 +546,7 @@ Primitive custom assets (trigger, boolean, integer, float and string) are extrem
 Drivers and Connectors (described below) also need a reference. They register for changing events. The event fires when and only when the custom asset changes.
 
 ### Polling
-No matter how hard we try there is data that changes and we cannot get be informed in a timely manner. The technique of last resort is called polling - where we check periodically for change. The inspector for any mutable custom asset will includes some polling fields. Just enable polling in the inspector and set the intervals.
+No matter how hard we try there is data that changes, and we cannot be informed promptly. The technique of last resort is called polling - where we check periodically for change. The inspector for any mutable custom asset includes some polling fields. Just enable polling in the inspector and set the intervals.
 
 ![Polling for changes](Polling.png)
 
@@ -649,7 +701,7 @@ An animator component relies on an outside source to set a named trigger, intege
 This connector allows for changes to the scale, rotation and position for any gameObject.transform. There is a video linked at the start of this document that uses changes of scale to show/hide a health-bar.
 
 #### GameObjectConnector
-The `GameObjectConnector` is a bit different. Add it to an existing GameObject with the menu ***Component/Custom Assets/GameObject Connector**** then drop in a custom asset that inherits from CustomAssets.Mutable.GameObject. Now code anywhere can access the game object until it is destroyed.
+The `GameObjectConnector` is a bit different. Add it to an existing GameObject with the menu ***Component/Custom Assets/GameObject Connector**** then drop in a custom asset that inherits from CustomAssets.Mutable.GameObject. Now code anywhere can access the game object.
 
 ## Custom Asset Persistence
 If a custom asset is marked persistent in the Inspector, then it writes itself out to the PlayerPref database using a key combining the name and class.
@@ -994,5 +1046,3 @@ public sealed class GameManager : MonoBehaviour {
     private void OnSceneChange() => UnityEngine.SceneManagement.SceneManager.LoadScene(sceneBuildIndex: scene);
   }
 ```
-
-#### Benefits of Refactoring

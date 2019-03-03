@@ -5,7 +5,7 @@ using Askowl;
 using UnityEngine;
 
 namespace CustomAsset.Mutable {
-  /// <a href="http://bit.ly/2Rlzvru">Static helper class for setting fields in a compound object</a>
+  /// <a href="http://bit.ly/2Rlzvru">Static helper class for setting fields in a compound custom assets</a>
   public static class Field {
     #region Generic Setters
 
