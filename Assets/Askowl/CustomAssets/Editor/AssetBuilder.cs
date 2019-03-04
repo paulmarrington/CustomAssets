@@ -19,11 +19,12 @@ namespace Askowl {
     private static AssetBuilder builder;
     // [MenuItem("Assets/Create/NAME")]
     /// <a href=""></a> //#TBD#//
-    public void CreateAssets(string name) {
+    public void CreateAssets(string assetName) {
+      name = assetName;
       if (builder != null) throw new Exception($"Please wait for asset builder {name} to complete");
       builder     = this;
       destination = Destination(name);
-      ProcessSource(name, destination, "cs|txt");
+      ProcessSource(@"cs|txt");
       var assetPath = destination.Substring(destination.IndexOf("/Assets/", StringComparison.Ordinal) + 1);
       AssetDatabase.ImportAsset(
         Path.GetDirectoryName(assetPath)
@@ -35,9 +36,13 @@ namespace Askowl {
     /// <a href=""></a> //#TBD#//
     protected abstract void OnScriptReload();
 
-    [DidReloadScripts] private static void Phase2() => builder?.OnScriptReload();
+    [DidReloadScripts] private static void Phase2() {
+      if (builder == null) return;
+      builder.OnScriptReload();
+      builder.SaveAssetDictionary();
+    }
 
-    private static void ProcessSource(string name, string destination, string textAssetTypes = @"cs|txt") {
+    private static void ProcessSource(string textAssetTypes) {
       Regex    textAssetTypesRegex = new Regex($"\\.({textAssetTypes})$");
       string[] sources             = AssetDatabase.FindAssets("", new[] {TemplatePath(name)});
       using (var template = Template.Instance) {
@@ -84,31 +89,31 @@ namespace Askowl {
       return path;
     }
 
-    private struct Asset {
-      public ScriptableObject scriptableObject;
-      public SerializedObject serializedObject;
-    }
-    private Dictionary<string, Asset> assets;
+    private readonly Dictionary<string, (ScriptableObject scriptableObject, SerializedObject serializedObject)> assets
+      = new Dictionary<string, (ScriptableObject scriptableObject, SerializedObject serializedObject)>();
 
     /// <a href=""></a> //#TBD#//
-    public void CreateAssetDictionary(string assetNameCsv) {
-      foreach (var assetNameAndType in assetNameCsv.Split(',')) {
-        string[] nameType         = assetNameAndType.Split('/');
-        string   assetName        = nameType[0];
-        string   assetType        = nameType[nameType.Length > 1 ? 1 : 0];
-        var      scriptableObject = ScriptableObject.CreateInstance(assetType);
-        var      serialisedObject = new SerializedObject(scriptableObject);
-        assets[assetName] = new Asset {scriptableObject = scriptableObject, serializedObject = serialisedObject};
+    protected ScriptableObject Asset(string name) => assets[name].scriptableObject;
+
+    /// <a href=""></a> //#TBD#//
+    protected void CreateAssetDictionary(params (string name, Type customAsset)[] assetNameAndTypeList) {
+      foreach (var entry in assetNameAndTypeList) {
+        var scriptableObject = ScriptableObject.CreateInstance(entry.customAsset);
+        var serialisedObject = new SerializedObject(scriptableObject);
+        assets[entry.name] = (scriptableObject, serialisedObject);
       }
     }
 
     /// <a href=""></a> //#TBD#//
-    public void SetField(string assetName, string fieldName, Object fieldValue) =>
+    protected void SetField(string assetName, string fieldName, Object fieldValue) =>
       assets[assetName].serializedObject.FindProperty(fieldName).objectReferenceValue = fieldValue;
 
     /// <a href=""></a> //#TBD#//
-    public void InsertIntoArrayField(string assetName, string fieldName, Object fieldValue, int index = 0) {
-      var asset              = assets[assetName].serializedObject;
+    protected void InsertIntoArrayField(string assetName, string fieldName, Object fieldValue, int index = 0) =>
+      InsertIntoArrayField(assets[assetName].serializedObject, fieldName, fieldValue, index);
+
+    /// <a href=""></a> //#TBD#//
+    protected void InsertIntoArrayField(SerializedObject asset, string fieldName, Object fieldValue, int index = 0) {
       var serialisedProperty = asset.FindProperty(fieldName);
       serialisedProperty.InsertArrayElementAtIndex(index);
       serialisedProperty.GetArrayElementAtIndex(index).objectReferenceValue = fieldValue;
@@ -116,41 +121,29 @@ namespace Askowl {
     }
 
     /// <a href=""></a> //#TBD#//
-    public void SaveAssetDictionary() {
-      assets.
+    private void SaveAssetDictionary() {
+      var manager = GetCustomAssetManager();
+      foreach (var entry in assets) {
+        AssetDatabase.CreateAsset(entry.Value.scriptableObject, $"{destination}/{name}{entry.Key}.asset");
+        entry.Value.serializedObject.ApplyModifiedProperties();
+        if (entry.Key.EndsWith("Manager")) InsertIntoArrayField(manager, "managers", entry.Value.scriptableObject);
+      }
+      AssetDatabase.SaveAssets();
     }
 
-    // *********************
-    private static void TheRest() {
-      var servicesManager = ScriptableObject.CreateInstance($"Decoupler.Services.{name}ServicesManager");
-      var context         = ScriptableObject.CreateInstance($"Decoupler.Services.{name}Context");
-      var serviceForMock  = ScriptableObject.CreateInstance($"Decoupler.Services.{name}ServiceForMock");
+    private SerializedObject GetCustomAssetManager() =>
+      GetMonoBehaviour("Custom Asset Managers", typeof(Managers));
 
-      var servicesManagerSerializedObject = new SerializedObject(servicesManager);
-      var contextSerializedObject         = new SerializedObject(context);
-      var serviceForMockSerializedObject  = new SerializedObject(serviceForMock);
-
-      SetField(servicesManagerSerializedObject, "context", context);
-      SetField(serviceForMockSerializedObject,  "context", context);
-      InsertIntoArrayField(servicesManagerSerializedObject, "services", serviceForMock);
-
-      AssetDatabase.CreateAsset(servicesManager, $"{destination}/{name}ServicesManager.asset");
-      AssetDatabase.CreateAsset(context,         $"{destination}/{name}MockContext.asset");
-      AssetDatabase.CreateAsset(serviceForMock,  $"{destination}/{name}ServiceForMock.asset");
-
-      servicesManagerSerializedObject.ApplyModifiedProperties();
-      contextSerializedObject.ApplyModifiedProperties();
-      serviceForMockSerializedObject.ApplyModifiedProperties();
-      AssetDatabase.SaveAssets();
-
-      var managers = GameObject.Find("/Service Managers");
+    private SerializedObject GetMonoBehaviour(string gameObjectName, Type monoBehaviourType) {
+      var managers = GameObject.Find(gameObjectName);
       if (managers == default) {
-        var prefab = Resources.Load("Managers");
+        var prefab = Resources.Load(monoBehaviourType.Name);
         managers      = (GameObject) Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
-        managers.name = "Service Managers";
+        managers.name = gameObjectName;
       }
-      var managersSerializedObject = new SerializedObject(managers.GetComponent<Managers>());
-      InsertIntoArrayField(managersSerializedObject, "managers", servicesManager);
+      var serialisedObject = new SerializedObject(managers.GetComponent(monoBehaviourType));
+      assets[name] = (null, serialisedObject);
+      return serialisedObject;
     }
 
     private static string Destination(string name) {
