@@ -11,7 +11,7 @@
 
 //- Now we will refactor a real game manager from a 2D game. The original code is to the left while we will build up the custom asset managers on the right
 
-#if AskowlTests
+#if !ExcludeAskowlTests
 using System;
 using CustomAsset;
 using CustomAsset.Mutable;

@@ -127,7 +127,9 @@ namespace CustomAsset.Mutable {
 
     /// <a href="http://bit.ly/2QMNebi">Basic load for a persistent custom asset</a>
     public void Load() {
-      if (persistent) Value = JsonUtility.FromJson<Wrap>(PlayerPrefs.GetString(Key, defaultValue: "")).data;
+      if (!persistent) return;
+      var json                   = PlayerPrefs.GetString(Key, defaultValue: "");
+      if (json.Length > 0) Value = JsonUtility.FromJson<Wrap>(json).data;
     }
 
     /// <a href="http://bit.ly/2QMNebi">Basic save for a persistent custom asset</a>

@@ -14,9 +14,9 @@ namespace CustomAsset.Mutable {
     [SerializeField] private int   stepsPerSecond  = 10;
     [SerializeField] private bool  resetOnStart    = false;
 
-    private Fiber        change;
-    private int          steps;
-    private float        stepTime, stepAmount;
+    private Fiber change;
+    private int   steps;
+    private float stepTime, stepAmount;
 
     /// <a href="http://bit.ly/2CwSUh0">Start a fiber to change over non-default period</a>
     public void Fire(float changeAmount, float seconds) {
@@ -34,11 +34,11 @@ namespace CustomAsset.Mutable {
     /// <a href="http://bit.ly/2CwSUh0">Abort a long-running change loop</a>
     public void Abort() => change?.Exit();
 
-    /// <a href=""></a> //#TBD#//
+    ///
     protected override void Initialise() {
       base.Initialise();
       void updateTargetValue(Fiber fiber) => targetForChange.Set(targetForChange + stepAmount);
-      change = Fiber.Instance.Begin.Do(updateTargetValue).WaitFor(stepTime).Repeat(steps);
+      change = Fiber.Instance.Begin.Do(updateTargetValue).WaitFor(stepTime).Repeat(_ => steps);
     }
   }
 }

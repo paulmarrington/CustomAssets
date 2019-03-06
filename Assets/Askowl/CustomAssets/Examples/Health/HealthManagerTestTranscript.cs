@@ -1,7 +1,7 @@
 ﻿//- A manager is game logic completely divorced from the visual. It still needs to run in a project if it uses Fibers.
 //- First we create a new custom asset, setting the starting health to zero as we want to see it grow. [[context/Manager/Health]
 //- While Fibers do not need to run from a MonoBehaviour, they still need a running scene - so we use UnityTest
-#if AskowlTests
+#if !ExcludeAskowlTests
 // ReSharper disable MissingXmlDoc
 using System.Collections;
 using CustomAsset;

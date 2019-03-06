@@ -1,4 +1,4 @@
-﻿#if AskowlTests
+﻿#if !ExcludeAskowlTests
 using System;
 using Askowl;
 using CustomAsset.Mutable;

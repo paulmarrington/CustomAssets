@@ -5,7 +5,7 @@ using CustomAsset;
 using CustomAsset.Mutable;
 using UnityEngine;
 
-#if AskowlTests
+#if !ExcludeAskowlTests
 
 // ReSharper disable MissingXmlDoc
 

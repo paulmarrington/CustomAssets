@@ -1,4 +1,4 @@
-﻿#if AskowlTests
+﻿#if !ExcludeAskowlTests
 using CustomAsset.Mutable;
 using UnityEngine;
 

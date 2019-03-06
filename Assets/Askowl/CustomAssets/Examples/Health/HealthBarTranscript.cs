@@ -14,7 +14,7 @@
 
 //- To finish up, we will write a quick Unity test that can be automated if you wish. It will be run in the Unity Test Runner and drives our visual test slider directly.
 
-#if AskowlTests
+#if !ExcludeAskowlTests
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
