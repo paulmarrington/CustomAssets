@@ -14,15 +14,15 @@ using String = CustomAsset.Constant.String;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
-  public abstract class AssetBuilder {
+  public abstract class AssetWizard {
     private static string       name, destination, destinationName, destinationRelative;
-    private static AssetBuilder builder;
+    private static AssetWizard wizard;
     // [MenuItem("Assets/Create/NAME")]
     /// <a href=""></a> //#TBD#//
     public void CreateAssets(string assetName) {
       name = assetName;
-      if (builder != null) throw new Exception($"Please wait for asset builder {name} to complete");
-      builder     = this;
+      if (wizard != null) throw new Exception($"Please wait for asset builder {name} to complete");
+      wizard     = this;
       destination = Destination();
       bool hasSource = ProcessSource(@"cs|txt");
       destinationRelative = destination.Substring(destination.IndexOf("/Assets/", StringComparison.Ordinal) + 1);
@@ -41,9 +41,9 @@ namespace Askowl {
     protected abstract void OnScriptReload();
 
     [DidReloadScripts] private static void Phase2() {
-      if (builder == null) return;
-      builder.OnScriptReload();
-      builder.SaveAssetDictionary();
+      if (wizard == null) return;
+      wizard.OnScriptReload();
+      wizard.SaveAssetDictionary();
     }
 
     private static bool ProcessSource(string textAssetTypes) {
@@ -105,6 +105,9 @@ namespace Askowl {
     }
 
     /// <a href=""></a> //#TBD#//
+    protected void SetActiveObject(string assetName) => Selection.activeObject = Asset(assetName).targetObject;
+
+    /// <a href=""></a> //#TBD#//
     protected void CreateAssetDictionary(params (string name, Type asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) {
         if (entry.asset.IsSubclassOf(typeof(ScriptableObject))) {
@@ -119,7 +122,7 @@ namespace Askowl {
           var serialisedObject = new SerializedObject(asset);
           assets[entry.name] = serialisedObject;
         } else {
-          throw new Exception($"{entry.asset.Name} is not a MonoBehaviour or ScriptableObject");
+          throw new Exception($"{entry.asset.Name} is not a MonoBehaviour, ScriptableObject or Resource");
         }
       }
     }
@@ -133,7 +136,7 @@ namespace Askowl {
       Field(assetName, fieldName).objectReferenceValue = fieldValue;
 
     /// <a href=""></a> //#TBD#//
-    protected SerializedProperty Field(string assetName, string fieldName) {
+    protected SerializedProperty Field(string assetName, string fieldName = "value") {
       if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
       var property = FindProperty(assetName, fieldName);
       if (property == default) throw new Exception($"No property '{fieldName}' in '{assetName}'");
@@ -162,8 +165,8 @@ namespace Askowl {
     }
 
     /// <a href=""></a> //#TBD#//
-    protected T FindProperty<T>(string assetName, string fieldName) where T : class =>
-      FindProperty(assetName, fieldName) as T;
+    protected T FindProperty<T>(string assetName, string fieldName = "value") where T : class =>
+      FindProperty(assetName, fieldName).exposedReferenceValue as T;
 
     private SerializedProperty FindProperty(SerializedObject asset, string fieldName) {
       var property = asset.FindProperty(fieldName);
@@ -181,12 +184,12 @@ namespace Askowl {
     private void SaveAssetDictionary() {
       var manager = GetCustomAssetManager();
       foreach (var entry in assets) {
-        if (entry.Value != default) {
+        if (entry.Value.targetObject.GetType().IsSubclassOf(typeof(ScriptableObject))) {
           string assetName = $"{destinationRelative}/{destinationName} {name} {entry.Key}.asset";
           AssetDatabase.CreateAsset(entry.Value.targetObject, assetName);
           if (entry.Key.EndsWith("Manager")) InsertIntoArrayField(manager, "managers", entry.Value.targetObject);
-          entry.Value.ApplyModifiedProperties();
         }
+        entry.Value.ApplyModifiedProperties();
       }
       AssetDatabase.SaveAssets();
     }
