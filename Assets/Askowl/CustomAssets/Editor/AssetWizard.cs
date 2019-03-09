@@ -14,17 +14,18 @@ using String = CustomAsset.Constant.String;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
-  public abstract class AssetWizard {
-    private static string       name, destination, destinationName, destinationRelative;
+  public abstract class AssetWizard : ScriptableObject {
+    private static string      assetType, destination, destinationName, destinationRelative;
     private static AssetWizard wizard;
     // [MenuItem("Assets/Create/NAME")]
     /// <a href=""></a> //#TBD#//
-    public void CreateAssets(string assetName) {
-      name = assetName;
-      if (wizard != null) throw new Exception($"Please wait for asset builder {name} to complete");
-      wizard     = this;
-      destination = Destination();
-      bool hasSource = ProcessSource(@"cs|txt");
+    public void CreateAssets(string newAssetType, params string[] templateSubstitutions) {
+      Selection.activeObject = null; // in case we had a creation form inspector up
+      if (wizard != null) throw new Exception($"Please wait for asset builder {assetType} to complete");
+      assetType = newAssetType;
+      wizard    = this;
+      SetDestination();
+      bool hasSource = ProcessSource(@"cs|txt", templateSubstitutions);
       destinationRelative = destination.Substring(destination.IndexOf("/Assets/", StringComparison.Ordinal) + 1);
       AssetDatabase.ImportAsset(
         Path.GetDirectoryName(destinationRelative)
@@ -44,22 +45,24 @@ namespace Askowl {
       if (wizard == null) return;
       wizard.OnScriptReload();
       wizard.SaveAssetDictionary();
+      wizard = null;
     }
 
-    private static bool ProcessSource(string textAssetTypes) {
+    private static bool ProcessSource(string textAssetTypes, string[] templateSubstitutions) {
+      if (templateSubstitutions.Length == 0) return false;
       bool     hasSource           = false;
       Regex    textAssetTypesRegex = new Regex($"\\.({textAssetTypes})$");
       string[] sources             = AssetDatabase.FindAssets("", new[] {TemplatePath()});
       using (var template = Template.Instance) {
-        template.Substitute("Template", name);
+        template.Substitute("Template", destinationName);
         for (int i = 0; i < sources.Length; i++) {
-          var sourcePath                            = AssetDatabase.GUIDToAssetPath(sources[i]);
-          if (sourcePath.EndsWith(".cs")) hasSource = true;
-          var fileName                              = Path.GetFileName(sourcePath);
+          var sourcePath = AssetDatabase.GUIDToAssetPath(sources[i]);
+          var fileName   = Path.GetFileName(sourcePath);
           if (File.Exists(sourcePath)) {
             if (textAssetTypesRegex.IsMatch(sourcePath)) {
-              var text = template.Process(File.ReadAllText(sourcePath));
-              File.WriteAllText($"{destination}/{name}{fileName}", text);
+              var text                                  = template.Process(File.ReadAllText(sourcePath));
+              if (sourcePath.EndsWith(".cs")) hasSource = true;
+              File.WriteAllText($"{destination}/{assetType}{fileName}", text);
             } else {
               File.Copy(sourcePath, $"{destination}/{fileName}");
             }
@@ -70,7 +73,7 @@ namespace Askowl {
     }
 
     private static string TemplatePath() {
-      var paths = AssetDatabase.FindAssets($"{name}TemplatePath");
+      var paths = AssetDatabase.FindAssets($"{assetType}TemplatePath");
       for (int i = 0; i < paths.Length; i++) {
         var path = AssetDatabase.GUIDToAssetPath(paths[i]);
         if (path.IndexOf("Askowl", StringComparison.Ordinal) == -1) return path;
@@ -78,7 +81,7 @@ namespace Askowl {
       if (paths.Length != 0) return AssetDatabase.LoadAssetAtPath<String>(AssetDatabase.GUIDToAssetPath(paths[0]));
 
       string exists(string path) {
-        path = $"Assets/Askowl/{name}/{path}";
+        path = $"Assets/Askowl/{assetType}/{path}";
         return Directory.Exists(path) ? path : null;
       }
       return exists("Editor/Template") ?? exists("Template") ?? exists("scripts/Template") ?? "";
@@ -111,7 +114,7 @@ namespace Askowl {
     protected void CreateAssetDictionary(params (string name, Type asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) {
         if (entry.asset.IsSubclassOf(typeof(ScriptableObject))) {
-          var scriptableObject = ScriptableObject.CreateInstance(entry.asset);
+          var scriptableObject = CreateInstance(entry.asset);
           var serialisedObject = new SerializedObject(scriptableObject);
           assets[entry.name] = serialisedObject;
         } else if (entry.asset.IsSubclassOf(typeof(MonoBehaviour))) {
@@ -185,7 +188,7 @@ namespace Askowl {
       var manager = GetCustomAssetManager();
       foreach (var entry in assets) {
         if (entry.Value.targetObject.GetType().IsSubclassOf(typeof(ScriptableObject))) {
-          string assetName = $"{destinationRelative}/{destinationName} {name} {entry.Key}.asset";
+          string assetName = $"{destinationRelative}/{destinationName} {assetType} {entry.Key}.asset";
           AssetDatabase.CreateAsset(entry.Value.targetObject, assetName);
           if (entry.Key.EndsWith("Manager")) InsertIntoArrayField(manager, "managers", entry.Value.targetObject);
         }
@@ -212,17 +215,21 @@ namespace Askowl {
       return serialisedObject;
     }
 
-    private static string Destination() {
-      var destinationPath = EditorUtility.SaveFilePanel(
-        $"Location for your new {name}", GetSelectedPathOrFallback(), "", "");
-      destinationName = Path.GetFileNameWithoutExtension(destinationPath);
-      if (string.IsNullOrEmpty(destinationPath)) return null;
-      if (Directory.Exists(destinationPath)) {
-        Debug.LogError($"{destinationPath} already exists. Please select a different name or project directory");
-        return null;
+    /// <a href=""></a> //#TBD#//
+    protected virtual string GetDestinationPath() => EditorUtility.SaveFilePanel(
+      $"Location for your new {assetType}", GetSelectedPathOrFallback(), "", "");
+
+    private void SetDestination() {
+      destination     = GetDestinationPath();
+      destinationName = Path.GetFileNameWithoutExtension(destination);
+      if (string.IsNullOrWhiteSpace(destination)) Fatal("Enter name for the new asset");
+      if (Directory.Exists(destination)) {
+        Fatal($"{destination} already exists. Please select a different name or project directory");
       }
-      Directory.CreateDirectory(destinationPath);
-      return destinationPath;
+      Directory.CreateDirectory(destination);
     }
+
+    /// <a href=""></a> //#TBD#//
+    protected void Fatal(string msg) => throw new Exception(msg);
   }
 }
