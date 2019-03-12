@@ -17,9 +17,12 @@ namespace Askowl {
   /// <a href=""></a> //#TBD#//
   public abstract class AssetWizard : ScriptableObject {
     /// <a href=""></a> //#TBD#//
-    protected static string assetType, destination, destinationName;
+    protected static string assetType, destination, destinationName, selectedPathInProjectView;
     /// <a href=""></a> //#TBD#//
     protected static AssetWizard wizard;
+
+    private void OnEnable() => selectedPathInProjectView = GetSelectedPathInProjectView();
+
     /// <a href=""></a> //#TBD#//
     protected void CreateAssets(string newAssetType) {
       Selection.activeObject = null; // in case we had a creation form inspector up
@@ -220,7 +223,7 @@ namespace Askowl {
 
     /// <a href=""></a> //#TBD#//
     protected virtual string GetDestinationPath() => EditorUtility.SaveFilePanel(
-      $"Location for your new {assetType}", GetSelectedPathInProjectView(), "", "");
+      $"Location for your new {assetType}", selectedPathInProjectView, "", "");
 
     private void SetDestination() {
       destination     = GetDestinationPath();
@@ -251,10 +254,8 @@ namespace Askowl {
     private static readonly Regex         csRegex = new Regex(@"\s*;\s*|\s*,\s*|\s+", RegexOptions.Singleline);
 
     /// <a href=""></a> //#TBD#//
-    protected static string GetSelectedPathInProjectView() {
+    private static string GetSelectedPathInProjectView() {
       string path = "Assets";
-      EditorUtility.FocusProjectWindow();
-      Debug.Log($"*** GetSelectedPathInProjectView '{Selection.activeObject}'"); //#DM#//
       foreach (Object obj in Selection.GetFiltered(typeof(Object), SelectionMode.Assets)) {
         path = AssetDatabase.GetAssetPath(obj);
         if (!string.IsNullOrEmpty(path) && File.Exists(path)) {
@@ -263,10 +264,6 @@ namespace Askowl {
         }
       }
       return path;
-    }
-
-    [MenuItem("TEST/TEST")] static void SelectPath() {
-      Debug.Log($"*** SelectPath '{GetSelectedPathInProjectView()}'"); //#DM#//
     }
 
     /// <a href=""></a> //#TBD#//
