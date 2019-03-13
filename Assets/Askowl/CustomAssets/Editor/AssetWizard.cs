@@ -15,69 +15,58 @@ using String = CustomAsset.Constant.String;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
-  public abstract class AssetWizard : ScriptableObject {
+  public abstract class AssetWizard : Manager {
     /// <a href=""></a> //#TBD#//
     protected static string assetType, destination, destinationName, selectedPathInProjectView;
     /// <a href=""></a> //#TBD#//
-    protected static AssetWizard wizard;
 
-    private void OnEnable() => selectedPathInProjectView = GetSelectedPathInProjectView();
+    protected override void OnEnable() {
+      base.OnEnable();
+      selectedPathInProjectView = GetSelectedPathInProjectView();
+    }
 
     /// <a href=""></a> //#TBD#//
     protected void CreateAssets(string newAssetType) {
-//      Selection.activeObject = null; // in case we had a creation form inspector up
-      if (wizard != null) throw new Exception($"Please wait for asset builder {assetType} to complete");
-      try {
+      Selection.activeObject = null; // in case we had a creation form inspector up
         assetType = newAssetType;
-        wizard    = this;
         SetDestination();
         bool hasSource = ProcessAllFiles(@"cs|txt");
         AssetDatabase.ImportAsset(
           Path.GetDirectoryName(destination)
         , ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ImportRecursive);
+
         if (hasSource) {
           Debug.Log($"Scripts for `{destination}` waiting on rebuild for basic assets...");
           // Will continue in `OnScriptsReloaded` if there is source to recompile
         } else {
           Phase2();
         }
-      } catch {
-        wizard = null;
-        throw;
-      }
     }
 
-    /// <a href=""></a> //#TBD#//
-    protected abstract void OnScriptReload();
-
     [DidReloadScripts] private static void Phase2() {
-      if (wizard == null) return;
-      wizard.OnScriptReload();
+      var wizard = OnScriptReload();
       wizard.SaveAssetDictionary();
-      wizard = null;
       Debug.Log("...All Done");
     }
 
     /// <a href=""></a> //#TBD#//
     protected virtual bool ProcessAllFiles(string textAssetTypes) {
-      Regex    textAssetTypesRegex                        = new Regex($@"\.({textAssetTypes})$");
       string[] sources                                    = AssetDatabase.FindAssets("", new[] {TemplatePath()});
       for (int i = 0; i < sources.Length; i++) sources[i] = AssetDatabase.GUIDToAssetPath(sources[i]);
       return ProcessFiles(textAssetTypes, sources);
     }
 
     /// <a href=""></a> //#TBD#//
-    protected static bool ProcessFiles(string textAssetTypes, params string[] files) {
-      bool     hasSource           = false;
-      Regex    textAssetTypesRegex = new Regex($@"\.({textAssetTypes})$");
-      string[] sources             = AssetDatabase.FindAssets("", new[] {TemplatePath()});
+    protected bool ProcessFiles(string textAssetTypes, params string[] files) {
+      bool  hasSource           = false;
+      Regex textAssetTypesRegex = new Regex($@"\.({textAssetTypes})$");
       using (var template = Template.Instance) {
         for (int i = 0; i < files.Length; i++) {
           var fileName = Path.GetFileName(files[i]) ?? "";
           if (File.Exists(files[i])) {
             if (textAssetTypesRegex.IsMatch(files[i])) {
               if (files[i].EndsWith(".cs")) hasSource = true;
-              var text                                = wizard.FillTemplate(template, File.ReadAllText(files[i]));
+              var text                                = FillTemplate(template, File.ReadAllText(files[i]));
               File.WriteAllText(
                 fileName.StartsWith(destinationName)
                   ? $"{destination}/{fileName}"
@@ -141,6 +130,9 @@ namespace Askowl {
     }
 
     /// <a href=""></a> //#TBD#//
+    protected Type ScriptableType(string name) => CreateInstance(name)?.GetType();
+
+    /// <a href=""></a> //#TBD#//
     protected void SetField(string assetName, string fieldName, SerializedObject fieldValue) =>
       SetField(assetName, fieldName, fieldValue.targetObject);
 
@@ -194,7 +186,7 @@ namespace Askowl {
     }
 
     /// <a href=""></a> //#TBD#//
-    private void SaveAssetDictionary() {
+    protected void SaveAssetDictionary() {
       var manager = GetCustomAssetManager();
       foreach (var entry in assets) {
         if (entry.Value.targetObject.GetType().IsSubclassOf(typeof(ScriptableObject))) {
@@ -230,14 +222,16 @@ namespace Askowl {
       $"Location for your new {assetType}", selectedPathInProjectView, "", "");
 
     private void SetDestination() {
-      destination     = GetDestinationPath();
-      destination     = destination.Substring(destination.IndexOf("/Assets/", StringComparison.Ordinal) + 1);
-      destinationName = Path.GetFileNameWithoutExtension(destination);
-      if (string.IsNullOrWhiteSpace(destination)) Fatal("Enter name for the new asset");
-      if (Directory.Exists(destination)) {
-        Fatal($"{destination} already exists. Please select a different name or project directory");
+      var dest = GetDestinationPath();
+      if (dest != null) {
+        if (string.IsNullOrWhiteSpace(destination = dest)) Fatal("Enter name for the new asset");
+        if (Directory.Exists(destination)) {
+          Fatal($"{destination} already exists. Please select a different name or project directory");
+        }
+        destination = destination.Substring(destination.IndexOf("/Assets/", StringComparison.Ordinal) + 1);
+        Directory.CreateDirectory(destination);
       }
-      Directory.CreateDirectory(destination);
+      destinationName = Path.GetFileNameWithoutExtension(destination);
     }
 
     /// <a href=""></a> //#TBD#//
@@ -288,6 +282,7 @@ namespace Askowl {
         DrawDefaultInspector();
         if (GUILayout.Button("Create")) ((AssetWizard) target).Create();
         serializedObject.ApplyModifiedProperties();
+        GUIUtility.ExitGUI();
       }
     }
     /// <a href=""></a> //#TBD#//
