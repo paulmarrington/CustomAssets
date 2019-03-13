@@ -25,20 +25,25 @@ namespace Askowl {
 
     /// <a href=""></a> //#TBD#//
     protected void CreateAssets(string newAssetType) {
-      Selection.activeObject = null; // in case we had a creation form inspector up
+//      Selection.activeObject = null; // in case we had a creation form inspector up
       if (wizard != null) throw new Exception($"Please wait for asset builder {assetType} to complete");
-      assetType = newAssetType;
-      wizard    = this;
-      SetDestination();
-      bool hasSource = ProcessAllFiles(@"cs|txt");
-      AssetDatabase.ImportAsset(
-        Path.GetDirectoryName(destination)
-      , ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ImportRecursive);
-      if (hasSource) {
-        Debug.Log($"Scripts for `{destination}` waiting on rebuild for basic assets...");
-        // Will continue in `OnScriptsReloaded` if there is source to recompile
-      } else {
-        Phase2();
+      try {
+        assetType = newAssetType;
+        wizard    = this;
+        SetDestination();
+        bool hasSource = ProcessAllFiles(@"cs|txt");
+        AssetDatabase.ImportAsset(
+          Path.GetDirectoryName(destination)
+        , ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ImportRecursive);
+        if (hasSource) {
+          Debug.Log($"Scripts for `{destination}` waiting on rebuild for basic assets...");
+          // Will continue in `OnScriptsReloaded` if there is source to recompile
+        } else {
+          Phase2();
+        }
+      } catch {
+        wizard = null;
+        throw;
       }
     }
 
@@ -53,7 +58,8 @@ namespace Askowl {
       Debug.Log("...All Done");
     }
 
-    private static bool ProcessAllFiles(string textAssetTypes) {
+    /// <a href=""></a> //#TBD#//
+    protected virtual bool ProcessAllFiles(string textAssetTypes) {
       Regex    textAssetTypesRegex                        = new Regex($@"\.({textAssetTypes})$");
       string[] sources                                    = AssetDatabase.FindAssets("", new[] {TemplatePath()});
       for (int i = 0; i < sources.Length; i++) sources[i] = AssetDatabase.GUIDToAssetPath(sources[i]);
@@ -66,18 +72,16 @@ namespace Askowl {
       Regex    textAssetTypesRegex = new Regex($@"\.({textAssetTypes})$");
       string[] sources             = AssetDatabase.FindAssets("", new[] {TemplatePath()});
       using (var template = Template.Instance) {
-        template.Substitute("Template", destinationName);
         for (int i = 0; i < files.Length; i++) {
           var fileName = Path.GetFileName(files[i]) ?? "";
           if (File.Exists(files[i])) {
             if (textAssetTypesRegex.IsMatch(files[i])) {
               if (files[i].EndsWith(".cs")) hasSource = true;
               var text                                = wizard.FillTemplate(template, File.ReadAllText(files[i]));
-              if (fileName.StartsWith(destinationName)) {
-                File.WriteAllText($"{destination}/{fileName}", text);
-              } else {
-                File.WriteAllText($"{destination}/{destinationName}{fileName}", text);
-              }
+              File.WriteAllText(
+                fileName.StartsWith(destinationName)
+                  ? $"{destination}/{fileName}"
+                  : $"{destination}/{destinationName}{fileName}", text);
             } else {
               File.Copy(files[i], $"{destination}/{fileName}");
             }
@@ -245,9 +249,15 @@ namespace Askowl {
     /// <a href=""></a> //#TBD#//
     protected string ToTuple(string fields) {
       var pairs = ToDefinitions(fields);
+      if (pairs.Length == 0) return null;
       if (pairs.Length == 1) return pairs[0];
+
+      if ((pairs.Length < 4) || ((pairs.Length % 2) != 0))
+        throw new Exception($"'{fields}' must be single type or pairs of (type, name)");
+
       builder.Clear().Append("(");
-      for (int i = 0; i < fields.Length; i += 2) builder.Append($"{fields[i]} {fields[i + 1]}");
+      builder.Append($"{pairs[0]} {pairs[1]}");
+      for (int i = 2; i < pairs.Length; i += 2) builder.Append($",{pairs[i]} {pairs[i + 1]}");
       return builder.Append($")").ToString();
     }
     private readonly        StringBuilder builder = new StringBuilder();
@@ -269,6 +279,7 @@ namespace Askowl {
     /// <a href=""></a> //#TBD#//
     [CustomEditor(typeof(AssetWizard), true)] public class AssetWizardEditor : Editor {
       public override void OnInspectorGUI() {
+        GUI.SetNextControlName("FirstWizardField");
         if (GUILayout.Button("Clear")) {
           ((AssetWizard) target).Clear();
           GUI.FocusControl(null);
