@@ -17,10 +17,16 @@ namespace CustomAsset {
     }
 
     /// <a href=""></a> //#TBD#//
+    /// Warning: Changes path in project window. Get old path first with
+    ///   var activeObject = Selection.activeObject;
+    ///   var selectedPathInProjectView = AssetDatabase.GetAssetPath(Selection.activeObject);
+    /// afterwards you can return with
+    ///   EditorGUIUtility.PingObject(activeObject);
+    /// but it is not perfect. Left project pane returns correctly, but right pane still points elsewhere
     public static T LoadOrCreate<T>(string path) where T : Base {
       var customAsset = Load<T>(path);
       if (customAsset != null) return customAsset;
-      customAsset = CreateInstance<T>();
+      AssetDatabase.CreateAsset(CreateInstance<T>(), $"Assets/{path}");
       AssetDatabase.SaveAssets();
       AssetDatabase.Refresh();
       return customAsset;
