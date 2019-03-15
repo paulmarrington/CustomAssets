@@ -19,7 +19,7 @@ namespace Askowl {
 
     /// <a href=""></a> //#TBD#//
     protected void CreateAssets(string newAssetType, string key) {
-      if (selectedPathInProjectView == null) selectedPathInProjectView = AssetDb.CurrentFolder();
+      if (selectedPathInProjectView == null) AssetDb.Instance.ProjectFolder(out selectedPathInProjectView);
       assetType = newAssetType;
       SetDestination();
       bool hasSource = ProcessAllFiles(@"cs|txt");

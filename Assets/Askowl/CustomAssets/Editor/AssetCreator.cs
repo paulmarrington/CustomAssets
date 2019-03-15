@@ -161,14 +161,7 @@ namespace Askowl {
         entry.Value.ApplyModifiedProperties();
       }
       AssetDatabase.SaveAssets();
-      ShowInProject(item);
-    }
-
-    private void ShowInProject(Object obj = null) {
-      if (obj == null) obj = AssetDatabase.LoadAssetAtPath(destination, typeof(Object));
-      EditorUtility.FocusProjectWindow();
-      Selection.activeObject = obj;
-      EditorGUIUtility.PingObject(obj);
+      AssetDb.Instance.Select(item).Dispose();
     }
 
     private SerializedObject GetCustomAssetManager() =>
