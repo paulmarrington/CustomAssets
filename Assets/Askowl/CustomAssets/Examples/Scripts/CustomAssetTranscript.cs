@@ -36,7 +36,7 @@ namespace Askowl.Transcripts {
     [SerializeField] private GameObject checkpoint = default;
 
     //- Initialise is called for a custom asset on the first FixedUpdate after the asset is enabled (OnEnable)
-    protected override void Initialise() => health.Emitter.Listen(OnHealthChange);
+    protected override void Initialise() => health.Emitter.Listen(OnHealthChange, once: false);
 
     //- Called every time health changes. Not that frequently in the scheme of things.
     private void OnHealthChange(Emitter emitter) {
@@ -68,7 +68,7 @@ namespace Askowl.Transcripts {
     [SerializeField] private Integer scene = default;
 
     //- Action triggered when scene changes
-    protected override void Initialise() => scene.Emitter.Listen(OnSceneChange);
+    protected override void Initialise() => scene.Emitter.Listen(OnSceneChange, once: false);
 
     //- That connects to Unity to change the display. This could be a string if you were to change scenes by name - my preferred option.
     private void OnSceneChange(Emitter emitter) =>

@@ -3,7 +3,8 @@
     "references": [
         "CustomAssets",
         "Able",
-        "AbleEditor"
+        "AbleEditor",
+        "Fibers"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [

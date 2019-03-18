@@ -1,25 +1,37 @@
 ﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using CustomAsset;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 using String = CustomAsset.Constant.String;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
+  public struct Jit<T> {
+    private T             value;
+    private bool          initialised;
+    private Func<bool, T> factory;
+    /// <a href=""></a> //#TBD#//
+    public static Jit<T> Instance(Func<bool, T> factory) => new Jit<T> {factory = factory};
+    /// <a href=""></a> //#TBD#//
+    public T Value => (initialised) ? value : value = factory(initialised = true);
+    /// <a href=""></a> //#TBD#//
+    public static implicit operator T(Jit<T> jit) => jit.value;
+  }
+  /// <a href=""></a> //#TBD#//
   public abstract class AssetWizard : Manager {
     /// <a href=""></a> //#TBD#//
-    protected static string assetType, destination, destinationName, selectedPathInProjectView;
+    protected static string assetType, destination, destinationName;
+    /// <a href=""></a> //#TBD#//
+    protected Jit<string> selectedPathInProjectView = Jit<string>.Instance(getProjectFolder);
+    private static readonly Func<bool, string> getProjectFolder = _ => AssetDb.ProjectFolder();
 
     /// <a href=""></a> //#TBD#//
     protected void CreateAssets(string newAssetType, string key) {
-      if (selectedPathInProjectView == null) AssetDb.Instance.ProjectFolder(out selectedPathInProjectView);
       assetType = newAssetType;
       SetDestination();
       bool hasSource = ProcessAllFiles(@"cs|txt");
@@ -28,7 +40,7 @@ namespace Askowl {
       , ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ImportRecursive);
 
       if (hasSource) {
-        PlayerPrefs.SetString($"{key}AssetWizard.CreateAssets.destination", $"{destination}");
+        PlayerPrefs.SetString($"{key}AssetEditor.destination", $"{destination}/{destinationName} ");
         Debug.Log($"Scripts for `{destination}` waiting on rebuild for basic assets...");
         // Will continue in `OnScriptsReloaded` if there is source to recompile
       }
@@ -118,7 +130,7 @@ namespace Askowl {
       builder.Clear().Append("(");
       builder.Append($"{pairs[0]} {pairs[1]}");
       for (int i = 2; i < pairs.Length; i += 2) builder.Append($",{pairs[i]} {pairs[i + 1]}");
-      return builder.Append($")").ToString();
+      return builder.Append(")").ToString();
     }
     private readonly        StringBuilder builder = new StringBuilder();
     private static readonly Regex         csRegex = new Regex(@"\s*;\s*|\s*,\s*|\s+", RegexOptions.Singleline);
@@ -139,7 +151,7 @@ namespace Askowl {
       }
     }
     /// <a href=""></a> //#TBD#//
-    protected virtual void Create() => throw new NotImplementedException();
+    public virtual void Create() => throw new NotImplementedException();
     /// <a href=""></a> //#TBD#//
     protected virtual void Clear() => throw new NotImplementedException();
   }

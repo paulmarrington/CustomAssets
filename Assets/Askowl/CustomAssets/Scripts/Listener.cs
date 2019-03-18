@@ -32,7 +32,7 @@ namespace CustomAsset.Mutable {
     }
 
     /// <a href="http://bit.ly/2QNmw2q">Register an action so that if the custom asset member changes anyone can be told</a>
-    public void Register() => assetToMonitor.Emitter.Listen(onTriggered);
+    public void Register() => assetToMonitor.Emitter.Listen(onTriggered, once: false);
 
     /// <a href="http://bit.ly/2QNmw2q">Call to stop receiving change calls</a>
     public void Deregister() => assetToMonitor.Emitter.Remove(onTriggered);

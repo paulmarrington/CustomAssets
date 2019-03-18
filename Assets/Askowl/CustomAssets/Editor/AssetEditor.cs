@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using CustomAsset;
 using UnityEditor;
 using UnityEngine;
@@ -9,36 +8,44 @@ using Object = UnityEngine.Object;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
-  public class AssetCreator : IDisposable {
+  public class AssetEditor : IDisposable {
     private readonly Dictionary<string, SerializedObject> assets         = new Dictionary<string, SerializedObject>();
     private readonly Dictionary<string, SerializedObject> existingAssets = new Dictionary<string, SerializedObject>();
 
     /// <a href=""></a> //#TBD#//
     public string destination;
     /// <a href=""></a> //#TBD#//
-    public string destinationName;
+    public string key;
+    /// <a href=""></a> //#TBD#//
+    public static Emitter onCompleteEmitter = Emitter.Instance;
 
     /// <a href=""></a> //#TBD#//
-    public static AssetCreator Instance(string key) {
-      key = $"{key}AssetWizard.CreateAssets.destination";
+    public static AssetEditor Instance(string key, string destination) {
+      var instance = Cache<AssetEditor>.Instance;
+      instance.destination = destination;
+      instance.key         = key;
+      return instance;
+    }
+
+    /// <a href=""></a> //#TBD#//
+    public static AssetEditor Instance(string key) {
+      key = $"{key}AssetEditor.destination";
       try {
         var destination = PlayerPrefs.GetString(key);
         if (string.IsNullOrWhiteSpace(destination)) return null;
-        var instance = Cache<AssetCreator>.Instance;
-        instance.destination     = destination;
-        instance.destinationName = Path.GetFileNameWithoutExtension(destination);
+        var instance = Instance(key, destination);
         return instance;
       } finally { PlayerPrefs.DeleteKey(key); }
     }
 
     /// <a href=""></a> //#TBD#//
-    public AssetCreator Add(params (string name, string asset)[] assetNameAndTypeList) {
+    public AssetEditor Add(params (string name, string asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) Add((entry.name, ScriptableType(entry.asset)));
       return this;
     }
 
     /// <a href=""></a> //#TBD#//
-    public AssetCreator Add(params (string name, Type asset)[] assetNameAndTypeList) {
+    public AssetEditor Add(params (string name, Type asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) {
         if (entry.asset == default) throw new Exception($"No asset '{entry.name}' found to add");
         if (entry.asset.IsSubclassOf(typeof(ScriptableObject))) {
@@ -59,38 +66,54 @@ namespace Askowl {
       return this;
     }
 
-    public AssetCreator Load(params (string name, string asset)[] assetNameAndTypeList) {
+    /// <a href=""></a> //#TBD#//
+    public AssetEditor Load(params (string name, string asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) {
-        var path  = $"{destination}/{destinationName} {entry.name}.asset";
+        var name  = entry.name;
+        var slash = name.LastIndexOf("/", StringComparison.Ordinal);
+        if ((destination == "") && (slash != -1)) {
+          destination = name.Substring(0, slash);
+          name        = name.Substring(slash + 1);
+        }
+        var path  = $"{destination}/{name}.asset";
         var asset = AssetDatabase.LoadAssetAtPath(path, ScriptableType(entry.asset));
         if (asset == null) throw new Exception($"No asset '{path}' found to load");
-        existingAssets[entry.name] = assets[entry.name] = new SerializedObject(asset);
+        existingAssets[name] = assets[name] = new SerializedObject(asset);
       }
       return this;
     }
 
     /// <a href=""></a> //#TBD#//
-    protected SerializedObject Asset(string assetName) {
+    private SerializedObject SerialisedAsset(string assetName) {
       if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
       return assets[assetName];
     }
 
     /// <a href=""></a> //#TBD#//
-    protected void SetActiveObject(string assetName) => Selection.activeObject = Asset(assetName).targetObject;
+    public Object Asset(string assetName) => SerialisedAsset(assetName).targetObject;
+
+    /// <a href=""></a> //#TBD#//
+    protected void SetActiveObject(string assetName) => Selection.activeObject = Asset(assetName);
 
     /// <a href=""></a> //#TBD#//
     private static Type ScriptableType(string name) => ScriptableObject.CreateInstance(name).GetType();
 
     /// <a href=""></a> //#TBD#//
-    public AssetCreator SetField(string assetName, string fieldName, string assetField) =>
-      SetField(assetName, fieldName, Asset(assetField)?.targetObject);
+    public AssetEditor SetFieldToAssetEditorEntry(string assetName, string fieldName, string assetField) =>
+      SetField(assetName, fieldName, Asset(assetField));
 
     /// <a href=""></a> //#TBD#//
-    public AssetCreator SetField(string assetName, string fieldName, SerializedObject fieldValue) =>
+    public AssetEditor SetField(string assetName, string fieldName, SerializedObject fieldValue) =>
       SetField(assetName, fieldName, fieldValue.targetObject);
 
     /// <a href=""></a> //#TBD#//
-    public AssetCreator SetField(string assetName, string fieldName, Object fieldValue) {
+    public AssetEditor SetField(string assetName, string fieldName, string fieldValue) {
+      Field(assetName, fieldName).stringValue = fieldValue;
+      return this;
+    }
+
+    /// <a href=""></a> //#TBD#//
+    public AssetEditor SetField(string assetName, string fieldName, Object fieldValue) {
       Field(assetName, fieldName).objectReferenceValue = fieldValue;
       return this;
     }
@@ -98,27 +121,36 @@ namespace Askowl {
     /// <a href=""></a> //#TBD#//
     public SerializedProperty Field(string assetName, string fieldName = "value") {
       if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
+      fieldName = CamelCase(fieldName);
       var property = FindProperty(assetName, fieldName);
+      if (property == default) FindProperty(assetName, char.ToUpper(fieldName[0]) + fieldName.Substring(1));
       if (property == default) throw new Exception($"No property '{fieldName}' in '{assetName}'");
       return property;
     }
 
-    /// <a href=""></a> //#TBD#//
-    public AssetCreator InsertIntoArrayField(
-      string assetName, string fieldName, string assetField, int index = 0) =>
-      InsertIntoArrayField(assetName, fieldName, Asset(assetField)?.targetObject, index);
+    private string CamelCase(string name) {
+      name = name.Replace(" ", "");
+      if (name.Length == 0) return "";
+      if (name.Length == 1) return $"{char.ToLower(name[0])}";
+      return char.ToLower(name[0]) + name.Substring(1);
+    }
 
     /// <a href=""></a> //#TBD#//
-    public AssetCreator InsertIntoArrayField(
+    public AssetEditor InsertIntoArrayField(
+      string assetName, string fieldName, string assetField, int index = 0) =>
+      InsertIntoArrayField(assetName, fieldName, Asset(assetField), index);
+
+    /// <a href=""></a> //#TBD#//
+    public AssetEditor InsertIntoArrayField(
       string assetName, string fieldName, SerializedObject fieldValue, int index = 0) =>
       InsertIntoArrayField(assetName, fieldName, fieldValue.targetObject, index);
 
     /// <a href=""></a> //#TBD#//
-    public AssetCreator InsertIntoArrayField(string assetName, string fieldName, Object fieldValue, int index = 0) {
+    public AssetEditor InsertIntoArrayField(string assetName, string fieldName, Object fieldValue, int index = 0) {
       var serialisedProperty = FindProperty(assetName, fieldName);
       serialisedProperty.InsertArrayElementAtIndex(index);
       serialisedProperty.GetArrayElementAtIndex(index).objectReferenceValue = fieldValue;
-      Asset(assetName).ApplyModifiedProperties();
+      SerialisedAsset(assetName).ApplyModifiedProperties();
       return this;
     }
 
@@ -141,7 +173,7 @@ namespace Askowl {
     }
 
     private SerializedProperty FindProperty(string assetName, string fieldName) {
-      var property = Asset(assetName).FindProperty(fieldName);
+      var property = SerialisedAsset(assetName).FindProperty(fieldName);
       if (property == default) throw new Exception($"No property '{fieldName}' in '{assetName}'");
       return property;
     }
@@ -153,7 +185,7 @@ namespace Askowl {
       foreach (var entry in assets) {
         if (entry.Value.targetObject.GetType().IsSubclassOf(typeof(ScriptableObject))) {
           if (!existingAssets.ContainsKey(entry.Key)) {
-            string assetName = $"{destination}/{destinationName} {entry.Key}.asset";
+            string assetName = $"{destination}{entry.Key}.asset";
             AssetDatabase.CreateAsset(item = entry.Value.targetObject, assetName);
           }
           if (entry.Key.EndsWith("Manager")) InsertIntoArrayField(manager, "managers", entry.Value.targetObject);
@@ -183,7 +215,8 @@ namespace Askowl {
     }
     public void Dispose() {
       SaveAssetDictionary();
-      Cache<AssetCreator>.Dispose(this);
+      Cache<AssetEditor>.Dispose(this);
+      onCompleteEmitter.Context("AssetEditor", key).Fire();
     }
   }
 }
