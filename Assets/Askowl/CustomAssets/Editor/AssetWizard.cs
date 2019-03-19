@@ -88,11 +88,11 @@ namespace Askowl {
     }
 
     /// <a href=""></a> //#TBD#//
-    protected virtual string GetDestinationPath() => EditorUtility.SaveFilePanel(
-      $"Location for your new {assetType}", selectedPathInProjectView, "", "");
+    protected virtual string GetDestinationPath(string basePath) =>
+      EditorUtility.SaveFilePanel($"Location for your new {assetType}", basePath, "", "");
 
     private string SetDestination() {
-      var dest = (!string.IsNullOrWhiteSpace(destinationPath)) ? destinationPath : GetDestinationPath();
+      var dest = GetDestinationPath(destinationPath ?? (string) selectedPathInProjectView ?? "/Assets");
       if (dest != null) {
         if (string.IsNullOrWhiteSpace(destination = dest)) Fatal("Enter name for the new asset");
         if (Directory.Exists(destination)) {
