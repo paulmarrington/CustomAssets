@@ -69,16 +69,11 @@ namespace Askowl {
     /// <a href=""></a> //#TBD#//
     public AssetEditor Load(params (string name, string asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) {
-        var name  = entry.name;
-        var slash = name.LastIndexOf("/", StringComparison.Ordinal);
-        if ((destination == "") && (slash != -1)) {
-          destination = name.Substring(0, slash);
-          name        = name.Substring(slash + 1);
-        }
-        var path  = $"{destination}/{name}.asset";
-        var asset = AssetDatabase.LoadAssetAtPath(path, ScriptableType(entry.asset));
-        if (asset == null) throw new Exception($"No asset '{path}' found to load");
-        existingAssets[name] = assets[name] = new SerializedObject(asset);
+        var name = entry.name.Contains(".") ? entry.name : $"{entry.name}.asset";
+        var asset = AssetDb.Load(name, ScriptableType(entry.asset)) ??
+                    AssetDatabase.LoadAssetAtPath($"{destination}/{entry.name}", ScriptableType(entry.asset));
+        if (asset == null) throw new Exception($"No asset '{name}' found to load");
+        existingAssets[entry.name] = assets[entry.name] = new SerializedObject(asset);
       }
       return this;
     }
@@ -179,7 +174,7 @@ namespace Askowl {
     }
 
     /// <a href=""></a> //#TBD#//
-    public void SaveAssetDictionary() {
+    public AssetEditor Save() {
       var    manager = GetCustomAssetManager();
       Object item    = null;
       foreach (var entry in assets) {
@@ -194,6 +189,7 @@ namespace Askowl {
       }
       AssetDatabase.SaveAssets();
       AssetDb.Instance.Select(item).Dispose();
+      return this;
     }
 
     private SerializedObject GetCustomAssetManager() =>
@@ -214,7 +210,7 @@ namespace Askowl {
       return serialisedObject;
     }
     public void Dispose() {
-      SaveAssetDictionary();
+      Save();
       Cache<AssetEditor>.Dispose(this);
       onCompleteEmitter.Context("AssetEditor", key).Fire();
     }

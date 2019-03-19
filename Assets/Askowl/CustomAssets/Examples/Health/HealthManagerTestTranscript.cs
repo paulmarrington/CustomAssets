@@ -18,8 +18,8 @@ namespace Askowl.CustomAssets.Transcripts {
       Time.timeScale = 10;
       try {
         //- We don't need a specific scene, just load the custom assets
-        Manager.Load<HealthManagerTranscript>("HealthManager.asset");
-        var health = Manager.Load<Float>("Health.asset");
+        AssetDb.Load<HealthManagerTranscript>("HealthManager.asset");
+        var health = AssetDb.Load<Float>("Health.asset");
         //- Set to 0 since once a custom asset is loaded in the editor it stays loaded
         health.Set(0);
         //- It looks like forever, but the Timeout attribute will cause a test failure after 10 seconds

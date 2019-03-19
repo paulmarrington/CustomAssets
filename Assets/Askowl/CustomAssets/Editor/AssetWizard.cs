@@ -11,21 +11,13 @@ using String = CustomAsset.Constant.String;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
-  public struct Jit<T> {
-    private T             value;
-    private bool          initialised;
-    private Func<bool, T> factory;
-    /// <a href=""></a> //#TBD#//
-    public static Jit<T> Instance(Func<bool, T> factory) => new Jit<T> {factory = factory};
-    /// <a href=""></a> //#TBD#//
-    public T Value => (initialised) ? value : value = factory(initialised = true);
-    /// <a href=""></a> //#TBD#//
-    public static implicit operator T(Jit<T> jit) => jit.value;
-  }
-  /// <a href=""></a> //#TBD#//
   public abstract class AssetWizard : Manager {
     /// <a href=""></a> //#TBD#//
     protected static string assetType, destination, destinationName;
+
+    /// <a href=""></a> //#TBD#//
+    [SerializeField, Tooltip("Optional: Overrides default project directory")]
+    protected string destinationPath;
     /// <a href=""></a> //#TBD#//
     protected Jit<string> selectedPathInProjectView = Jit<string>.Instance(getProjectFolder);
     private static readonly Func<bool, string> getProjectFolder = _ => AssetDb.ProjectFolder();
@@ -41,7 +33,7 @@ namespace Askowl {
 
       if (hasSource) {
         PlayerPrefs.SetString($"{key}AssetEditor.destination", $"{destination}/{destinationName} ");
-        Debug.Log($"Scripts for `{destination}` waiting on rebuild for basic assets...");
+        Debug.Log($"      Scripts for `{destination}` waiting on rebuild for basic assets...");
         // Will continue in `OnScriptsReloaded` if there is source to recompile
       }
     }
@@ -99,8 +91,8 @@ namespace Askowl {
     protected virtual string GetDestinationPath() => EditorUtility.SaveFilePanel(
       $"Location for your new {assetType}", selectedPathInProjectView, "", "");
 
-    private void SetDestination() {
-      var dest = GetDestinationPath();
+    private string SetDestination() {
+      var dest = (!string.IsNullOrWhiteSpace(destinationPath)) ? destinationPath : GetDestinationPath();
       if (dest != null) {
         if (string.IsNullOrWhiteSpace(destination = dest)) Fatal("Enter name for the new asset");
         if (Directory.Exists(destination)) {
@@ -110,6 +102,7 @@ namespace Askowl {
         Directory.CreateDirectory(destination);
       }
       destinationName = Path.GetFileNameWithoutExtension(destination);
+      return destination;
     }
 
     /// <a href=""></a> //#TBD#//
