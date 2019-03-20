@@ -189,6 +189,7 @@ namespace Askowl {
       }
       AssetDatabase.SaveAssets();
       AssetDb.Instance.Select(item).Dispose();
+      Debug.Log($"*** Save '3'"); //#DM#//
       return this;
     }
 
@@ -212,6 +213,7 @@ namespace Askowl {
     public void Dispose() {
       Save();
       Cache<AssetEditor>.Dispose(this);
+      Debug.Log($"*** Dispose '4'"); //#DM#//
       onCompleteEmitter.Context("AssetEditor", key).Fire();
     }
   }
