@@ -11,6 +11,6 @@ namespace CustomAsset.Mutable {
     public string Text { get => Value; set => Value = value; }
 
     /// <a href="http://bit.ly/2QP2Kn9"><see cref="OfType{T}.Instance{TC}"/></a>
-    public static String Instance(string name) => Instance<String>(name);
+    public static String Instance(string path) => Instance<String>(path);
   }
 }

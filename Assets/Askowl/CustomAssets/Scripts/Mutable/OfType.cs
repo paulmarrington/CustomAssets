@@ -58,8 +58,8 @@ namespace CustomAsset.Mutable {
 
     #region Construction
     /// <a href="http://bit.ly/2QQjKcL">If this is a project asset, then you will need to reference it somewhere. Other classes can get a reference using `Instance()` or `Instance(string name)`. Also useful for creating in-memory versions to share between hosts</a>
-    public new static TC Instance<TC>(string name = null) where TC : Base {
-      var instance = Base.Instance<TC>(name);
+    public new static TC Instance<TC>(string path = null) where TC : Base {
+      var instance = Base.Instance<TC>(path);
       AssetToUnload(instance); // so unexpected data does not remain between editor plays
       return instance;
     }

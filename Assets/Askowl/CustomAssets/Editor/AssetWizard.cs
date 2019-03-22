@@ -11,7 +11,7 @@ using String = CustomAsset.Constant.String;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
-  public abstract class AssetWizard : Manager, IOnScriptReload {
+  public abstract class AssetWizard : Manager {
     /// <a href=""></a> //#TBD#//
     protected static string assetType, destination, destinationName;
 
@@ -32,9 +32,8 @@ namespace Askowl {
       , ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ImportRecursive);
 
       if (hasSource) {
-        PlayerPrefs.SetString($"{key}AssetEditor.destination", $"{destination}/{destinationName} ");
+        PlayerPrefs.SetString($"{key}.AssetEditor.destination", $"{destination}/{destinationName} ");
         Debug.Log($"      Scripts for `{destination}` waiting on rebuild for basic assets...");
-        OnScriptReloaded.Register(this);
       }
     }
 
@@ -147,7 +146,5 @@ namespace Askowl {
     public virtual void Create() => throw new NotImplementedException();
     /// <a href=""></a> //#TBD#//
     protected virtual void Clear() => throw new NotImplementedException();
-
-    public abstract void OnScriptReload();
   }
 }

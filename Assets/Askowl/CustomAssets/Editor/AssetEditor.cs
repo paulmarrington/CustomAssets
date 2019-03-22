@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using CustomAsset;
+using CustomAsset.Mutable;
 using UnityEditor;
 using UnityEngine;
 using GameObject = UnityEngine.GameObject;
 using Object = UnityEngine.Object;
+using String = CustomAsset.Mutable.String;
 
 namespace Askowl {
   /// <a href=""></a> //#TBD#//
@@ -16,8 +18,6 @@ namespace Askowl {
     public string destination;
     /// <a href=""></a> //#TBD#//
     public string key;
-    /// <a href=""></a> //#TBD#//
-    public static Emitter onCompleteEmitter = Emitter.Instance;
 
     /// <a href=""></a> //#TBD#//
     public static AssetEditor Instance(string key, string destination) {
@@ -29,13 +29,12 @@ namespace Askowl {
 
     /// <a href=""></a> //#TBD#//
     public static AssetEditor Instance(string key) {
-      key = $"{key}AssetEditor.destination";
-      try {
-        var destination = PlayerPrefs.GetString(key);
-        if (string.IsNullOrWhiteSpace(destination)) return null;
-        var instance = Instance(key, destination);
-        return instance;
-      } finally { PlayerPrefs.DeleteKey(key); }
+      var pref        = $"{key}.AssetEditor.destination";
+      var destination = PlayerPrefs.GetString(pref);
+      PlayerPrefs.DeleteKey(pref);
+      if (string.IsNullOrWhiteSpace(destination)) return null;
+      var instance = Instance(key, destination);
+      return instance;
     }
 
     /// <a href=""></a> //#TBD#//
@@ -91,7 +90,7 @@ namespace Askowl {
     protected void SetActiveObject(string assetName) => Selection.activeObject = Asset(assetName);
 
     /// <a href=""></a> //#TBD#//
-    private static Type ScriptableType(string name) => ScriptableObject.CreateInstance(name).GetType();
+    private static Type ScriptableType(string name) => ScriptableObject.CreateInstance(name)?.GetType();
 
     /// <a href=""></a> //#TBD#//
     public AssetEditor SetFieldToAssetEditorEntry(string assetName, string fieldName, string assetField) =>
@@ -189,7 +188,6 @@ namespace Askowl {
       }
       AssetDatabase.SaveAssets();
       AssetDb.Instance.Select(item).Dispose();
-      Debug.Log($"*** Save '3'"); //#DM#//
       return this;
     }
 
@@ -213,8 +211,6 @@ namespace Askowl {
     public void Dispose() {
       Save();
       Cache<AssetEditor>.Dispose(this);
-      Debug.Log($"*** Dispose '4'"); //#DM#//
-      onCompleteEmitter.Context("AssetEditor", key).Fire();
     }
   }
 }

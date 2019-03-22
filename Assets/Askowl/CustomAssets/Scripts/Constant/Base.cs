@@ -7,7 +7,7 @@ namespace CustomAsset {
   /// <a href="http://bit.ly/2CwSS8S">Base class for all custom assets - implementing initialisation</a>
   public class Base : ScriptableObject {
     /// <a href="http://bit.ly/2CzuMKF">If this is a project asset, then you will need to reference it somewhere. Other classes can get a reference using `Instance()` or `Instance(string name)`. Also useful for creating in-memory versions to share between hosts</a>
-    public static T Instance<T>(string name) where T : Base => Objects.Find<T>(name);
+    public static T Instance<T>(string path) where T : Base => Resources.Load<T>(path);
 
     [SerializeField, Multiline] private string description = default;
 
