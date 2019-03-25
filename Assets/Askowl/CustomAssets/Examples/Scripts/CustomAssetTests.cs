@@ -238,7 +238,6 @@ namespace Askowl.CustomAssets.Examples {
         yield return null;
       }
 
-      Debug.Log($"*** ChangeOverTime '{count}'"); //#DM#//
       Assert.Greater(count, 60);
     }
   }
