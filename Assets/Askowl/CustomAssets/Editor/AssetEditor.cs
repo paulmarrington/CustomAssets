@@ -9,17 +9,13 @@ using Object = UnityEngine.Object;
 using String = CustomAsset.Mutable.String;
 
 namespace Askowl {
-  /// <a href=""></a> //#TBD#//
   public class AssetEditor : IDisposable {
     private readonly Dictionary<string, SerializedObject> assets         = new Dictionary<string, SerializedObject>();
     private readonly Dictionary<string, SerializedObject> existingAssets = new Dictionary<string, SerializedObject>();
 
-    /// <a href=""></a> //#TBD#//
     public string destination;
-    /// <a href=""></a> //#TBD#//
     public string key;
 
-    /// <a href=""></a> //#TBD#//
     public static AssetEditor Instance(string key, string destination) {
       var instance = Cache<AssetEditor>.Instance;
       instance.destination = destination;
@@ -27,7 +23,6 @@ namespace Askowl {
       return instance;
     }
 
-    /// <a href=""></a> //#TBD#//
     public static AssetEditor Instance(string key) {
       var pref        = $"{key}.AssetEditor.destination";
       var destination = PlayerPrefs.GetString(pref);
@@ -37,13 +32,11 @@ namespace Askowl {
       return instance;
     }
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor Add(params (string name, string asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) Add((entry.name, ScriptableType(entry.asset)));
       return this;
     }
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor Add(params (string name, Type asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) {
         if (entry.asset == default) throw new Exception($"No asset '{entry.name}' found to add");
@@ -65,7 +58,6 @@ namespace Askowl {
       return this;
     }
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor Load(params (string name, string asset)[] assetNameAndTypeList) {
       foreach (var entry in assetNameAndTypeList) {
         var name = entry.name.Contains(".") ? entry.name : $"{entry.name}.asset";
@@ -77,42 +69,33 @@ namespace Askowl {
       return this;
     }
 
-    /// <a href=""></a> //#TBD#//
-    private SerializedObject SerialisedAsset(string assetName) {
+    public SerializedObject SerialisedAsset(string assetName) {
       if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
       return assets[assetName];
     }
 
-    /// <a href=""></a> //#TBD#//
     public Object Asset(string assetName) => SerialisedAsset(assetName).targetObject;
 
-    /// <a href=""></a> //#TBD#//
     protected void SetActiveObject(string assetName) => Selection.activeObject = Asset(assetName);
 
-    /// <a href=""></a> //#TBD#//
     private static Type ScriptableType(string name) => ScriptableObject.CreateInstance(name)?.GetType();
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor SetFieldToAssetEditorEntry(string assetName, string fieldName, string assetField) =>
       SetField(assetName, fieldName, Asset(assetField));
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor SetField(string assetName, string fieldName, SerializedObject fieldValue) =>
       SetField(assetName, fieldName, fieldValue.targetObject);
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor SetField(string assetName, string fieldName, string fieldValue) {
       Field(assetName, fieldName).stringValue = fieldValue;
       return this;
     }
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor SetField(string assetName, string fieldName, Object fieldValue) {
       Field(assetName, fieldName).objectReferenceValue = fieldValue;
       return this;
     }
 
-    /// <a href=""></a> //#TBD#//
     public SerializedProperty Field(string assetName, string fieldName = "value") {
       if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
       fieldName = CamelCase(fieldName);
@@ -129,34 +112,29 @@ namespace Askowl {
       return char.ToLower(name[0]) + name.Substring(1);
     }
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor InsertIntoArrayField(
       string assetName, string fieldName, string assetField, int index = 0) =>
       InsertIntoArrayField(assetName, fieldName, Asset(assetField), index);
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor InsertIntoArrayField(
       string assetName, string fieldName, SerializedObject fieldValue, int index = 0) =>
       InsertIntoArrayField(assetName, fieldName, fieldValue.targetObject, index);
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor InsertIntoArrayField(string assetName, string fieldName, Object fieldValue, int index = 0) {
       var serialisedProperty = FindProperty(assetName, fieldName);
       serialisedProperty.InsertArrayElementAtIndex(index);
       serialisedProperty.GetArrayElementAtIndex(index).objectReferenceValue = fieldValue;
-      SerialisedAsset(assetName).ApplyModifiedProperties();
+      SerialisedAsset(assetName).ApplyModifiedPropertiesWithoutUndo();
       return this;
     }
 
-    /// <a href=""></a> //#TBD#//
     public void InsertIntoArrayField(SerializedObject asset, string fieldName, Object fieldValue, int index = 0) {
       var serialisedProperty = FindProperty(asset, fieldName);
       serialisedProperty.InsertArrayElementAtIndex(index);
       serialisedProperty.GetArrayElementAtIndex(index).objectReferenceValue = fieldValue;
-      asset.ApplyModifiedProperties();
+      asset.ApplyModifiedPropertiesWithoutUndo();
     }
 
-    /// <a href=""></a> //#TBD#//
     public T FindProperty<T>(string assetName, string fieldName = "value") where T : class =>
       FindProperty(assetName, fieldName).exposedReferenceValue as T;
 
@@ -172,7 +150,6 @@ namespace Askowl {
       return property;
     }
 
-    /// <a href=""></a> //#TBD#//
     public AssetEditor Save() {
       var    manager = GetCustomAssetManager();
       Object item    = null;
@@ -184,7 +161,7 @@ namespace Askowl {
           }
           if (entry.Key.EndsWith("Manager")) InsertIntoArrayField(manager, "managers", entry.Value.targetObject);
         }
-        entry.Value.ApplyModifiedProperties();
+        entry.Value.ApplyModifiedPropertiesWithoutUndo();
       }
       AssetDatabase.SaveAssets();
       AssetDb.Instance.Select(item).Dispose();

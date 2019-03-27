@@ -10,22 +10,17 @@ using UnityEngine;
 using String = CustomAsset.Constant.String;
 
 namespace Askowl {
-  /// <a href=""></a> //#TBD#//
   public abstract class AssetWizard : Manager {
-    /// <a href=""></a> //#TBD#//
     protected static string assetType, destination, destinationName;
 
-    /// <a href=""></a> //#TBD#//
     [SerializeField, Tooltip("Optional: Overrides default project directory")]
     protected string destinationPath;
-    /// <a href=""></a> //#TBD#//
-    protected Jit<string> selectedPathInProjectView = Jit<string>.Instance(getProjectFolder);
-    private static readonly Func<bool, string> getProjectFolder = _ => AssetDb.ProjectFolder();
+    protected               Jit<string>        selectedPathInProjectView = Jit<string>.Instance(getProjectFolder);
+    private static readonly Func<bool, string> getProjectFolder          = _ => AssetDb.ProjectFolder();
 
-    /// <a href=""></a> //#TBD#//
-    protected void CreateAssets(string newAssetType, string key) {
+    protected void CreateAssets(string newAssetType, string key, string destinationDirectory = null) {
       assetType = newAssetType;
-      SetDestination();
+      SetDestination(destinationDirectory);
       bool hasSource = ProcessAllFiles(@"cs|txt");
       AssetDatabase.ImportAsset(
         Path.GetDirectoryName(destination)
@@ -33,18 +28,16 @@ namespace Askowl {
 
       if (hasSource) {
         PlayerPrefs.SetString($"{key}.AssetEditor.destination", $"{destination}/{destinationName} ");
-        Debug.Log($"      Scripts for `{destination}` waiting on rebuild for basic assets...");
+        Debug.Log($"      Scripts for `{destination}/{destinationName}` waiting on rebuild for basic assets...");
       }
     }
 
-    /// <a href=""></a> //#TBD#//
     protected virtual bool ProcessAllFiles(string textAssetTypes) {
       string[] sources                                    = AssetDatabase.FindAssets("", new[] {TemplatePath()});
       for (int i = 0; i < sources.Length; i++) sources[i] = AssetDatabase.GUIDToAssetPath(sources[i]);
       return ProcessFiles(textAssetTypes, sources);
     }
 
-    /// <a href=""></a> //#TBD#//
     protected bool ProcessFiles(string textAssetTypes, params string[] files) {
       bool  hasSource           = false;
       Regex textAssetTypesRegex = new Regex($@"\.({textAssetTypes})$");
@@ -52,15 +45,16 @@ namespace Askowl {
         for (int i = 0; i < files.Length; i++) {
           var fileName = Path.GetFileName(files[i]) ?? "";
           if (File.Exists(files[i])) {
+            var filePath = $"{destination}/{fileName}";
             if (textAssetTypesRegex.IsMatch(files[i])) {
-              if (files[i].EndsWith(".cs")) hasSource = true;
-              var text                                = FillTemplate(template, File.ReadAllText(files[i]));
-              File.WriteAllText(
-                fileName.StartsWith(destinationName)
-                  ? $"{destination}/{fileName}"
-                  : $"{destination}/{destinationName}{fileName}", text);
+              if (files[i].EndsWith(".cs")) hasSource             = true;
+              if (!fileName.StartsWith(destinationName)) filePath = $"{destination}/{destinationName}{fileName}";
+              if (File.Exists(filePath) && filePath != files[i])
+                Fatal($"{filePath} already exists. Select a different name or directory");
+              File.WriteAllText(filePath, FillTemplate(template, File.ReadAllText(files[i])));
             } else {
-              File.Copy(files[i], $"{destination}/{fileName}");
+              if (File.Exists(filePath)) Fatal($"{filePath} already exists. Select a different name or directory");
+              File.Copy(files[i], filePath);
             }
           }
         }
@@ -68,7 +62,6 @@ namespace Askowl {
       return hasSource;
     }
 
-    /// <a href=""></a> //#TBD#//
     protected virtual string FillTemplate(Template template, string text) => template.From(text).Result();
 
     private static string TemplatePath() {
@@ -86,17 +79,17 @@ namespace Askowl {
       return exists("Editor/Template") ?? exists("Template") ?? exists("scripts/Template") ?? "";
     }
 
-    /// <a href=""></a> //#TBD#//
-    protected virtual string GetDestinationPath(string basePath) =>
+    protected virtual string GetDestinationPath(string basePath) => basePath;
+
+    protected string AskForDestinationPath(string basePath) =>
       EditorUtility.SaveFilePanel($"Location for your new {assetType}", basePath, "", "");
 
-    private string SetDestination() {
-      var dest = GetDestinationPath(destinationPath ?? (string) selectedPathInProjectView ?? "/Assets");
+    private string SetDestination(string dest) {
+      if (string.IsNullOrWhiteSpace(destinationPath))
+        destinationPath = dest ?? (string) selectedPathInProjectView ?? "/Assets";
+      dest = GetDestinationPath(destinationPath);
       if (dest != null) {
         if (string.IsNullOrWhiteSpace(destination = dest)) Fatal("Enter name for the new asset");
-        if (Directory.Exists(destination)) {
-          Fatal($"{destination} already exists. Please select a different name or project directory");
-        }
         destination = destination.Substring(destination.IndexOf("/Assets/", StringComparison.Ordinal) + 1);
         Directory.CreateDirectory(destination);
       }
@@ -104,13 +97,10 @@ namespace Askowl {
       return destination;
     }
 
-    /// <a href=""></a> //#TBD#//
     protected void Fatal(string msg) => throw new Exception(msg);
 
-    /// <a href=""></a> //#TBD#//
     protected string[] ToDefinitions(string text) => csRegex.Split(text);
 
-    /// <a href=""></a> //#TBD#//
     protected string ToTuple(string fields) {
       var pairs = ToDefinitions(fields);
       if (pairs.Length == 0) return null;
@@ -127,7 +117,6 @@ namespace Askowl {
     private readonly        StringBuilder builder = new StringBuilder();
     private static readonly Regex         csRegex = new Regex(@"\s*;\s*|\s*,\s*|\s+", RegexOptions.Singleline);
 
-    /// <a href=""></a> //#TBD#//
     [CustomEditor(typeof(AssetWizard), true)] public class AssetWizardEditor : Editor {
       public override void OnInspectorGUI() {
         GUI.SetNextControlName("FirstWizardField");
@@ -142,9 +131,7 @@ namespace Askowl {
 //        GUIUtility.ExitGUI();
       }
     }
-    /// <a href=""></a> //#TBD#//
-    public virtual void Create() => throw new NotImplementedException();
-    /// <a href=""></a> //#TBD#//
-    protected virtual void Clear() => throw new NotImplementedException();
+    public virtual void Create()                => throw new NotImplementedException();
+    public virtual void Clear(string dest = "") => throw new NotImplementedException();
   }
 }
