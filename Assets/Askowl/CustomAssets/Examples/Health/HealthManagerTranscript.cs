@@ -25,7 +25,7 @@ namespace Askowl.CustomAssets.Transcripts {
       //- We can just update health every second. The Float custom asset corrects for health over the maximum
       void trickleCharge(Fiber fiber) => health.Value += trickleChargePerSecond;
       //- Fibers are efficient, only taking up time once a second to update health value
-      Fiber.Start.Begin.WaitFor(seconds: 1.0f).Do(trickleCharge).Again.Finish();
+      Fiber.Start("TrickleCharge").Begin.WaitFor(seconds: 1.0f).Do(trickleCharge).Again.Finish();
     }
     //- Consider using the ChangeOverTime custom asset for updating health with potions or med-packs. Perhaps a large potion recharges to a higher value but more slowly.
   }

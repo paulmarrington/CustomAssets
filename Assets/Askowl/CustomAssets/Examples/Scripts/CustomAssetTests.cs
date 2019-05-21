@@ -205,9 +205,7 @@ namespace Askowl.CustomAssets.Examples {
 
     [UnityTest] public IEnumerator TestInstance() {
       yield return Setup();
-
       yield return PushButton("Check Instance");
-
       CheckPattern(new Regex(@"^.* SampleFloatVariable as SampleFloatVariable\n.* 0.1234 .* 0.1234$"), results.text);
     }
 
@@ -238,7 +236,7 @@ namespace Askowl.CustomAssets.Examples {
         yield return null;
       }
 
-      Assert.Greater(count, 60);
+      Assert.Greater(count, 59);
     }
   }
 }

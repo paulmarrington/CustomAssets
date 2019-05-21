@@ -38,7 +38,7 @@ namespace CustomAsset.Mutable {
     protected override void Initialise() {
       base.Initialise();
       void updateTargetValue(Fiber fiber) => targetForChange.Set(targetForChange + stepAmount);
-      change = Fiber.Instance.Begin.Do(updateTargetValue).WaitFor(stepTime).Repeat(_ => steps);
+      change = Fiber.Instance().Begin.Do(updateTargetValue).WaitFor(stepTime).Repeat(_ => steps);
     }
   }
 }

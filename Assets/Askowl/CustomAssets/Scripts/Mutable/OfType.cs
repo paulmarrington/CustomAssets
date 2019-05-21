@@ -27,7 +27,7 @@ namespace CustomAsset.Mutable {
           if (!componentToPoll.Equals(null)) componentToPoll.Emitter.Fire();
         }
 
-        Fiber.Start.WaitFor(secondsDelayAtStart).Begin.Do(poll).WaitFor(updateIntervalInSeconds).Again.Finish();
+        Fiber.Start("Polling").WaitFor(secondsDelayAtStart).Begin.Do(poll).WaitFor(updateIntervalInSeconds).Again.Finish();
       }
     }
 

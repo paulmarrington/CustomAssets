@@ -9,7 +9,7 @@ namespace CustomAsset {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void InitialiseCustomAssetsFiber() =>
       // Permanently running fiber that waits until an asset requires initialising before looping back on itself.
-      Fiber.Start.OnFixedUpdates.Begin.Do(
+      Fiber.Start().OnFixedUpdates.Begin.Do(
         _ => {
           while (!AssetsWaitingInitialisation.Empty) AssetsWaitingInitialisation.Pop().Initialiser();
         }, "CustomAsset Initialiser").WaitFor(InitialiseAssetEmitter).Again.Finish();

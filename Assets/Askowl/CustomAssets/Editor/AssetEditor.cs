@@ -10,71 +10,58 @@ using String = CustomAsset.Mutable.String;
 
 namespace Askowl {
   public class AssetEditor : IDisposable {
-    private readonly Dictionary<string, SerializedObject> assets         = new Dictionary<string, SerializedObject>();
-    private readonly Dictionary<string, SerializedObject> existingAssets = new Dictionary<string, SerializedObject>();
+    private readonly Dictionary<string, (SerializedObject serializedAsset, string path)> assets =
+      new Dictionary<string, (SerializedObject, string)>();
+    private readonly Dictionary<string, bool> existingAssets = new Dictionary<string, bool>();
 
-    public string destination;
-    public string key;
+    public static AssetEditor Instance => Cache<AssetEditor>.Instance;
 
-    public static AssetEditor Instance(string key, string destination) {
-      var instance = Cache<AssetEditor>.Instance;
-      instance.destination = destination;
-      instance.key         = key;
-      return instance;
+    public AssetEditor Add(string assetName, string nameSpace, string path) {
+      var  qualifiedName = string.IsNullOrWhiteSpace(nameSpace) ? assetName : $"{nameSpace}.{assetName}";
+      Type assetType     = ScriptableType(qualifiedName);
+      if (assetType == default) throw new Exception($"No asset '{qualifiedName}' found to add");
+      return Add(assetName, assetType, path);
     }
 
-    public static AssetEditor Instance(string key) {
-      var pref        = $"{key}.AssetEditor.destination";
-      var destination = PlayerPrefs.GetString(pref);
-      PlayerPrefs.DeleteKey(pref);
-      if (string.IsNullOrWhiteSpace(destination)) return null;
-      var instance = Instance(key, destination);
-      return instance;
-    }
-
-    public AssetEditor Add(params (string name, string asset)[] assetNameAndTypeList) {
-      foreach (var entry in assetNameAndTypeList) Add((entry.name, ScriptableType(entry.asset)));
-      return this;
-    }
-
-    public AssetEditor Add(params (string name, Type asset)[] assetNameAndTypeList) {
-      foreach (var entry in assetNameAndTypeList) {
-        if (entry.asset == default) throw new Exception($"No asset '{entry.name}' found to add");
-        if (entry.asset.IsSubclassOf(typeof(ScriptableObject))) {
-          var scriptableObject = ScriptableObject.CreateInstance(entry.asset);
-          var serialisedObject = new SerializedObject(scriptableObject);
-          assets[entry.name] = serialisedObject;
-        } else if (entry.asset.IsSubclassOf(typeof(MonoBehaviour))) {
-          GetPrefabMonoBehaviour(entry.name, entry.asset);
-        } else if (entry.asset.IsSubclassOf(typeof(Object))) {
-          var asset = Resources.Load(entry.name, entry.asset);
-          if (asset == null) throw new Exception($"No resource '{entry.name}' of type {entry.asset.Name}");
-          var serialisedObject = new SerializedObject(asset);
-          assets[entry.name] = serialisedObject;
-        } else {
-          throw new Exception($"{entry.asset.Name} is not a MonoBehaviour, ScriptableObject or Resource");
-        }
+    public AssetEditor Add(string assetName, Type assetType, string path) {
+      if (assetType == default) throw new Exception($"No asset '{assetName}' found to add");
+      if (assetType.IsSubclassOf(typeof(ScriptableObject))) {
+        var scriptableObject = ScriptableObject.CreateInstance(assetType);
+        assets[assetName] = (new SerializedObject(scriptableObject), path);
+      } else if (assetType.IsSubclassOf(typeof(MonoBehaviour))) {
+        GetPrefabMonoBehaviour(assetName, assetType, path);
+      } else if (assetType.IsSubclassOf(typeof(Object))) {
+        var asset = Resources.Load(assetName, assetType);
+        if (asset == null) throw new Exception($"No resource '{assetName}' of type {assetType.Name}");
+        var serialisedObject = new SerializedObject(asset);
+        assets[assetName] = (serialisedObject, path);
+      } else {
+        throw new Exception($"{assetType.Name} is not a MonoBehaviour, ScriptableObject or Resource");
       }
       return this;
     }
 
-    public AssetEditor Load(params (string name, string asset)[] assetNameAndTypeList) {
-      foreach (var entry in assetNameAndTypeList) {
-        var name = entry.name.Contains(".") ? entry.name : $"{entry.name}.asset";
-        var asset = AssetDb.Load(name, ScriptableType(entry.asset)) ??
-                    AssetDatabase.LoadAssetAtPath($"{destination}/{entry.name}", ScriptableType(entry.asset));
-        if (asset == null) throw new Exception($"No asset '{name}' found to load");
-        existingAssets[entry.name] = assets[entry.name] = new SerializedObject(asset);
-      }
+    public AssetEditor Load(string assetName, string nameSpace, string path) {
+      if (Exists(assetName)) return this;
+      var name      = assetName.Contains(".") ? assetName : $"{assetName}.asset";
+      var assetType = ScriptableType($"{nameSpace}.{assetName}");
+      var asset     = AssetDb.Load(name, assetType) ?? AssetDatabase.LoadAssetAtPath($"{path}/{assetName}", assetType);
+      if (asset == null) throw new Exception($"No asset '{name}' found to load");
+      existingAssets[assetName] = true;
+      assets[assetName]         = (new SerializedObject(asset), path);
       return this;
     }
+
+    public bool Exists(string assetName) => assets.ContainsKey(assetName);
 
     public SerializedObject SerialisedAsset(string assetName) {
-      if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
-      return assets[assetName];
+      if (!Exists(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
+      return assets[assetName].serializedAsset;
     }
 
     public Object Asset(string assetName) => SerialisedAsset(assetName).targetObject;
+
+    public string AssetPath(string assetName) => assets[assetName].path;
 
     protected void SetActiveObject(string assetName) => Selection.activeObject = Asset(assetName);
 
@@ -97,7 +84,7 @@ namespace Askowl {
     }
 
     public SerializedProperty Field(string assetName, string fieldName = "value") {
-      if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary");
+      if (!assets.ContainsKey(assetName)) throw new Exception($"No asset '{assetName}' set in CreateAssetDictionary - Have you run 'Assets // Create // Decoupler // Build Assets`?");
       fieldName = CamelCase(fieldName);
       var property = FindProperty(assetName, fieldName);
       if (property == default) FindProperty(assetName, char.ToUpper(fieldName[0]) + fieldName.Substring(1));
@@ -154,14 +141,13 @@ namespace Askowl {
       var    manager = GetCustomAssetManager();
       Object item    = null;
       foreach (var entry in assets) {
-        if (entry.Value.targetObject.GetType().IsSubclassOf(typeof(ScriptableObject))) {
-          if (!existingAssets.ContainsKey(entry.Key)) {
-            string assetName = $"{destination}{entry.Key}.asset";
-            AssetDatabase.CreateAsset(item = entry.Value.targetObject, assetName);
-          }
-          if (entry.Key.EndsWith("Manager")) InsertIntoArrayField(manager, "managers", entry.Value.targetObject);
+        if (entry.Value.serializedAsset.targetObject.GetType().IsSubclassOf(typeof(ScriptableObject))) {
+          if (!existingAssets.ContainsKey(entry.Key))
+            AssetDatabase.CreateAsset(item = entry.Value.serializedAsset.targetObject, entry.Value.path);
+          if (entry.Key.EndsWith("Manager"))
+            InsertIntoArrayField(manager, "managers", entry.Value.serializedAsset.targetObject);
         }
-        entry.Value.ApplyModifiedPropertiesWithoutUndo();
+        entry.Value.serializedAsset.ApplyModifiedPropertiesWithoutUndo();
       }
       AssetDatabase.SaveAssets();
       AssetDb.Instance.Select(item).Dispose();
@@ -169,9 +155,9 @@ namespace Askowl {
     }
 
     private SerializedObject GetCustomAssetManager() =>
-      GetPrefabMonoBehaviour("Custom Asset Managers", typeof(Managers));
+      GetPrefabMonoBehaviour("Custom Asset Managers", typeof(Managers), "");
 
-    private SerializedObject GetPrefabMonoBehaviour(string prefabName, Type monoBehaviour) {
+    private SerializedObject GetPrefabMonoBehaviour(string prefabName, Type monoBehaviour, string path) {
       var gameObject = GameObject.Find(prefabName);
       if (gameObject == default) {
         var prefab = Resources.Load(prefabName);
@@ -182,7 +168,7 @@ namespace Askowl {
       var component = gameObject.GetComponentInChildren(monoBehaviour);
       if (component == default) throw new Exception($"No component '{monoBehaviour.Name}' in '{gameObject.name}'1");
       var serialisedObject = new SerializedObject(component);
-      assets[prefabName] = serialisedObject;
+      assets[prefabName] = (serialisedObject, path);
       return serialisedObject;
     }
     public void Dispose() {

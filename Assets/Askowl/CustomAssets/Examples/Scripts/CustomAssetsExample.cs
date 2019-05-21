@@ -13,8 +13,7 @@ using String = CustomAsset.Mutable.String;
 
 // ReSharper disable MissingXmlDoc
 namespace Askowl.CustomAssets.Examples {
-  [RequireComponent(typeof(AudioSource))]
-  public sealed class CustomAssetsExample : MonoBehaviour {
+  [RequireComponent(typeof(AudioSource))] public sealed class CustomAssetsExample : MonoBehaviour {
     [SerializeField] private Float                     maxFloat      = default;
     [SerializeField] private CustomAsset.Mutable.Float currentFloat  = default;
     [SerializeField] private Integer                   integer       = default;
